@@ -40,6 +40,7 @@ public class GameLogic {
 	private MegaMan megaMan;
 	private Floor floor;
 	private Platform platform;
+	private Platform platform1;
 	private Boss boss;
 	private Boss boss2;
 	private Asteroid asteroid;
@@ -112,6 +113,7 @@ public class GameLogic {
         newMegaMan(gameScreen);
         newFloor(gameScreen);
         newPlatform(gameScreen);
+        newPlatform1(gameScreen);
         newBoss(gameScreen);
         newBoss2(gameScreen);
         newAsteroid(gameScreen);
@@ -309,8 +311,13 @@ public class GameLogic {
 	}
 	
 	public Platform newPlatform(GameScreen screen){
-		this.platform = new Platform(screen);
+		this.platform = new Platform(screen, 0);
 		return platform;
+	}
+	
+	public Platform newPlatform1(GameScreen screen){
+		this.platform1 = new Platform(screen, 1);
+		return platform1;
 	}
 	
 	/**
@@ -367,6 +374,10 @@ public class GameLogic {
 	
 	public Platform getPlatform(){
 		return platform;
+	}
+	
+	public Platform getPlatform1(){
+		return platform1;
 	}
 	
 	public Boss getBoss() {

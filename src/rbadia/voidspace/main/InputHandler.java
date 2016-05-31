@@ -156,7 +156,7 @@ public class InputHandler implements KeyListener{
 	 */
 	private void moveMegaManDown(MegaMan megaMan, int screenHeight, Floor floor){
 		if(megaMan.getY() + megaMan.getSpeed() + megaMan.height < screenHeight - floor.getFloorHeight()/2){
-			megaMan.translate(0, megaMan.getSpeed());
+			megaMan.translate(0, 2);
 		}
 	}
 

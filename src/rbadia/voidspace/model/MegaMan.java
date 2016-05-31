@@ -16,7 +16,7 @@ public class MegaMan extends Rectangle {
 	private static final int Y_OFFSET = 5; // initial y distance of the ship from the bottom of the screen 
 	
 	private int megaManWidth = 42;
-	private int megaManHeight = 45;
+	private int megaManHeight = 41;
 	private int speed = DEFAULT_SPEED;
 	
 	/**

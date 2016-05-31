@@ -62,8 +62,10 @@ public class GameScreen extends JPanel {
 	private GraphicsManager graphicsMan;
 	private GameLogic gameLogic;
 	private InputHandler input;
+	private Platform[] platforms;
 
 	private int boom=0;
+	private int numPlatforms;
 	//	private int damage=0;
 	//	private int scroll=0;
 	//	private int bossHealth=0;
@@ -116,6 +118,7 @@ public class GameScreen extends JPanel {
 		MegaMan megaMan = gameLogic.getMegaMan();
 		Floor floor = gameLogic.getFloor();
 		Platform platform = gameLogic.getPlatform();
+		Platform platform1 = gameLogic.getPlatform1();
 		List<Bullet> bullets = gameLogic.getBullets();
 		Asteroid asteroid = gameLogic.getAsteroid();
 		List<BigBullet> bigBullets = gameLogic.getBigBullets();
@@ -183,9 +186,11 @@ public class GameScreen extends JPanel {
 		}
 
 		graphicsMan.drawFloor(floor, g2d, this);
-		for(int i=0; i<6; i++){
-		graphicsMan.drawPlatform(platform, g2d, this, i);
-		}
+		
+//		for(int i=0; i<7; i++){
+			graphicsMan.drawPlatform(platform, g2d, this, 0);
+			graphicsMan.drawPlatform(platform, g2d, this, 1);
+//		}
 
 
 		//draw MegaMan
@@ -483,7 +488,7 @@ public class GameScreen extends JPanel {
 		MegaMan megaMan = gameLogic.getMegaMan();
 		Floor floor = gameLogic.getFloor();
 
-		if((megaMan.getY() + megaMan.getMegaManHeight() -17 < this.getHeight() - floor.getFloorHeight()/2) && Fall() == true){
+		if((megaMan.getY() + megaMan.getMegaManHeight() -17 < this.getHeight() - floor.getFloorHeight()/2) && Fall() == true && Fall2() == true){
 			megaMan.translate(0 , 2);
 			return true;
 		}
@@ -502,7 +507,7 @@ public class GameScreen extends JPanel {
 		}
 		return false;
 	}
-	
+
 	private boolean Fire2(){
 		MegaMan megaMan = gameLogic.getMegaMan();
 		List<BigBullet> bigBullets = gameLogic.getBigBullets();
@@ -519,15 +524,29 @@ public class GameScreen extends JPanel {
 	public boolean Fall(){
 		MegaMan megaMan = gameLogic.getMegaMan();
 		Platform platform = gameLogic.getPlatform();
-		if((((platform.getX() < megaMan.getX()) && (megaMan.getX()< platform.getX() + platform.getPlatformWidth()))
-				|| ((platform.getX() < megaMan.getX() + megaMan.getMegaManWidth()) 
-						&& (megaMan.getX() + megaMan.getMegaManWidth()< platform.getX() + platform.getPlatformWidth())))
-				&& megaMan.getY() + megaMan.getMegaManHeight() == platform.getY() + 10
-				){
-			return false;
-		}
+			if((((platform.getX() < megaMan.getX()) && (megaMan.getX()< platform.getX() + platform.getPlatformWidth()))
+			|| ((platform.getX() < megaMan.getX() + megaMan.getMegaManWidth()) 
+			&& (megaMan.getX() + megaMan.getMegaManWidth()< platform.getX() + platform.getPlatformWidth())))
+					&& megaMan.getY() + megaMan.getMegaManHeight() == platform.getY()
+					){
+				return false;
+			}
 		return true;
 	}
-
+	
+	public boolean Fall2(){
+		MegaMan megaMan = gameLogic.getMegaMan();
+		Platform platform1 = gameLogic.getPlatform1();
+			if(	(((platform1.getX() < megaMan.getX()) && (megaMan.getX()< platform1.getX() + platform1.getPlatformWidth()))
+			|| ((platform1.getX() < megaMan.getX() + megaMan.getMegaManWidth()) 
+			&& (megaMan.getX() + megaMan.getMegaManWidth()< platform1.getX() + platform1.getPlatformWidth())))
+					&& megaMan.getY() + megaMan.getMegaManHeight() == platform1.getY()
+					
+					){
+				return false;
+			}
+		return true;
+	}
+	
 
 }

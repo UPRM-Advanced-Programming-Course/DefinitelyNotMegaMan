@@ -48,7 +48,7 @@ public class GraphicsManager {
 			this.megaFallRImg = ImageIO.read(getClass().getResource("/rbadia/voidspace/graphics/megaFallRight.png"));
 			this.megaFireRImg = ImageIO.read(getClass().getResource("/rbadia/voidspace/graphics/megaFireRight.png"));
 			this.floorImg = ImageIO.read(getClass().getResource("/rbadia/voidspace/graphics/megaFloor.png"));
-			this.platformImg = ImageIO.read(getClass().getResource("/rbadia/voidspace/graphics/platform.png"));
+			this.platformImg = ImageIO.read(getClass().getResource("/rbadia/voidspace/graphics/platform3.png"));
 			//			this.bossImg = ImageIO.read(getClass().getResource("/rbadia/voidspace/graphics/boss1.png"));
 			//			this.bossImg2 = ImageIO.read(getClass().getResource("/rbadia/voidspace/graphics/boss2.png"));
 			this.asteroidImg = ImageIO.read(getClass().getResource("/rbadia/voidspace/graphics/asteroid.png"));
@@ -92,7 +92,7 @@ public class GraphicsManager {
 		}
 	}
 	public void drawPlatform(Platform platform, Graphics2D g2d, ImageObserver observer, int i){
-			g2d.drawImage(platformImg, platform.x  , platform.y - i*30, observer);	
+			g2d.drawImage(platformImg, platform.x + i*40  , platform.y - i*40, observer);	
 	}
 
 	/**
