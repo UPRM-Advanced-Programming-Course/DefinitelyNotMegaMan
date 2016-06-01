@@ -16,9 +16,9 @@ public class Platform extends Rectangle {
 	 * Crates a new asteroid at a random x location at the top of the screen 
 	 * @param screen the game screen
 	 */
-	public Platform(GameScreen screen, int numPlatforms){
+	public Platform(GameScreen screen, int n){
 
-		this.setLocation(250 + numPlatforms*40 , screen.getHeight()/2 + 140 - numPlatforms*40);
+		this.setLocation( 0 , screen.getHeight()/2 + 140 - n*40 );
 		this.setSize(platformWidth, platformHeight);
 		
 	}

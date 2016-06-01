@@ -92,7 +92,7 @@ public class GraphicsManager {
 		}
 	}
 	public void drawPlatform(Platform platform, Graphics2D g2d, ImageObserver observer, int i){
-			g2d.drawImage(platformImg, platform.x + i*40  , platform.y - i*40, observer);	
+			g2d.drawImage(platformImg, platform.x , platform.y, observer);	
 	}
 
 	/**

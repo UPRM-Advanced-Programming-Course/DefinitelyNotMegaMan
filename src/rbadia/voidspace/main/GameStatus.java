@@ -94,13 +94,13 @@ public class GameStatus {
 		this.newFloor = newFloor;
 	}
 	
-	public synchronized boolean isNewPlatform(){
-		return newPlatform;
-	}
-	
-	public synchronized void setNewPlatform(boolean newPlatform){
-		this.newPlatform = newPlatform;
-	}
+//	public synchronized boolean isNewPlatform(){
+//		return newPlatform;
+//	}
+//	
+//	public synchronized void setNewPlatform(boolean newPlatform){
+//		this.newPlatform = newPlatform;
+//	}
 	
 	public synchronized boolean isNewBoss() {
 		return newBoss;

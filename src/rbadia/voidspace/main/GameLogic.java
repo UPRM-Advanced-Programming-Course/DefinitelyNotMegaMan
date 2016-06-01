@@ -39,8 +39,6 @@ public class GameLogic {
 	
 	private MegaMan megaMan;
 	private Floor floor;
-	private Platform platform;
-	private Platform platform1;
 	private Boss boss;
 	private Boss boss2;
 	private Asteroid asteroid;
@@ -50,6 +48,8 @@ public class GameLogic {
 	private List<BulletBoss> bulletsBoss;
 	private List<BulletBoss2> bulletsBoss2;
 	private List<BigBullet> bigBullets;
+	
+	private Platform[] numPlatforms;
 	
 	private long lastBulletTime;
 	
@@ -99,7 +99,8 @@ public class GameLogic {
 		bulletsBoss = new ArrayList<BulletBoss>();
 		bulletsBoss2 = new ArrayList<BulletBoss2>();
 		bigBullets = new ArrayList<BigBullet>();
-
+		//numPlatforms = new Platform[5];
+		
 		status.setShipsLeft(3);
 		status.setLevel(1);
 		status.setGameOver(false);
@@ -112,8 +113,11 @@ public class GameLogic {
 		// init the ship and the asteroid
         newMegaMan(gameScreen);
         newFloor(gameScreen);
-        newPlatform(gameScreen);
-        newPlatform1(gameScreen);
+        
+        newNumPlatforms(gameScreen, 8);
+        
+//        newPlatform(gameScreen/*, 1*/);
+//        newPlatform1(gameScreen);
         newBoss(gameScreen);
         newBoss2(gameScreen);
         newAsteroid(gameScreen);
@@ -310,15 +314,15 @@ public class GameLogic {
 		return floor;
 	}
 	
-	public Platform newPlatform(GameScreen screen){
-		this.platform = new Platform(screen, 0);
-		return platform;
+	public Platform[] newNumPlatforms(GameScreen screen, int n){
+		numPlatforms = new Platform[n];
+		for(int i=0; i<n; i++){
+			this.numPlatforms[i] = new Platform(screen, i);
+		}
+		return numPlatforms;
+		
 	}
 	
-	public Platform newPlatform1(GameScreen screen){
-		this.platform1 = new Platform(screen, 1);
-		return platform1;
-	}
 	
 	/**
 	 * Create the first boss.
@@ -372,12 +376,8 @@ public class GameLogic {
 	return floor;	
 	}
 	
-	public Platform getPlatform(){
-		return platform;
-	}
-	
-	public Platform getPlatform1(){
-		return platform1;
+	public Platform[] getNumPlatforms(){
+		return numPlatforms;
 	}
 	
 	public Boss getBoss() {
