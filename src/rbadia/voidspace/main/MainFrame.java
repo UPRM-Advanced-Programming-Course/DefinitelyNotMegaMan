@@ -43,7 +43,7 @@ public class MainFrame extends JFrame {
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(520, 470);
+		this.setSize(530, 480);
 		this.setContentPane(getJContentPane());
 		this.setTitle("Void Space");
 //		this.setResizable(false);

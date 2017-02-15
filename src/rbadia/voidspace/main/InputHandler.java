@@ -270,7 +270,7 @@ public class InputHandler implements KeyListener{
 		case KeyEvent.VK_S:
 			if(!status.isGameStarted() && !status.isGameOver() && !status.isGameStarting() && !status.isGameWon()){
 				JOptionPane.showMessageDialog( null, 
-						"Item:     Price\r\n"+
+						"Item:                Price\r\n"+
 								"\r\n"+
 								"Extra Life:      1500\r\n"+ 
 								"Power Shot:  1000\r\n"+
@@ -286,9 +286,9 @@ public class InputHandler implements KeyListener{
 						"Power Up:     Explanation\r\n"+
 								"\r\n"+
 								"Extra Life:      Gives an extra life (One Extra Life per second)\r\n"+ 
-
-								"Power Shot:  Activates the Power Shot which kills all asteroid in one hit\r\n"+
-						"                           (Press Q to buy, afterwards press or hold Q to fire.)\r\n");
+						"                           (Press E to buy, limit of one life per second.)\r\n" +
+								"Power Shot:  Activates the Power Shot which kills the asteroid in one hit\r\n"+
+						"                           (Press Q to buy, afterwards press Q to fire.)\r\n");
 
 			}
 			else{

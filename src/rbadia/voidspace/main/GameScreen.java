@@ -188,19 +188,19 @@ public class GameScreen extends BaseScreen{
 		//draw Floor
 		graphicsMan.drawFloor(floor, g2d, this);
 
-//		if(level==1){
-			//draw Platform LV. 1
-			for(int i=0; i<8; i++){
-				graphicsMan.drawPlatform(numPlatforms[i], g2d, this, i);
-//			}
+		//		if(level==1){
+		//draw Platform LV. 1
+		for(int i=0; i<8; i++){
+			graphicsMan.drawPlatform(numPlatforms[i], g2d, this, i);
+			//			}
 		}
-//		//draw Platform LV. 2
-//		else if(level==2){
-//			for(int i=0; i<8; i++){
-//			
-//				graphicsMan.drawPlatform2(numPlatforms[i], g2d, this, i);
-//			}	
-//		}
+		//		//draw Platform LV. 2
+		//		else if(level==2){
+		//			for(int i=0; i<8; i++){
+		//			
+		//				graphicsMan.drawPlatform2(numPlatforms[i], g2d, this, i);
+		//			}	
+		//		}
 
 		//draw MegaMan
 		if(!status.isNewMegaMan()){
@@ -322,6 +322,8 @@ public class GameScreen extends BaseScreen{
 				damage=0;
 			}
 		}
+		if(boom == 2)
+		restructure();
 
 		status.getAsteroidsDestroyed();
 		status.getShipsLeft();
@@ -367,7 +369,7 @@ public class GameScreen extends BaseScreen{
 	}
 
 	protected void drawYouWin() {
-		String youWinStr = "You Win!!!";
+		String youWinStr = "You Pass";
 
 		Font currentFont = biggestFont == null? bigFont : biggestFont;
 		float fontSize = currentFont.getSize2D();
@@ -389,15 +391,15 @@ public class GameScreen extends BaseScreen{
 
 		g2d.setFont(originalFont);
 		fm = g2d.getFontMetrics();
-		String newGameStr = "Press <Space> to Start a New Game.";
+		String newGameStr = "Next level starting soon";
 		strWidth = fm.stringWidth(newGameStr);
 		strX = (this.getWidth() - strWidth)/2;
 		strY = (this.getHeight() + fm.getAscent())/2 + ascent + 16;
 		g2d.setPaint(Color.YELLOW);
 		g2d.drawString(newGameStr, strX, strY);
 
-		boom=3;
-		restructure();
+		boom=3;	//Change value in order for the next level to start
+
 		//		boomReset();
 		//		healthReset();
 		//		delayReset();
@@ -570,10 +572,11 @@ public class GameScreen extends BaseScreen{
 		Floor floor = gameLogic.getFloor();
 
 		if((megaMan.getY() + megaMan.getMegaManHeight() -17 < this.getHeight() - floor.getFloorHeight()/2) 
-				&& Fall() == true
-				){
+				&& Fall() == true){
+
 			megaMan.translate(0 , 2);
 			return true;
+
 		}
 		return false;
 	}
@@ -632,6 +635,6 @@ public class GameScreen extends BaseScreen{
 				n=n+2;
 			}
 		}
-
+		status.setLevel(status.getLevel() + 1);
 	}
 }
