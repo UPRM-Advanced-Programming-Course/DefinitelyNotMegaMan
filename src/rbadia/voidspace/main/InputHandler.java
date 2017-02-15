@@ -39,6 +39,7 @@ public class InputHandler implements KeyListener{
 
 
 	private GameLogic gameLogic;
+	private GameScreen gScreen;
 
 
 
@@ -108,12 +109,12 @@ public class InputHandler implements KeyListener{
 			Floor floor = gameLogic.getFloor();
 
 			if(shiftIsPressed){
-				megaMan.setSpeed(megaMan.getDefaultSpeed() * 2);
+				megaMan.setSpeed(megaMan.getDefaultSpeed() * 2 +1);
 			}
 
 			if(upIsPressed){
 				long currentTime = System.currentTimeMillis();
-				if((currentTime - lastBigBulletTime) > 500){ //if i<10 (700)
+				if((currentTime - lastBigBulletTime) > 570){ //if i<10 (700)
 					lastBigBulletTime = currentTime;
 					for(int i=0; i<6; i++){
 						moveMegaManUp(megaMan);

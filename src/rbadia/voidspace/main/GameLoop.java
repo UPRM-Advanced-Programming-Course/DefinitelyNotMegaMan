@@ -5,6 +5,7 @@ package rbadia.voidspace.main;
  */
 public class GameLoop implements Runnable{
 	private GameScreen gameScreen;
+//	private GameScreen2 gameScreen2;
 	private GameLogic gameLogic;
 	private InputHandler inputHandler;
 
@@ -40,7 +41,6 @@ public class GameLoop implements Runnable{
 			// update the game graphics
 			gameScreen.updateScreen();
 			
-		//	gameScreen.updateScreen2();
 			// handle input
 			inputHandler.handleInput(gameScreen);
 			

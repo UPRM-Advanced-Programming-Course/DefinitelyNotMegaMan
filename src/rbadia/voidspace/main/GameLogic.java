@@ -34,6 +34,7 @@ import rbadia.voidspace.sounds.SoundManager;
  */
 public class GameLogic {
 	private GameScreen gameScreen;
+	private GameScreen2 gameScreen2;
 	private GameStatus status;
 	private SoundManager soundMan;
 	
@@ -149,7 +150,7 @@ public class GameLogic {
 			}
 		}
 		if(!status.isGameWon()){
-			if(gameScreen.getBoom() == 16)
+			if(gameScreen.getBoom() == 2)
 			gameWon();
 		}
 	}
@@ -192,12 +193,14 @@ public class GameLogic {
 	/**
 	 * Actions to take if game is won.
 	 */
+	
+	//GAME LOOPS ON THE FIRST GAMESCREEN AND RESETS ALL VARIABLE COUNTERS
 	public void gameWon(){
-		status.setGameStarted(false);
+		//status.setGameStarted(false);  //SENDS TO MAIN SCREEN/ IF COMMENTED OUT LOOPS THE GAME
 		status.setGameWon(true);
 		gameScreen.doGameOver();
 		
-        // delay to display "Game Over" message for 3 seconds
+        // delay to display "Game Won" message for 3 seconds
 		Timer timer = new Timer(3000, new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				status.setGameWon(false);

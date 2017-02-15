@@ -10,6 +10,8 @@ public class Platform extends Rectangle {
 	//	public static final int DEFAULT_SPEED = 4;
 	private int platformWidth = 44;
 	private int platformHeight = 4;
+	private int platformX=0;
+	private int platformY=0;
 	//	private int speed = DEFAULT_SPEED;
 
 	/**
@@ -18,7 +20,7 @@ public class Platform extends Rectangle {
 	 */
 	public Platform(GameScreen screen, int n){
 
-		this.setLocation( 0 , screen.getHeight()/2 + 140 - n*40 );
+		this.setLocation( 0 , screen.getHeight()/2 + 140 - n*40);
 		this.setSize(platformWidth, platformHeight);
 		
 	}

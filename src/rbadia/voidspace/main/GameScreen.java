@@ -1,5 +1,6 @@
 package rbadia.voidspace.main;
 import java.awt.Color;
+
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -26,7 +27,7 @@ import rbadia.voidspace.sounds.SoundManager;
 /**
  * Main game screen. Handles all game graphics updates and some of the game logic.
  */
-public class GameScreen extends JPanel {
+public class GameScreen extends BaseScreen{
 	private static final long serialVersionUID = 1L;
 
 	private BufferedImage backBuffer;
@@ -37,7 +38,7 @@ public class GameScreen extends JPanel {
 	//	private static final int NEW_ASTEROID_2_DELAY = 500;
 	//	private static final int NEW_BIG_ASTEROID_DELAY = 500;
 
-	private long lastShipTime;
+	//	private long lastShipTime;
 	private long lastAsteroidTime;
 	//	private long lastAsteroid2Time;
 	//	private long lastBigAsteroidTime;
@@ -61,11 +62,12 @@ public class GameScreen extends JPanel {
 	private SoundManager soundMan;
 	private GraphicsManager graphicsMan;
 	private GameLogic gameLogic;
-	private InputHandler input;
-	private Platform[] platforms;
+	//private InputHandler input;
+	//private Platform[] platforms;
 
 	private int boom=0;
-	//	private int damage=0;
+	private int level=1;
+	//private int damage=0;
 	//	private int scroll=0;
 	//	private int bossHealth=0;
 	//	private int delay=0;
@@ -93,7 +95,7 @@ public class GameScreen extends JPanel {
 	/**
 	 * Initialization method (for VE compatibility).
 	 */
-	private void initialize() {
+	protected void initialize() {
 		// set panel properties
 		this.setSize(new Dimension(500, 400));
 		this.setPreferredSize(new Dimension(500, 400));
@@ -185,12 +187,20 @@ public class GameScreen extends JPanel {
 
 		//draw Floor
 		graphicsMan.drawFloor(floor, g2d, this);
-		
-		//draw Platform
-		for(int i=0; i<8; i++){
-			graphicsMan.drawPlatform(numPlatforms[i], g2d, this, i);
-		}
 
+//		if(level==1){
+			//draw Platform LV. 1
+			for(int i=0; i<8; i++){
+				graphicsMan.drawPlatform(numPlatforms[i], g2d, this, i);
+//			}
+		}
+//		//draw Platform LV. 2
+//		else if(level==2){
+//			for(int i=0; i<8; i++){
+//			
+//				graphicsMan.drawPlatform2(numPlatforms[i], g2d, this, i);
+//			}	
+//		}
 
 		//draw MegaMan
 		if(!status.isNewMegaMan()){
@@ -218,10 +228,24 @@ public class GameScreen extends JPanel {
 			else if (boom <= 5){
 				asteroid.setLocation(this.getWidth() - asteroid.getAsteroidWidth(),
 						rand.nextInt(this.getHeight() - asteroid.getAsteroidHeight() - 32));
+			}	
+		}
+		else{
+			long currentTime = System.currentTimeMillis();
+			if((currentTime - lastAsteroidTime) > NEW_ASTEROID_DELAY){
+				// draw a new asteroid
+				lastAsteroidTime = currentTime;
+				status.setNewAsteroid(false);
+				asteroid.setLocation(this.getWidth() - asteroid.getAsteroidWidth(),
+						rand.nextInt(this.getHeight() - asteroid.getAsteroidHeight() - 32));
+			}
+			else{
+				// draw explosion
+				graphicsMan.drawAsteroidExplosion(asteroidExplosion, g2d, this);
 			}
 		}
 
-		// draw bullets 
+		// draw bullets   
 		for(int i=0; i<bullets.size(); i++){
 			Bullet bullet = bullets.get(i);
 			graphicsMan.drawBullet(bullet, g2d, this);
@@ -245,6 +269,60 @@ public class GameScreen extends JPanel {
 			}
 		}
 
+		// check bullet-asteroid collisions
+		for(int i=0; i<bullets.size(); i++){
+			Bullet bullet = bullets.get(i);
+			if(asteroid.intersects(bullet)){
+				// increase asteroids destroyed count
+				status.setAsteroidsDestroyed(status.getAsteroidsDestroyed() + 100);
+				// "remove" asteroid
+				asteroidExplosion = new Rectangle(
+						asteroid.x,
+						asteroid.y,
+						asteroid.width,
+						asteroid.height);
+				asteroid.setLocation(-asteroid.width, -asteroid.height);
+				status.setNewAsteroid(true);
+				lastAsteroidTime = System.currentTimeMillis();
+
+				// play asteroid explosion sound
+				soundMan.playAsteroidExplosionSound();
+				if(boom != 5 && boom != 15){
+					boom=boom + 1;
+				}
+				damage=0;
+				// remove bullet
+				bullets.remove(i);
+				break;
+			}
+		}
+
+		// check big bullet-asteroid collisions
+		for(int i=0; i<bigBullets.size(); i++){
+			BigBullet bigBullet = bigBullets.get(i);
+			if(asteroid.intersects(bigBullet)){
+				// increase asteroids destroyed count
+				status.setAsteroidsDestroyed(status.getAsteroidsDestroyed() + 100);
+
+				// "remove" asteroid
+				asteroidExplosion = new Rectangle(
+						asteroid.x,
+						asteroid.y,
+						asteroid.width,
+						asteroid.height);
+				asteroid.setLocation(-asteroid.width, -asteroid.height);
+				status.setNewAsteroid(true);
+				lastAsteroidTime = System.currentTimeMillis();
+
+				// play asteroid explosion sound
+				soundMan.playAsteroidExplosionSound();
+				if(boom != 5 && boom != 15){
+					boom=boom + 1;
+				}
+				damage=0;
+			}
+		}
+
 		status.getAsteroidsDestroyed();
 		status.getShipsLeft();
 		status.getLevel();
@@ -262,7 +340,7 @@ public class GameScreen extends JPanel {
 	/**
 	 * Draws the "Game Over" message.
 	 */
-	private void drawGameOver() {
+	protected void drawGameOver() {
 		String gameOverStr = "GAME OVER";
 
 		Font currentFont = biggestFont == null? bigFont : biggestFont;
@@ -288,7 +366,7 @@ public class GameScreen extends JPanel {
 		delayReset();
 	}
 
-	private void drawYouWin() {
+	protected void drawYouWin() {
 		String youWinStr = "You Win!!!";
 
 		Font currentFont = biggestFont == null? bigFont : biggestFont;
@@ -309,15 +387,26 @@ public class GameScreen extends JPanel {
 		g2d.setPaint(Color.YELLOW);
 		g2d.drawString(youWinStr, strX, strY);
 
-		boomReset();
-		healthReset();
-		delayReset();
+		g2d.setFont(originalFont);
+		fm = g2d.getFontMetrics();
+		String newGameStr = "Press <Space> to Start a New Game.";
+		strWidth = fm.stringWidth(newGameStr);
+		strX = (this.getWidth() - strWidth)/2;
+		strY = (this.getHeight() + fm.getAscent())/2 + ascent + 16;
+		g2d.setPaint(Color.YELLOW);
+		g2d.drawString(newGameStr, strX, strY);
+
+		boom=3;
+		restructure();
+		//		boomReset();
+		//		healthReset();
+		//		delayReset();
 	}
 
 	/**
 	 * Draws the initial "Get Ready!" message.
 	 */
-	private void drawGetReady() {
+	protected void drawGetReady() {
 		String readyStr = "Get Ready"; 
 		g2d.setFont(originalFont.deriveFont(originalFont.getSize2D() + 1));
 		FontMetrics fm = g2d.getFontMetrics();
@@ -333,7 +422,7 @@ public class GameScreen extends JPanel {
 	 * Draws the specified number of stars randomly on the game screen.
 	 * @param numberOfStars the number of stars to draw
 	 */
-	private void drawStars(int numberOfStars) {
+	protected void drawStars(int numberOfStars) {
 		g2d.setColor(Color.WHITE);
 		for(int i=0; i<numberOfStars; i++){
 			int x = (int)(Math.random() * this.getWidth());
@@ -345,7 +434,7 @@ public class GameScreen extends JPanel {
 	/**
 	 * Display initial game title screen.
 	 */
-	private void initialMessage() {
+	protected void initialMessage() {
 		String gameTitleStr = "Definitely Not MegaMan";
 
 		Font currentFont = biggestFont == null? bigFont : biggestFont;
@@ -476,7 +565,7 @@ public class GameScreen extends JPanel {
 		return boom;
 	}
 
-	private boolean Gravity(){
+	protected boolean Gravity(){
 		MegaMan megaMan = gameLogic.getMegaMan();
 		Floor floor = gameLogic.getFloor();
 
@@ -489,7 +578,7 @@ public class GameScreen extends JPanel {
 		return false;
 	}
 	//Bullet fire pose
-	private boolean Fire(){
+	protected boolean Fire(){
 		MegaMan megaMan = gameLogic.getMegaMan();
 		List<Bullet> bullets = gameLogic.getBullets();
 		for(int i=0; i<bullets.size(); i++){
@@ -501,9 +590,9 @@ public class GameScreen extends JPanel {
 		}
 		return false;
 	}
-	
+
 	//BigBullet fire pose
-	private boolean Fire2(){
+	protected boolean Fire2(){
 		MegaMan megaMan = gameLogic.getMegaMan();
 		List<BigBullet> bigBullets = gameLogic.getBigBullets();
 		for(int i=0; i<bigBullets.size(); i++){
@@ -522,13 +611,27 @@ public class GameScreen extends JPanel {
 		Platform[] platform = gameLogic.getNumPlatforms();
 		for(int i=0; i<8; i++){
 			if((((platform[i].getX() < megaMan.getX()) && (megaMan.getX()< platform[i].getX() + platform[i].getPlatformWidth()))
-			|| ((platform[i].getX() < megaMan.getX() + megaMan.getMegaManWidth()) 
-			&& (megaMan.getX() + megaMan.getMegaManWidth()< platform[i].getX() + platform[i].getPlatformWidth())))
+					|| ((platform[i].getX() < megaMan.getX() + megaMan.getMegaManWidth()) 
+							&& (megaMan.getX() + megaMan.getMegaManWidth()< platform[i].getX() + platform[i].getPlatformWidth())))
 					&& megaMan.getY() + megaMan.getMegaManHeight() == platform[i].getY()
 					){
 				return false;
 			}
 		}
-			return true;
+		return true;
+	}
+
+	public void restructure(){
+		Platform[] platform = gameLogic.getNumPlatforms();
+		for(int i=0; i<8; i++){
+			if(i<4)	platform[i].setLocation(50+ i*50, getHeight()/2 + 140 - i*40);
+			if(i==4) platform[i].setLocation(50 +i*50, getHeight()/2 + 140 - 3*40);
+			if(i>4){	
+				int n=4;
+				platform[i].setLocation(50 + i*50, getHeight()/2 + 20 + (i-n)*40 );
+				n=n+2;
+			}
+		}
+
 	}
 }
