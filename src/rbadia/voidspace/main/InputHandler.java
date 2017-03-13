@@ -101,12 +101,12 @@ public class InputHandler implements KeyListener{
 			}
 
 			//WIP
-//			if(mIsPressed){
-//				mute=1;
-//			}
+			//			if(mIsPressed){
+			//				mute=1;
+			//			}
 
 			MegaMan megaMan = gameLogic.getMegaMan();
-			Floor floor = gameLogic.getFloor();
+			Floor[] floor = gameLogic.getFloor();
 
 			if(shiftIsPressed){
 				megaMan.setSpeed(megaMan.getDefaultSpeed() * 2 +1);
@@ -155,9 +155,11 @@ public class InputHandler implements KeyListener{
 	 * Move the megaMan down
 	 * @param megaMan the megaMan
 	 */
-	private void moveMegaManDown(MegaMan megaMan, int screenHeight, Floor floor){
-		if(megaMan.getY() + megaMan.getSpeed() + megaMan.height < screenHeight - floor.getFloorHeight()/2){
-			megaMan.translate(0, 2);
+	private void moveMegaManDown(MegaMan megaMan, int screenHeight, Floor[] floor){
+		for(int i=0; i<9; i++){
+			if(megaMan.getY() + megaMan.getSpeed() + megaMan.height < screenHeight - floor[i].getFloorHeight()/2){
+				megaMan.translate(0, 2);
+			}
 		}
 	}
 
@@ -225,27 +227,27 @@ public class InputHandler implements KeyListener{
 				spaceIsPressed = false;
 				stack=0;
 				gameLogic.newGame();
-				
+
 				//WIP
-//				if(mute==0){
-					
+				//				if(mute==0){
+
 				//Music
 				//changes music from "menu music" to "ingame music"
-					VoidSpaceMain.audioClip.close();
-					VoidSpaceMain.audioFile = new File("audio/mainGame.wav");
-					try {
-						VoidSpaceMain.audioStream = AudioSystem.getAudioInputStream(VoidSpaceMain.audioFile);
-						VoidSpaceMain.audioClip.open(VoidSpaceMain.audioStream);
-						VoidSpaceMain.audioClip.start();
-						VoidSpaceMain.audioClip.loop(Clip.LOOP_CONTINUOUSLY);
-					} catch (UnsupportedAudioFileException e1) {
-						e1.printStackTrace();
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					} catch (LineUnavailableException e1) {
-						e1.printStackTrace();
-					}
-//				}
+				VoidSpaceMain.audioClip.close();
+				VoidSpaceMain.audioFile = new File("audio/mainGame.wav");
+				try {
+					VoidSpaceMain.audioStream = AudioSystem.getAudioInputStream(VoidSpaceMain.audioFile);
+					VoidSpaceMain.audioClip.open(VoidSpaceMain.audioStream);
+					VoidSpaceMain.audioClip.start();
+					VoidSpaceMain.audioClip.loop(Clip.LOOP_CONTINUOUSLY);
+				} catch (UnsupportedAudioFileException e1) {
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				} catch (LineUnavailableException e1) {
+					e1.printStackTrace();
+				}
+				//				}
 			}
 			else{
 				this.spaceIsPressed = true;
@@ -286,7 +288,7 @@ public class InputHandler implements KeyListener{
 						"Power Up:     Explanation\r\n"+
 								"\r\n"+
 								"Extra Life:      Gives an extra life (One Extra Life per second)\r\n"+ 
-						"                           (Press E to buy, limit of one life per second.)\r\n" +
+								"                           (Press E to buy, limit of one life per second.)\r\n" +
 								"Power Shot:  Activates the Power Shot which kills the asteroid in one hit\r\n"+
 						"                           (Press Q to buy, afterwards press Q to fire.)\r\n");
 

@@ -86,13 +86,13 @@ public class GameStatus {
 		this.newMegaMan = newMegaMan;
 	}
 	
-	public synchronized boolean isNewFloor(){
-		return newFloor;
-	}
-	
-	public synchronized void setNewFloor(boolean newFloor) {
-		this.newFloor = newFloor;
-	}
+//	public synchronized boolean isNewFloor(){
+//		return newFloor;
+//	}
+//	
+//	public synchronized void setNewFloor(boolean newFloor) {
+//		this.newFloor = newFloor;
+//	}
 	
 //	public synchronized boolean isNewPlatform(){
 //		return newPlatform;

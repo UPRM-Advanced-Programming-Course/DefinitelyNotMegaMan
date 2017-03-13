@@ -86,10 +86,8 @@ public class GraphicsManager {
 		g2d.drawImage(megaFireRImg, megaMan.x, megaMan.y, observer);	
 	}
 
-	public void drawFloor (Floor floor, Graphics2D g2d, ImageObserver observer){
-		for(int i=0; i<9; i++){
-			g2d.drawImage(floorImg, floor.x + i*64, floor.y, observer);				
-		}
+	public void drawFloor (Floor floor, Graphics2D g2d, ImageObserver observer, int i){
+			g2d.drawImage(floorImg, floor.x, floor.y, observer);				
 	}
 	public void drawPlatform(Platform platform, Graphics2D g2d, ImageObserver observer, int i){
 			g2d.drawImage(platformImg, platform.x , platform.y, observer);	

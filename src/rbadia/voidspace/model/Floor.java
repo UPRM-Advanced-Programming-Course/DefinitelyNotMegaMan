@@ -11,14 +11,16 @@ public class Floor extends Rectangle {
 
 	private int floorWidth = 64;
 	private int floorHeight = 64;
+//	private int floorX = 0;
+//	private int floorY =0;
 	//	private int speed = DEFAULT_SPEED;
 
 	/**
 	 * Crates a new asteroid at a random x location at the top of the screen 
 	 * @param screen the game screen
 	 */
-	public Floor(GameScreen screen){
-			this.setLocation(0 , screen.getHeight()- floorHeight/2);
+	public Floor(GameScreen screen, int n){
+			this.setLocation(0 + n*floorWidth , screen.getHeight()- floorHeight/2);
 			this.setSize(floorWidth, floorHeight);
 	}
 

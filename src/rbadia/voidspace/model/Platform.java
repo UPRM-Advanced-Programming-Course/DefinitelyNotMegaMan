@@ -10,8 +10,8 @@ public class Platform extends Rectangle {
 	//	public static final int DEFAULT_SPEED = 4;
 	private int platformWidth = 44;
 	private int platformHeight = 4;
-	private int platformX=0;
-	private int platformY=0;
+//	private int platformX=0;
+//	private int platformY=0;
 	//	private int speed = DEFAULT_SPEED;
 
 	/**

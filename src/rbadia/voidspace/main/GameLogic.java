@@ -37,9 +37,9 @@ public class GameLogic {
 	private GameScreen2 gameScreen2;
 	private GameStatus status;
 	private SoundManager soundMan;
-	
+
 	private MegaMan megaMan;
-	private Floor floor;
+
 	private Boss boss;
 	private Boss boss2;
 	private Asteroid asteroid;
@@ -49,23 +49,24 @@ public class GameLogic {
 	private List<BulletBoss> bulletsBoss;
 	private List<BulletBoss2> bulletsBoss2;
 	private List<BigBullet> bigBullets;
-	
+
 	private Platform[] numPlatforms;
-	
+	private Floor[] floor;
+
 	private long lastBulletTime;
-	
+
 	/**
 	 * Create a new game logic handler
 	 * @param gameScreen the game screen
 	 */
 	public GameLogic(GameScreen gameScreen){
 		this.gameScreen = gameScreen;
-		
+
 		// initialize game status information
 		status = new GameStatus();
 		// initialize the sound manager
 		soundMan = new SoundManager();
-		
+
 		// init some variables
 		bullets = new ArrayList<Bullet>();
 		bulletsBoss = new ArrayList<BulletBoss>();
@@ -94,14 +95,14 @@ public class GameLogic {
 	 */
 	public void newGame(){
 		status.setGameStarting(true);
-		
+
 		// init game variables
 		bullets = new ArrayList<Bullet>();
 		bulletsBoss = new ArrayList<BulletBoss>();
 		bulletsBoss2 = new ArrayList<BulletBoss2>();
 		bigBullets = new ArrayList<BigBullet>();
 		//numPlatforms = new Platform[5];
-		
+
 		status.setShipsLeft(3);
 		status.setLevel(1);
 		status.setGameOver(false);
@@ -109,26 +110,26 @@ public class GameLogic {
 		status.setNewAsteroid(false);
 		status.setNewAsteroid2(false);
 		status.setNewBigAsteroid(false);
-		status.setNewFloor(false);
-				
+		//status.setNewFloor(false);
+
 		// init the ship and the asteroid
-        newMegaMan(gameScreen);
-        newFloor(gameScreen);
-        
-        newNumPlatforms(gameScreen, 8);
-        
-//        newPlatform(gameScreen/*, 1*/);
-//        newPlatform1(gameScreen);
-        newBoss(gameScreen);
-        newBoss2(gameScreen);
-        newAsteroid(gameScreen);
-        newAsteroid2(gameScreen);
-        newBigAsteroid(gameScreen);
-        
-        // prepare game screen
-        gameScreen.doNewGame();
-        
-        // delay to display "Get Ready" message for 1.5 seconds
+		newMegaMan(gameScreen);
+		newFloor(gameScreen, 9);
+
+		newNumPlatforms(gameScreen, 8);
+
+		//        newPlatform(gameScreen/*, 1*/);
+		//        newPlatform1(gameScreen);
+		newBoss(gameScreen);
+		newBoss2(gameScreen);
+		newAsteroid(gameScreen);
+		newAsteroid2(gameScreen);
+		newBigAsteroid(gameScreen);
+
+		// prepare game screen
+		gameScreen.doNewGame();
+
+		// delay to display "Get Ready" message for 1.5 seconds
 		Timer timer = new Timer(1500, new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				status.setGameStarting(false);
@@ -138,7 +139,7 @@ public class GameLogic {
 		timer.setRepeats(false);
 		timer.start();
 	}
-	
+
 	/**
 	 * Check game or level ending conditions.
 	 */
@@ -151,10 +152,10 @@ public class GameLogic {
 		}
 		if(!status.isGameWon()){
 			if(gameScreen.getBoom() == 2)
-			gameWon();
+				gameWon();
 		}
 	}
-	
+
 	/**
 	 * Actions to take when the game is over.
 	 */
@@ -162,8 +163,8 @@ public class GameLogic {
 		status.setGameStarted(false);
 		status.setGameOver(true);
 		gameScreen.doGameOver();
-		
-        // delay to display "Game Over" message for 3 seconds
+
+		// delay to display "Game Over" message for 3 seconds
 		Timer timer = new Timer(5000, new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				status.setGameOver(false);
@@ -171,7 +172,7 @@ public class GameLogic {
 		});
 		timer.setRepeats(false);
 		timer.start();
-		
+
 		//Change music back to menu screen music
 		VoidSpaceMain.audioClip.close();
 		VoidSpaceMain.audioFile = new File("audio/menuScreen.wav");
@@ -187,20 +188,20 @@ public class GameLogic {
 		} catch (LineUnavailableException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	/**
 	 * Actions to take if game is won.
 	 */
-	
+
 	//GAME LOOPS ON THE FIRST GAMESCREEN AND RESETS ALL VARIABLE COUNTERS
 	public void gameWon(){
 		//status.setGameStarted(false);  //SENDS TO MAIN SCREEN/ IF COMMENTED OUT LOOPS THE GAME
 		status.setGameWon(true);
 		gameScreen.doGameOver();
-		
-        // delay to display "Game Won" message for 3 seconds
+
+		// delay to display "Game Won" message for 3 seconds
 		Timer timer = new Timer(3000, new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				status.setGameWon(false);
@@ -208,7 +209,7 @@ public class GameLogic {
 		});
 		timer.setRepeats(false);
 		timer.start();
-		
+
 		//Change music back to menu screen music
 		VoidSpaceMain.audioClip.close();
 		VoidSpaceMain.audioFile = new File("audio/menuScreen.wav");
@@ -224,10 +225,10 @@ public class GameLogic {
 		} catch (LineUnavailableException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
-	
+
+
 	/**
 	 * Fire a bullet from ship.
 	 */
@@ -236,7 +237,7 @@ public class GameLogic {
 		bullets.add(bullet);
 		soundMan.playBulletSound();
 	}
-	
+
 	/**
 	 * Fire the "Power Shot" bullet
 	 */
@@ -245,7 +246,7 @@ public class GameLogic {
 		bigBullets.add(bigBullet);
 		soundMan.playBulletSound();
 	}
-	
+
 	/**
 	 * Move a bullet once fired from the ship.
 	 * @param bullet the bullet to move
@@ -260,7 +261,7 @@ public class GameLogic {
 			return true;
 		}
 	}
-	
+
 	/**
 	 * Move a bullet once fired from the boss.
 	 * @param bulletBoss the bullet to move
@@ -275,7 +276,7 @@ public class GameLogic {
 			return true;
 		}
 	}
-	
+
 	/** Move a bullet once fired from the second boss.
 	 * @param bulletBoss2 the bullet to move
 	 * @return if the bullet should be removed from screen
@@ -289,7 +290,7 @@ public class GameLogic {
 			return true;
 		}
 	}
-	
+
 	/** Move a "Power Shot" bullet once fired from the ship.
 	 * @param bulletBoss2 the bullet to move
 	 * @return if the bullet should be removed from screen
@@ -303,7 +304,7 @@ public class GameLogic {
 			return true;
 		}
 	}
-	
+
 	/**
 	 * Create a new ship (and replace current one).
 	 */
@@ -311,22 +312,26 @@ public class GameLogic {
 		this.megaMan = new MegaMan(screen);
 		return megaMan;
 	}
-	
-	public Floor newFloor(GameScreen screen){
-		this.floor = new Floor(screen);
+
+	public Floor[] newFloor(GameScreen screen, int n){
+		floor = new Floor[n];
+		for(int i=0; i<n; i++){
+			this.floor[i] = new Floor(screen, i);
+		}
+
 		return floor;
 	}
-	
+
 	public Platform[] newNumPlatforms(GameScreen screen, int n){
 		numPlatforms = new Platform[n];
 		for(int i=0; i<n; i++){
 			this.numPlatforms[i] = new Platform(screen, i);
 		}
 		return numPlatforms;
-		
+
 	}
-	
-	
+
+
 	/**
 	 * Create the first boss.
 	 */
@@ -334,15 +339,15 @@ public class GameLogic {
 		this.boss = new Boss(screen);
 		return boss;
 	}
-	
-/**
- * Create the second boss.
- */
+
+	/**
+	 * Create the second boss.
+	 */
 	public Boss newBoss2(GameScreen screen){
 		this.boss2 = new Boss(screen);
 		return boss2;
 	}
-	
+
 	/**
 	 * Create a new asteroid.
 	 */
@@ -350,7 +355,7 @@ public class GameLogic {
 		this.asteroid = new Asteroid(screen);
 		return asteroid;
 	}
-	
+
 	/**
 	 * Create a second asteroid.
 	 */
@@ -358,15 +363,15 @@ public class GameLogic {
 		this.asteroid2 = new Asteroid(screen);
 		return asteroid2;
 	}
-	
+
 	/**
 	 * Create a new big asteroid.
 	 */
 	public BigAsteroid newBigAsteroid(GameScreen screen){
 		this.bigAsteroid = new BigAsteroid(screen);
-				return bigAsteroid;
+		return bigAsteroid;
 	}
-	
+
 	/**
 	 * Returns the ship.
 	 * @return the ship
@@ -374,19 +379,19 @@ public class GameLogic {
 	public MegaMan getMegaMan() {
 		return megaMan;
 	}
-	
-	public Floor getFloor(){
-	return floor;	
+
+	public Floor[] getFloor(){
+		return floor;	
 	}
-	
+
 	public Platform[] getNumPlatforms(){
 		return numPlatforms;
 	}
-	
+
 	public Boss getBoss() {
 		return boss;
 	}
-	
+
 	public Boss getBoss2() {
 		return boss2;
 	}
@@ -398,11 +403,11 @@ public class GameLogic {
 	public Asteroid getAsteroid() {
 		return asteroid;
 	}
-	
+
 	public Asteroid getAsteroid2() {
 		return asteroid2;
 	}
-	
+
 	public BigAsteroid getBigAsteroid() {
 		return bigAsteroid;
 	}
@@ -414,7 +419,7 @@ public class GameLogic {
 	public List<Bullet> getBullets() {
 		return bullets;
 	}
-	
+
 	/**
 	 * Returns the list of the boss's bullets.
 	 * @return the list of the boss's bullets
@@ -422,7 +427,7 @@ public class GameLogic {
 	public List<BulletBoss> getBulletBoss() {
 		return bulletsBoss;
 	}
-	
+
 	/**
 	 * Returns the list of the second boss's bullets.
 	 * @return the list of the second boss's bullets
@@ -430,7 +435,7 @@ public class GameLogic {
 	public List<BulletBoss2> getBulletBoss2() {
 		return bulletsBoss2;
 	}
-	
+
 	/**
 	 * Returns the list of "Power Shot" bullets.
 	 * @return the list of "Power Shot" bullets
