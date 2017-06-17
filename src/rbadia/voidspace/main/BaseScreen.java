@@ -15,47 +15,6 @@ import rbadia.voidspace.sounds.SoundManager;
 
 public abstract class BaseScreen extends JPanel {
 	protected static final long serialVersionUID = 1L;
-
-	protected BufferedImage backBuffer;
-	protected Graphics2D g2d;
-
-	protected static final int NEW_SHIP_DELAY = 500;
-	protected static final int NEW_ASTEROID_DELAY = 500;
-	//	protected static final int NEW_ASTEROID_2_DELAY = 500;
-	//	protected static final int NEW_BIG_ASTEROID_DELAY = 500;
-
-	protected long lastShipTime;
-	protected long lastAsteroidTime;
-	//	protected long lastAsteroid2Time;
-	//	protected long lastBigAsteroidTime;
-
-	protected Rectangle asteroidExplosion;
-	//	protected Rectangle bigAsteroidExplosion;
-	//	protected Rectangle shipExplosion;
-	//	protected Rectangle bossExplosion;
-
-	protected JLabel shipsValueLabel;
-	protected JLabel destroyedValueLabel;
-	protected JLabel levelValueLabel;
-
-	protected Random rand;
-
-	protected Font originalFont;
-	protected Font bigFont;
-	protected Font biggestFont;
-
-	protected GameStatus status;
-	protected SoundManager soundMan;
-	protected GraphicsManager graphicsMan;
-	protected GameLogic gameLogic;
-	protected InputHandler input;
-	protected Platform[] platforms;
-
-	protected int boom=0;
-	protected int damage=0;
-	//	protected int scroll=0;
-	//	protected int bossHealth=0;
-	//	protected int delay=0;
 	
 	protected abstract void initialize();
 	

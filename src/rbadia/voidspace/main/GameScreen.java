@@ -29,9 +29,25 @@ import rbadia.voidspace.sounds.SoundManager;
  */
 public class GameScreen extends BaseScreen{
 	private static final long serialVersionUID = 1L;
+		protected BufferedImage backBuffer;
+	protected Graphics2D g2d;
 
-	private BufferedImage backBuffer;
-	private Graphics2D g2d;
+	protected long lastShipTime;
+	
+	//	protected long lastAsteroid2Time;
+	//	protected long lastBigAsteroidTime;
+
+	//	protected Rectangle bigAsteroidExplosion;
+	//	protected Rectangle shipExplosion;
+	//	protected Rectangle bossExplosion;
+
+	protected InputHandler input;
+	protected Platform[] platforms;
+
+	protected int damage=0;
+	//	protected int scroll=0;
+	//	protected int bossHealth=0;
+	//	protected int delay=0;
 
 	private static final int NEW_SHIP_DELAY = 500;
 	private static final int NEW_ASTEROID_DELAY = 500;

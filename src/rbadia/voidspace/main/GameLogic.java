@@ -34,7 +34,6 @@ import rbadia.voidspace.sounds.SoundManager;
  */
 public class GameLogic {
 	private GameScreen gameScreen;
-	private GameScreen2 gameScreen2;
 	private GameStatus status;
 	private SoundManager soundMan;
 
