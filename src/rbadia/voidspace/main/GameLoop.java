@@ -35,6 +35,7 @@ public class GameLoop implements Runnable{
 			catch(Exception e){
 				e.printStackTrace();
 			}
+			
 			// check game or level ending conditions
 			gameLogic.checkConditions();
 			
