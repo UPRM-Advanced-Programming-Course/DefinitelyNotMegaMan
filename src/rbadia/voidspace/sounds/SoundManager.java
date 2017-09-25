@@ -3,7 +3,7 @@ package rbadia.voidspace.sounds;
 import java.applet.Applet;
 import java.applet.AudioClip;
 
-import rbadia.voidspace.main.GameScreen;
+import rbadia.voidspace.main.Level1State;
 
 /**
  * Manages and plays the game's sounds.
@@ -11,9 +11,9 @@ import rbadia.voidspace.main.GameScreen;
 public class SoundManager {
 	private static final boolean SOUND_ON = true;
 
-    private AudioClip shipExplosionSound = Applet.newAudioClip(GameScreen.class.getResource(
+    private AudioClip shipExplosionSound = Applet.newAudioClip(Level1State.class.getResource(
     "/rbadia/voidspace/sounds/shipExplosion.wav"));
-    private AudioClip bulletSound = Applet.newAudioClip(GameScreen.class.getResource(
+    private AudioClip bulletSound = Applet.newAudioClip(Level1State.class.getResource(
     "/rbadia/voidspace/sounds/laser.wav"));
     
     /**

@@ -50,28 +50,31 @@ public class VoidSpaceMain {
 			e.printStackTrace();
 		}
 		
-		// init main frame
-		MainFrame frame = new MainFrame();
+		// get game screen
+        GameState gameState = new Level1State();
+
+        // init main frame
+		MainFrame frame = new MainFrame(gameState);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		// get game screen
-        GameScreen gameScreen = frame.getGameScreen();
-		
+        gameState.setMainFrame(frame);
+        		
 		// init game logic handler
-		GameLogic gameLogic = new GameLogic(gameScreen);
+		GameLogic gameLogic = new GameLogic(gameState);
+		gameState.setGameLogic(gameLogic);
 		
-		// pass some variables to game screen
-        gameScreen.setGameLogic(gameLogic);
-        
+       	frame.setGameState(gameState);
+		       
 		// init input handler
-        InputHandler inputHandler = new InputHandler(gameLogic);
+        InputHandler inputHandler = new InputHandler(gameState);
         frame.addKeyListener(inputHandler);
+        gameState.setInputHandler(inputHandler);
         
         // show main frame
 		frame.setVisible(true);
 		
 		// init main game loop
-		new Thread(new GameLoop(gameScreen, gameLogic, inputHandler)).start();
+		new Thread(new GameLoop(gameState)).start();
 	}
 
 

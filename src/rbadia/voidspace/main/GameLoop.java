@@ -4,8 +4,7 @@ package rbadia.voidspace.main;
  * Implements the main game loop, i.e. what actions should be taken on each frame update.
  */
 public class GameLoop implements Runnable{
-	private GameScreen gameScreen;
-//	private GameScreen2 gameScreen2;
+	private GameState gameScreen;
 	private GameLogic gameLogic;
 	private InputHandler inputHandler;
 
@@ -15,10 +14,10 @@ public class GameLoop implements Runnable{
 	 * @param gameLogic the game logic handler
 	 * @param inputHandler the user input handler
 	 */
-	public GameLoop(GameScreen gameScreen, GameLogic gameLogic, InputHandler inputHandler){
+	public GameLoop(GameState gameScreen){
 		this.gameScreen = gameScreen;
-		this.gameLogic = gameLogic;
-		this.inputHandler = inputHandler;
+		this.gameLogic = gameScreen.getGameLogic();
+		this.inputHandler = gameScreen.getInputHandler();
 	}
 
 	/**

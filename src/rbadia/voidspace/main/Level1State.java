@@ -8,6 +8,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -16,9 +17,12 @@ import javax.swing.JPanel;
 
 import rbadia.voidspace.graphics.GraphicsManager;
 import rbadia.voidspace.model.Asteroid;
+import rbadia.voidspace.model.BigAsteroid;
 import rbadia.voidspace.model.BigBullet;
+import rbadia.voidspace.model.Boss;
 import rbadia.voidspace.model.Bullet;
 import rbadia.voidspace.model.BulletBoss;
+import rbadia.voidspace.model.BulletBoss2;
 import rbadia.voidspace.model.Floor;
 import rbadia.voidspace.model.MegaMan;
 import rbadia.voidspace.model.Platform;
@@ -27,46 +31,36 @@ import rbadia.voidspace.sounds.SoundManager;
 /**
  * Main game screen. Handles all game graphics updates and some of the game logic.
  */
-public class GameScreen extends BaseScreen{
+public class Level1State extends GameState {
+
 	private static final long serialVersionUID = 1L;
-		protected BufferedImage backBuffer;
+	protected BufferedImage backBuffer;
 	protected Graphics2D g2d;
 
-	protected long lastShipTime;
-	
-	//	protected long lastAsteroid2Time;
-	//	protected long lastBigAsteroidTime;
-
-	//	protected Rectangle bigAsteroidExplosion;
-	//	protected Rectangle shipExplosion;
-	//	protected Rectangle bossExplosion;
-
-	protected InputHandler input;
+	private GameStatus status;
+	private SoundManager soundMan;
+	private MegaMan megaMan;
+	private Boss boss;
+	private Boss boss2;
+	private Asteroid asteroid;
+	private Asteroid asteroid2;
+	private BigAsteroid bigAsteroid;
+	private List<Bullet> bullets;
+	private List<BulletBoss> bulletsBoss;
+	private List<BulletBoss2> bulletsBoss2;
+	private List<BigBullet> bigBullets;
+	private Platform[] numPlatforms;
+	private Floor[] floor;	// END Moved from GameLogic class
 	protected Platform[] platforms;
 
 	protected int damage=0;
-	//	protected int scroll=0;
-	//	protected int bossHealth=0;
-	//	protected int delay=0;
-
 	private static final int NEW_SHIP_DELAY = 500;
 	private static final int NEW_ASTEROID_DELAY = 500;
-	//	private static final int NEW_ASTEROID_2_DELAY = 500;
-	//	private static final int NEW_BIG_ASTEROID_DELAY = 500;
 
-	//	private long lastShipTime;
 	private long lastAsteroidTime;
-	//	private long lastAsteroid2Time;
-	//	private long lastBigAsteroidTime;
-
+	protected long lastShipTime;
+		
 	private Rectangle asteroidExplosion;
-	//	private Rectangle bigAsteroidExplosion;
-	//	private Rectangle shipExplosion;
-	//	private Rectangle bossExplosion;
-
-	private JLabel shipsValueLabel;
-	private JLabel destroyedValueLabel;
-	private JLabel levelValueLabel;
 
 	private Random rand;
 
@@ -74,48 +68,155 @@ public class GameScreen extends BaseScreen{
 	private Font bigFont;
 	private Font biggestFont;
 
-	private GameStatus status;
-	private SoundManager soundMan;
 	private GraphicsManager graphicsMan;
 	private GameLogic gameLogic;
-	//private InputHandler input;
-	//private Platform[] platforms;
+	private InputHandler inputHandler;
+	
+	private MainFrame mainFrame;
 
 	private int boom=0;
 	private int level=1;
-	//private int damage=0;
-	//	private int scroll=0;
-	//	private int bossHealth=0;
-	//	private int delay=0;
-
-
-	/**
-	 * This method initializes 
-	 * 
-	 */
-	public GameScreen() {
+	
+	// Constructors
+	public Level1State() {
 		super();
+		
+		this.setSize(new Dimension(500, 400));
+		this.setPreferredSize(new Dimension(500, 400));
+		this.setBackground(Color.BLACK);
+
 		// initialize random number generator
 		rand = new Random();
-
-		initialize();
-
-		// init graphics manager
+		
 		graphicsMan = new GraphicsManager();
 
 		// init back buffer image
 		backBuffer = new BufferedImage(500, 400, BufferedImage.TYPE_INT_RGB);
 		g2d = backBuffer.createGraphics();
+		
+		status = new GameStatus();
+		soundMan = new SoundManager();
+
+		// init some variables
+		bullets = new ArrayList<Bullet>();
+		bulletsBoss = new ArrayList<BulletBoss>();
+		bulletsBoss2 = new ArrayList<BulletBoss2>();
+		bigBullets = new ArrayList<BigBullet>();
+	}
+	
+	// Getters
+	public GameStatus getStatus() {
+		return status;
+	}
+	
+	public SoundManager getSoundManager() {
+		return soundMan;
+	}
+	
+	public GameLogic getGameLogic() {
+		return gameLogic;
+	}
+	
+	public InputHandler getInputHandler() {
+		return inputHandler;
+	}
+	
+	public MainFrame getMainFrame() {
+		return mainFrame;
+	}
+	public int getBoom(){
+		return boom;
+	}
+
+	public MegaMan getMegaMan() {
+		return megaMan;
+	}
+
+	public Floor[] getFloor(){
+		return floor;	
+	}
+
+	public Platform[] getNumPlatforms(){
+		return numPlatforms;
+	}
+
+	public Boss getBoss() {
+		return boss;
+	}
+
+	public Boss getBoss2() {
+		return boss2;
 	}
 
 	/**
-	 * Initialization method (for VE compatibility).
+	 * Returns the asteroid.
+	 * @return the asteroid
 	 */
-	protected void initialize() {
-		// set panel properties
-		this.setSize(new Dimension(500, 400));
-		this.setPreferredSize(new Dimension(500, 400));
-		this.setBackground(Color.BLACK);
+	public Asteroid getAsteroid() {
+		return asteroid;
+	}
+
+	public Asteroid getAsteroid2() {
+		return asteroid2;
+	}
+
+	public BigAsteroid getBigAsteroid() {
+		return bigAsteroid;
+	}
+
+	/**
+	 * Returns the list of bullets.
+	 * @return the list of bullets
+	 */
+	public List<Bullet> getBullets() {
+		return bullets;
+	}
+
+	/**
+	 * Returns the list of the boss's bullets.
+	 * @return the list of the boss's bullets
+	 */
+	public List<BulletBoss> getBulletBoss() {
+		return bulletsBoss;
+	}
+
+	/**
+	 * Returns the list of the second boss's bullets.
+	 * @return the list of the second boss's bullets
+	 */
+	public List<BulletBoss2> getBulletBoss2() {
+		return bulletsBoss2;
+	}
+
+	/**
+	 * Returns the list of "Power Shot" bullets.
+	 * @return the list of "Power Shot" bullets
+	 */
+	public List<BigBullet> getBigBullets(){
+		return bigBullets;
+	}
+	
+	// Setters
+	public void setGraphicsMan(GraphicsManager graphicsMan) {
+		this.graphicsMan = graphicsMan;
+	}
+	
+	public void setGameLogic(GameLogic gameLogic) {
+		this.gameLogic = gameLogic;
+		this.status = this.getStatus();
+		this.soundMan = this.getSoundManager();
+	}
+	
+	/**
+	 * Sets the game input handler
+	 * @param inputHandler the game input handler
+	 */
+	public void setInputHandler(InputHandler inputHandler) {
+		this.inputHandler = inputHandler;
+	}
+	
+	public void setMainFrame(MainFrame mainFrame) {
+		this.mainFrame = mainFrame;
 	}
 
 	/**
@@ -132,12 +233,12 @@ public class GameScreen extends BaseScreen{
 	 * Update the game screen's backbuffer image.
 	 */
 	public void updateScreen(){
-		MegaMan megaMan = gameLogic.getMegaMan();
-		Floor[] floor = gameLogic.getFloor();
-		Platform[] numPlatforms = gameLogic.getNumPlatforms();
-		List<Bullet> bullets = gameLogic.getBullets();
-		Asteroid asteroid = gameLogic.getAsteroid();
-		List<BigBullet> bigBullets = gameLogic.getBigBullets();
+		MegaMan megaMan = this.getMegaMan();
+		Floor[] floor = this.getFloor();
+		Platform[] numPlatforms = this.getNumPlatforms();
+		List<Bullet> bullets = this.getBullets();
+		Asteroid asteroid = this.getAsteroid();
+		List<BigBullet> bigBullets = this.getBigBullets();
 		//		Asteroid asteroid2 = gameLogic.getAsteroid2();
 		//		BigAsteroid bigAsteroid = gameLogic.getBigAsteroid();
 		//		List<BulletBoss> bulletsBoss = gameLogic.getBulletBoss();
@@ -285,7 +386,7 @@ public class GameScreen extends BaseScreen{
 			Bullet bullet = bullets.get(i);
 			graphicsMan.drawBullet(bullet, g2d, this);
 
-			boolean remove =   gameLogic.moveBullet(bullet);
+			boolean remove =   this.moveBullet(bullet);
 			if(remove){
 				bullets.remove(i);
 				i--;
@@ -297,7 +398,7 @@ public class GameScreen extends BaseScreen{
 			BigBullet bigBullet = bigBullets.get(i);
 			graphicsMan.drawBigBullet(bigBullet, g2d, this);
 
-			boolean remove = gameLogic.moveBigBullet(bigBullet);
+			boolean remove = this.moveBigBullet(bigBullet);
 			if(remove){
 				bigBullets.remove(i);
 				i--;
@@ -366,13 +467,14 @@ public class GameScreen extends BaseScreen{
 		status.getLevel();
 
 		// update asteroids destroyed label  
-		destroyedValueLabel.setText(Long.toString(status.getAsteroidsDestroyed()));
+		getMainFrame().getDestroyedValueLabel().setText(Long.toString(status.getAsteroidsDestroyed()));
 
 		// update ships left label
-		shipsValueLabel.setText(Integer.toString(status.getShipsLeft()));
+		getMainFrame().getDestroyedValueLabel().setText(Integer.toString(status.getShipsLeft()));
 
 		//update level label
-		levelValueLabel.setText(Long.toString(status.getLevel()));
+
+		getMainFrame().getDestroyedValueLabel().setText(Long.toString(status.getLevel()));
 	}
 
 	/**
@@ -528,13 +630,47 @@ public class GameScreen extends BaseScreen{
 	 * Prepare screen for game over.
 	 */
 	public void doGameOver(){
-		shipsValueLabel.setForeground(new Color(128, 0, 0));
+		getMainFrame().getDestroyedValueLabel().setForeground(new Color(128, 0, 0));
 	}
 
 	/**
 	 * Prepare screen for a new game.
 	 */
-	public void doNewGame(){		
+	public void doNewGame() {	
+		
+		// BEGIN Moved from GameLogic
+		// init game variables
+		bullets = new ArrayList<Bullet>();
+		bulletsBoss = new ArrayList<BulletBoss>();
+		bulletsBoss2 = new ArrayList<BulletBoss2>();
+		bigBullets = new ArrayList<BigBullet>();
+		//numPlatforms = new Platform[5];
+
+		status.setGameStarting(true);
+		status.setShipsLeft(3);
+		status.setLevel(1);
+		status.setGameOver(false);
+		status.setAsteroidsDestroyed(0);
+		status.setNewAsteroid(false);
+		status.setNewAsteroid2(false);
+		status.setNewBigAsteroid(false);
+		//status.setNewFloor(false);
+
+		// init the ship and the asteroid
+		newMegaMan(this);
+		newFloor(this, 9);
+
+		newNumPlatforms(this, 8);
+
+		//        newPlatform(gameScreen/*, 1*/);
+		//        newPlatform1(gameScreen);
+		newBoss(this);
+		newBoss2(this);
+		newAsteroid(this);
+		newAsteroid2(this);
+		newBigAsteroid(this);
+		// END Moved from GameLogic
+		
 		lastAsteroidTime = -NEW_ASTEROID_DELAY;
 		//lastBigAsteroidTime = -NEW_BIG_ASTEROID_DELAY;
 		lastShipTime = -NEW_SHIP_DELAY;
@@ -543,53 +679,14 @@ public class GameScreen extends BaseScreen{
 		biggestFont = null;
 
 		// set labels' text
-		shipsValueLabel.setForeground(Color.BLACK);
-		shipsValueLabel.setText(Integer.toString(status.getShipsLeft()));
-		destroyedValueLabel.setText(Long.toString(status.getAsteroidsDestroyed()));
-		levelValueLabel.setText(Long.toString(status.getLevel()));
+		getMainFrame().getDestroyedValueLabel().setForeground(Color.BLACK);
+		getMainFrame().getDestroyedValueLabel().setText(Integer.toString(status.getShipsLeft()));
+		getMainFrame().getDestroyedValueLabel().setText(Long.toString(status.getAsteroidsDestroyed()));
+		getMainFrame().getDestroyedValueLabel().setText(Long.toString(status.getLevel()));
+		
+		
 	}
 
-	/**
-	 * Sets the game graphics manager.
-	 * @param graphicsMan the graphics manager
-	 */
-	public void setGraphicsMan(GraphicsManager graphicsMan) {
-		this.graphicsMan = graphicsMan;
-	}
-
-	/**
-	 * Sets the game logic handler
-	 * @param gameLogic the game logic handler
-	 */
-	public void setGameLogic(GameLogic gameLogic) {
-		this.gameLogic = gameLogic;
-		this.status = gameLogic.getStatus();
-		this.soundMan = gameLogic.getSoundMan();
-	}
-
-	/**
-	 * Sets the label that displays the value for asteroids destroyed.
-	 * @param destroyedValueLabel the label to set
-	 */
-	public void setDestroyedValueLabel(JLabel destroyedValueLabel) {
-		this.destroyedValueLabel = destroyedValueLabel;
-	}
-
-	/**
-	 * Sets the label that displays the value for ship (lives) left
-	 * @param shipsValueLabel the label to set
-	 */
-	public void setShipsValueLabel(JLabel shipsValueLabel) {
-		this.shipsValueLabel = shipsValueLabel;
-	}
-
-	public void setLevelValueLabel(JLabel levelValueLabel){
-		this.levelValueLabel = levelValueLabel;
-	}
-
-	public int getBoom(){
-		return boom;
-	}
 	public int boomReset(){
 		boom= 0;
 		return boom;
@@ -604,8 +701,8 @@ public class GameScreen extends BaseScreen{
 	}
 
 	protected boolean Gravity(){
-		MegaMan megaMan = gameLogic.getMegaMan();
-		Floor[] floor = gameLogic.getFloor();
+		MegaMan megaMan = this.getMegaMan();
+		Floor[] floor = this.getFloor();
 
 		for(int i=0; i<9; i++){
 			if((megaMan.getY() + megaMan.getMegaManHeight() -17 < this.getHeight() - floor[i].getFloorHeight()/2) 
@@ -618,10 +715,11 @@ public class GameScreen extends BaseScreen{
 		}
 		return false;
 	}
+	
 	//Bullet fire pose
 	protected boolean Fire(){
-		MegaMan megaMan = gameLogic.getMegaMan();
-		List<Bullet> bullets = gameLogic.getBullets();
+		MegaMan megaMan = this.getMegaMan();
+		List<Bullet> bullets = this.getBullets();
 		for(int i=0; i<bullets.size(); i++){
 			Bullet bullet = bullets.get(i);
 			if((bullet.getX() > megaMan.getX() + megaMan.getMegaManWidth()) && 
@@ -634,8 +732,8 @@ public class GameScreen extends BaseScreen{
 
 	//BigBullet fire pose
 	protected boolean Fire2(){
-		MegaMan megaMan = gameLogic.getMegaMan();
-		List<BigBullet> bigBullets = gameLogic.getBigBullets();
+		MegaMan megaMan = this.getMegaMan();
+		List<BigBullet> bigBullets = this.getBigBullets();
 		for(int i=0; i<bigBullets.size(); i++){
 			BigBullet bigBullet = bigBullets.get(i);
 			if((bigBullet.getX() > megaMan.getX() + megaMan.getMegaManWidth()) && 
@@ -648,8 +746,8 @@ public class GameScreen extends BaseScreen{
 
 	//Platform Gravity
 	public boolean Fall(){
-		MegaMan megaMan = gameLogic.getMegaMan(); 
-		Platform[] platform = gameLogic.getNumPlatforms();
+		MegaMan megaMan = this.getMegaMan(); 
+		Platform[] platform = this.getNumPlatforms();
 		for(int i=0; i<8; i++){
 			if((((platform[i].getX() < megaMan.getX()) && (megaMan.getX()< platform[i].getX() + platform[i].getPlatformWidth()))
 					|| ((platform[i].getX() < megaMan.getX() + megaMan.getMegaManWidth()) 
@@ -663,7 +761,7 @@ public class GameScreen extends BaseScreen{
 	}
 
 	public void restructure(){
-		Platform[] platform = gameLogic.getNumPlatforms();
+		Platform[] platform = this.getNumPlatforms();
 		for(int i=0; i<8; i++){
 			if(i<4)	platform[i].setLocation(50+ i*50, getHeight()/2 + 140 - i*40);
 			if(i==4) platform[i].setLocation(50 +i*50, getHeight()/2 + 140 - 3*40);
@@ -690,4 +788,193 @@ public class GameScreen extends BaseScreen{
 		// play asteroid explosion sound
 		soundMan.playAsteroidExplosionSound();
 	}
+	
+	// BEGIN Moved from GameLogic
+	/**
+	 * Fire a bullet from ship.
+	 */
+	public void fireBullet(){
+		Bullet bullet = new Bullet(megaMan);
+		bullets.add(bullet);
+		soundMan.playBulletSound();
+	}
+
+	/**
+	 * Fire the "Power Shot" bullet
+	 */
+	public void fireBigBullet(){
+		BigBullet bigBullet = new BigBullet(megaMan);
+		bigBullets.add(bigBullet);
+		soundMan.playBulletSound();
+	}
+
+	/**
+	 * Move a bullet once fired from the ship.
+	 * @param bullet the bullet to move
+	 * @return if the bullet should be removed from screen
+	 */
+	public boolean moveBullet(Bullet bullet){
+		if(bullet.getY() - bullet.getSpeed() >= 0){
+			bullet.translate(bullet.getSpeed(), 0);
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
+
+	/**
+	 * Move a bullet once fired from the boss.
+	 * @param bulletBoss the bullet to move
+	 * @return if the bullet should be removed from screen
+	 */
+	public boolean moveBulletBoss(BulletBoss bulletBoss){
+		if(bulletBoss.getY() - bulletBoss.getSpeed() >= 0){
+			bulletBoss.translate(0, bulletBoss.getSpeed());
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
+
+	/** Move a bullet once fired from the second boss.
+	 * @param bulletBoss2 the bullet to move
+	 * @return if the bullet should be removed from screen
+	 */
+	public boolean moveBulletBoss2(BulletBoss2 bulletBoss2){
+		if(bulletBoss2.getY() - bulletBoss2.getSpeed() >= 0){
+			bulletBoss2.translate(0, bulletBoss2.getSpeed());
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
+
+	/** Move a "Power Shot" bullet once fired from the ship.
+	 * @param bulletBoss2 the bullet to move
+	 * @return if the bullet should be removed from screen
+	 */
+	public boolean moveBigBullet(BigBullet bigBullet){
+		if(bigBullet.getY() - bigBullet.getBigSpeed() >= 0){
+			bigBullet.translate(bigBullet.getBigSpeed(), 0);
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
+
+	/**
+	 * Create a new ship (and replace current one).
+	 */
+	public MegaMan newMegaMan(Level1State screen){
+		this.megaMan = new MegaMan(screen);
+		return megaMan;
+	}
+
+	public Floor[] newFloor(Level1State screen, int n){
+		floor = new Floor[n];
+		for(int i=0; i<n; i++){
+			this.floor[i] = new Floor(screen, i);
+		}
+
+		return floor;
+	}
+
+	public Platform[] newNumPlatforms(Level1State screen, int n){
+		numPlatforms = new Platform[n];
+		for(int i=0; i<n; i++){
+			this.numPlatforms[i] = new Platform(screen, i);
+		}
+		return numPlatforms;
+
+	}
+
+
+	/**
+	 * Create the first boss.
+	 */
+	public Boss newBoss(Level1State screen){
+		this.boss = new Boss(screen);
+		return boss;
+	}
+
+	/**
+	 * Create the second boss.
+	 */
+	public Boss newBoss2(Level1State screen){
+		this.boss2 = new Boss(screen);
+		return boss2;
+	}
+
+	/**
+	 * Create a new asteroid.
+	 */
+	public Asteroid newAsteroid(Level1State screen){
+		this.asteroid = new Asteroid(screen);
+		return asteroid;
+	}
+
+	/**
+	 * Create a second asteroid.
+	 */
+	public Asteroid newAsteroid2(Level1State screen){
+		this.asteroid2 = new Asteroid(screen);
+		return asteroid2;
+	}
+
+	/**
+	 * Create a new big asteroid.
+	 */
+	public BigAsteroid newBigAsteroid(Level1State screen){
+		this.bigAsteroid = new BigAsteroid(screen);
+		return bigAsteroid;
+	}
+
+
+	
+	/**
+	 * Move the megaMan up
+	 * @param megaMan the megaMan
+	 */
+	public void moveMegaManUp(MegaMan megaMan){
+		if(megaMan.getY() - megaMan.getSpeed() >= 0){
+			megaMan.translate(0, -megaMan.getSpeed()*2);
+		}
+	}
+
+	/**
+	 * Move the megaMan down
+	 * @param megaMan the megaMan
+	 */
+	public void moveMegaManDown(MegaMan megaMan, int screenHeight, Floor[] floor){
+		for(int i=0; i<9; i++){
+			if(megaMan.getY() + megaMan.getSpeed() + megaMan.height < screenHeight - floor[i].getFloorHeight()/2){
+				megaMan.translate(0, 2);
+			}
+		}
+	}
+
+	/**
+	 * Move the megaMan left
+	 * @param megaMan the megaMan
+	 */
+	public void moveMegaManLeft(MegaMan megaMan){
+		if(megaMan.getX() - megaMan.getSpeed() >= 0){
+			megaMan.translate(-megaMan.getSpeed(), 0);
+		}
+	}
+
+	/**
+	 * Move the megaMan right
+	 * @param megaMan the megaMan
+	 */
+	public void moveMegaManRight(MegaMan megaMan, int screenWidth){
+		if(megaMan.getX() + megaMan.getSpeed() + megaMan.width < screenWidth){
+			megaMan.translate(megaMan.getSpeed(), 0);
+		}
+	}
+	// END Moved from GameLogic
 }

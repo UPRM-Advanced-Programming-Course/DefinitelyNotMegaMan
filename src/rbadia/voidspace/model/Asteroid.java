@@ -3,7 +3,7 @@ package rbadia.voidspace.model;
 import java.awt.Rectangle;
 import java.util.Random;
 
-import rbadia.voidspace.main.GameScreen;
+import rbadia.voidspace.main.Level1State;
 
 public class Asteroid extends Rectangle {
 	private static final long serialVersionUID = 1L;
@@ -20,7 +20,7 @@ public class Asteroid extends Rectangle {
 	 * Crates a new asteroid at a random x location at the top of the screen 
 	 * @param screen the game screen
 	 */
-	public Asteroid(GameScreen screen){
+	public Asteroid(Level1State screen){
 		this.setLocation(
 				screen.getWidth() - asteroidWidth,
         		rand.nextInt(screen.getHeight() - asteroidHeight - 32)

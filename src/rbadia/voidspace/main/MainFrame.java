@@ -18,7 +18,7 @@ public class MainFrame extends JFrame {
 
 	private JPanel jContentPane = null;
 
-	private GameScreen gameScreen = null;
+	private GameState gameState = null;
 	
 	private JLabel destroyedLabel;
 	private JLabel destroyedValueLabel;
@@ -32,9 +32,50 @@ public class MainFrame extends JFrame {
 	/**
 	 * This is the default constructor
 	 */
-	public MainFrame() {
+	public MainFrame(GameState gameState) {
 		super();
+		this.gameState = gameState;
 		initialize();
+	}
+
+	public JLabel getLevelLabel() {
+		return levelLabel;
+	}
+
+	public JLabel getLevelValueLabel() {
+		return levelValueLabel;
+	}
+
+	public JLabel getShipsLabel() {
+		return shipsLabel;
+	}
+
+	public JLabel getShipsValueLabel() {
+		return shipsValueLabel;
+	}
+
+	public JLabel getDestroyedValueLabel() {
+		return destroyedValueLabel;
+	}
+
+	public void setDestroyedValueLabel(JLabel destroyedValueLabel) {
+		this.destroyedValueLabel = destroyedValueLabel;
+	}
+
+	public void setLevelLabel(JLabel levelLabel) {
+		this.levelLabel = levelLabel;
+	}
+
+	public void setLevelValueLabel(JLabel levelValueLabel) {
+		this.levelValueLabel = levelValueLabel;
+	}
+
+	public void setShipsLabel(JLabel shipsLabel) {
+		this.shipsLabel = shipsLabel;
+	}
+
+	public void setShipsValueLabel(JLabel shipsValueLabel) {
+		this.shipsValueLabel = shipsValueLabel;
 	}
 
 	/**
@@ -118,7 +159,7 @@ public class MainFrame extends JFrame {
 			levelValueLabel = new JLabel("1");
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new GridBagLayout());
-			jContentPane.add(getGameScreen(), gridBagConstraints);
+			jContentPane.add(getGameState(), gridBagConstraints);
 			jContentPane.add(shipsLabel, gridBagConstraints1);
 			jContentPane.add(shipsValueLabel, gridBagConstraints2);
 			jContentPane.add(destroyedLabel, gridBagConstraints3);
@@ -134,14 +175,19 @@ public class MainFrame extends JFrame {
 	 * 	
 	 * @return GameScreen
 	 */
-	public GameScreen getGameScreen() {
-		if (gameScreen == null) {
-			gameScreen = new GameScreen();
-			gameScreen.setShipsValueLabel(shipsValueLabel);
-			gameScreen.setDestroyedValueLabel(destroyedValueLabel);
-			gameScreen.setLevelValueLabel(levelValueLabel);
-		}
-		return gameScreen;
+	public GameState getGameState() {
+//		if (gameState == null) {
+//			gameState = new Level1State();
+//			gameState.setShipsValueLabel(shipsValueLabel);
+//			gameState.setDestroyedValueLabel(destroyedValueLabel);
+//			gameState.setLevelValueLabel(levelValueLabel);
+//		}
+		return gameState;
 	}
+	
+	public void setGameState(GameState gameScreen) {
+		this.gameState = gameScreen;
+	}
+
 
 }  //  @jve:decl-index=0:visual-constraint="10,10"

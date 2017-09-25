@@ -2,7 +2,7 @@ package rbadia.voidspace.model;
 
 import java.awt.Rectangle;
 
-import rbadia.voidspace.main.GameScreen;
+import rbadia.voidspace.main.Level1State;
 
 public class Platform extends Rectangle {
 	private static final long serialVersionUID = 1L;
@@ -18,7 +18,7 @@ public class Platform extends Rectangle {
 	 * Crates a new asteroid at a random x location at the top of the screen 
 	 * @param screen the game screen
 	 */
-	public Platform(GameScreen screen, int n){
+	public Platform(Level1State screen, int n){
 
 		this.setLocation( 0 , screen.getHeight()/2 + 140 - n*40);
 		this.setSize(platformWidth, platformHeight);

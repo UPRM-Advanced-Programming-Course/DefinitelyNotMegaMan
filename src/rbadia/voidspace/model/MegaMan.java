@@ -2,8 +2,7 @@ package rbadia.voidspace.model;
 
 import java.awt.Rectangle;
 
-
-import rbadia.voidspace.main.GameScreen;
+import rbadia.voidspace.main.GameState;
 
 /**
  * Represents a ship/space craft.
@@ -23,7 +22,7 @@ public class MegaMan extends Rectangle {
 	 * Creates a new ship at the default initial location. 
 	 * @param screen the game screen
 	 */
-	public MegaMan(GameScreen screen){
+	public MegaMan(GameState screen){
 		this.setLocation((screen.getWidth() - megaManWidth)/2,
 				(screen.getHeight() - megaManHeight - Y_OFFSET) /2);
 		this.setSize(megaManWidth, megaManHeight);

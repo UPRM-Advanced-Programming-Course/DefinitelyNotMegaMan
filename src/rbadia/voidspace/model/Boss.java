@@ -2,7 +2,7 @@ package rbadia.voidspace.model;
 
 import java.awt.Rectangle;
 
-import rbadia.voidspace.main.GameScreen;
+import rbadia.voidspace.main.Level1State;
 
 /**
  * Represents a ship/space craft.
@@ -24,7 +24,7 @@ public class Boss extends Rectangle {
 	 * Creates a new ship at the default initial location. 
 	 * @param screen the game screen
 	 */
-	public Boss(GameScreen screen){
+	public Boss(Level1State screen){
 		this.setLocation((screen.getWidth() - bossWidth)/2,
 				screen.getHeight() - bossHeight - Y_OFFSET);
 		this.setSize(bossWidth, bossHeight);
