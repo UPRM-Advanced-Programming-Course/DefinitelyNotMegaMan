@@ -67,6 +67,7 @@ public class Level1State extends LevelState {
 	private Font biggestFont;
 
 	private int boom=0;
+	private int levelAsteroidsDestroyed = 0;
 	
 	// Constructors
 	public Level1State(int level) {
@@ -183,6 +184,7 @@ public class Level1State extends LevelState {
 	/**
 	 * Update the game screen's backbuffer image.
 	 */
+	@Override
 	public void updateScreen(){
 		MegaMan megaMan = this.getMegaMan();
 		Floor[] floor = this.getFloor();
@@ -364,9 +366,9 @@ public class Level1State extends LevelState {
 				status.setAsteroidsDestroyed(status.getAsteroidsDestroyed() + 100);
 
 				removeAsteroid(asteroid);
-
-
-
+				
+				levelAsteroidsDestroyed++;
+				
 				if(boom != 5 && boom != 15){
 					boom=boom + 1;
 				}
@@ -580,16 +582,19 @@ public class Level1State extends LevelState {
 	/**
 	 * Prepare screen for game over.
 	 */
-	public void doGameOver(){
+	public void doLevelOver(){
 		getMainFrame().getDestroyedValueLabel().setForeground(new Color(128, 0, 0));
+	}
+
+	public void doLevelWin(){
+		
 	}
 
 	/**
 	 * Prepare screen for a new game.
 	 */
-	public void doNewGame() {	
+	public void doLevelStart() {	
 		
-		// BEGIN Moved from GameLogic
 		// init game variables
 		bullets = new ArrayList<Bullet>();
 		bulletsBoss = new ArrayList<BulletBoss>();
@@ -638,6 +643,10 @@ public class Level1State extends LevelState {
 		getMainFrame().getDestroyedValueLabel().setText(Long.toString(status.getLevel()));
 		
 		
+	}
+
+	public boolean isLevelWon() {
+		return levelAsteroidsDestroyed >= 3;
 	}
 
 	public int boomReset(){
@@ -892,7 +901,7 @@ public class Level1State extends LevelState {
 	 * Move the megaMan up
 	 * @param megaMan the megaMan
 	 */
-	public void moveMegaManUp(MegaMan megaMan){
+	public void moveMegaManUp(){
 		if(megaMan.getY() - megaMan.getSpeed() >= 0){
 			megaMan.translate(0, -megaMan.getSpeed()*2);
 		}
@@ -902,9 +911,9 @@ public class Level1State extends LevelState {
 	 * Move the megaMan down
 	 * @param megaMan the megaMan
 	 */
-	public void moveMegaManDown(MegaMan megaMan, int screenHeight, Floor[] floor){
+	public void moveMegaManDown(){
 		for(int i=0; i<9; i++){
-			if(megaMan.getY() + megaMan.getSpeed() + megaMan.height < screenHeight - floor[i].getFloorHeight()/2){
+			if(megaMan.getY() + megaMan.getSpeed() + megaMan.height < getHeight() - floor[i].getFloorHeight()/2){
 				megaMan.translate(0, 2);
 			}
 		}
@@ -914,7 +923,7 @@ public class Level1State extends LevelState {
 	 * Move the megaMan left
 	 * @param megaMan the megaMan
 	 */
-	public void moveMegaManLeft(MegaMan megaMan){
+	public void moveMegaManLeft(){
 		if(megaMan.getX() - megaMan.getSpeed() >= 0){
 			megaMan.translate(-megaMan.getSpeed(), 0);
 		}
@@ -924,10 +933,17 @@ public class Level1State extends LevelState {
 	 * Move the megaMan right
 	 * @param megaMan the megaMan
 	 */
-	public void moveMegaManRight(MegaMan megaMan, int screenWidth){
-		if(megaMan.getX() + megaMan.getSpeed() + megaMan.width < screenWidth){
+	public void moveMegaManRight(){
+		if(megaMan.getX() + megaMan.getSpeed() + megaMan.width < getWidth()){
 			megaMan.translate(megaMan.getSpeed(), 0);
 		}
 	}
-	// END Moved from GameLogic
+	
+	public void speedUpMegaMan() {
+		megaMan.setSpeed(megaMan.getDefaultSpeed() * 2 +1);
+	}
+	
+	public void slowDownMegaMan() {
+		megaMan.setSpeed(megaMan.getDefaultSpeed());
+	}
 }

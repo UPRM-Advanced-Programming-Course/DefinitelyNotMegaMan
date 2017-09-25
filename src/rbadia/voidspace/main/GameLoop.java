@@ -24,7 +24,7 @@ public class GameLoop implements Runnable{
 	 * Implements the run interface method. Should be called by the running thread.
 	 */
 	public void run() {
-		while(!levelState.getStatus().isGameOver() && !levelState.getStatus().isGameWon()) {
+		while(!levelState.getStatus().isGameOver() && !levelState.isLevelWon()) {
 			// main game loop
 			try{
 				// sleep/wait for 1/60th of a second,

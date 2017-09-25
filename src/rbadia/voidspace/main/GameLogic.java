@@ -51,7 +51,7 @@ public class GameLogic {
 	public void newGame(){
 
 		// prepare game screen
-		levelState.doNewGame();
+		levelState.doLevelStart();
 
 		// delay to display "Get Ready" message for 1.5 seconds
 		Timer timer = new Timer(1500, new ActionListener(){
@@ -85,7 +85,7 @@ public class GameLogic {
 	public void gameOver(){
 		getLevelState().getStatus().setGameStarted(false);
 		getLevelState().getStatus().setGameOver(true);
-		levelState.doGameOver();
+		levelState.doLevelOver();
 
 		// delay to display "Game Over" message for 3 seconds
 		Timer timer = new Timer(5000, new ActionListener(){
@@ -122,7 +122,7 @@ public class GameLogic {
 	public void gameWon(){
 		//status.setGameStarted(false);  //SENDS TO MAIN SCREEN/ IF COMMENTED OUT LOOPS THE GAME
 		getLevelState().getStatus().setGameWon(true);
-		levelState.doGameOver();
+		levelState.doLevelOver();
 
 		// delay to display "Game Won" message for 3 seconds
 		Timer timer = new Timer(3000, new ActionListener(){
@@ -206,10 +206,9 @@ public class GameLogic {
 			}
 
 			MegaMan megaMan = getLevelState().getMegaMan();
-			Floor[] floor = getLevelState().getFloor();
 
 			if(ih.isShiftPressed()){
-				megaMan.setSpeed(megaMan.getDefaultSpeed() * 2 +1);
+				getLevelState().speedUpMegaMan();
 			}
 
 			if(ih.isUpPressed()){
@@ -217,21 +216,21 @@ public class GameLogic {
 				if((currentTime - lastBigBulletTime) > 570){ //if i<10 (700)
 					lastBigBulletTime = currentTime;
 					for(int i=0; i<6; i++){
-						getLevelState().moveMegaManUp(megaMan);
+						getLevelState().moveMegaManUp();
 					}
 				}
 			}
 
 			if(ih.isDownPressed()){
-				getLevelState().moveMegaManDown(megaMan, levelState.getHeight(), floor);
+				getLevelState().moveMegaManDown();
 			}
 
 			if(ih.isLeftPressed()){
-				getLevelState().moveMegaManLeft(megaMan);
+				getLevelState().moveMegaManLeft();
 			}
 
 			if(ih.isRightPressed()){
-				getLevelState().moveMegaManRight(megaMan, levelState.getWidth());
+				getLevelState().moveMegaManRight();
 			}
 		}
 	}

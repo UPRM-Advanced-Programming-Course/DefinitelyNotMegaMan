@@ -17,7 +17,6 @@ public abstract class LevelState extends JPanel {
 	private GameStatus status;
 	private SoundManager soundManager;
 	private int level;
-
 	
 	// Getters
 	public GraphicsManager getGraphicsManager() { return graphicsManager; }
@@ -27,10 +26,6 @@ public abstract class LevelState extends JPanel {
 	public GameStatus getStatus() { return status; }
 	public SoundManager getSoundManager() { return soundManager; }
 	public int getLevel() { return level; }
-	
-	public abstract int getBoom();
-	public abstract MegaMan getMegaMan();
-	public abstract Floor[] getFloor();
 	
 	// Setters
 	protected void setGraphicsManager(GraphicsManager graphicsManager) { this.graphicsManager = graphicsManager; }
@@ -42,26 +37,33 @@ public abstract class LevelState extends JPanel {
 	public void setLevel(int level) { this.level = level; }
 		
 	// Game evolution methods
-	protected abstract void updateScreen();	
-	protected abstract void drawGameOver();
-	protected abstract void drawYouWin();
-	protected abstract void drawGetReady();
-	protected abstract void drawStars(int numberOfStars);
-	protected abstract void initialMessage();
-	protected abstract void doGameOver();
-	protected abstract void doNewGame();
-//	public abstract boolean isGameOver();
-//	public abstract boolean isGameWon();
+	public abstract void updateScreen();	
+	public abstract void doLevelOver();
+	public abstract void doLevelWin();
+	public abstract void doLevelStart();
+	public abstract boolean isLevelWon();
+	//protected abstract void drawGameOver();
+	//protected abstract void drawYouWin();
+	//protected abstract void drawGetReady();
+	//protected abstract void drawStars(int numberOfStars);
+	//protected abstract void initialMessage();
 	
 	// User actions and character reactions
-	protected abstract boolean Gravity();
-	protected abstract boolean Fire();
-	protected abstract boolean Fire2();
-	protected abstract boolean Fall();	
 	public abstract void fireBullet();
 	public abstract void fireBigBullet();
-	public abstract void moveMegaManUp(MegaMan megaMan);
-	public abstract void moveMegaManDown(MegaMan megaMan, int screenHeight, Floor[] floor);
-	public abstract void moveMegaManLeft(MegaMan megaMan);
-	public abstract void moveMegaManRight(MegaMan megaMan, int screenWidth);
+	public abstract void moveMegaManUp();
+	public abstract void moveMegaManDown();
+	public abstract void moveMegaManLeft();
+	public abstract void moveMegaManRight();
+	public abstract void speedUpMegaMan();
+	public abstract void slowDownMegaMan();
+	//protected abstract boolean Gravity();
+	//protected abstract boolean Fire();
+	//protected abstract boolean Fire2();
+	//protected abstract boolean Fall();
+	
+	public abstract int getBoom();
+	public abstract MegaMan getMegaMan();
+	public abstract Floor[] getFloor();
+	
 }
