@@ -16,8 +16,8 @@ public class GameStatus {
 	private boolean newAsteroid;
 	private boolean newAsteroid2;
 	private boolean newBigAsteroid;
-	private boolean newFloor;
-	private boolean newPlatform;
+	//private boolean newFloor;
+	//private boolean newPlatform;
 	private long asteroidsDestroyed = 0;
 	private int shipsLeft;
 	private int level = 1;

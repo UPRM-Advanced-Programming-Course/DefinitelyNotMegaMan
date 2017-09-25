@@ -1,14 +1,9 @@
 package rbadia.voidspace.main;
 
 import java.awt.event.ActionEvent;
-
-
-
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -16,17 +11,8 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.Timer;
 
-import rbadia.voidspace.model.Asteroid;
-import rbadia.voidspace.model.BigAsteroid;
-import rbadia.voidspace.model.BigBullet;
-import rbadia.voidspace.model.Bullet;
-import rbadia.voidspace.model.BulletBoss;
-import rbadia.voidspace.model.BulletBoss2;
 import rbadia.voidspace.model.Floor;
 import rbadia.voidspace.model.MegaMan;
-import rbadia.voidspace.model.Platform;
-import rbadia.voidspace.model.Boss;
-import rbadia.voidspace.sounds.SoundManager;
 
 
 /**

@@ -12,9 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
 import rbadia.voidspace.graphics.GraphicsManager;
 import rbadia.voidspace.model.Asteroid;
 import rbadia.voidspace.model.BigAsteroid;
@@ -70,7 +67,6 @@ public class Level1State extends GameState {
 	private Font biggestFont;
 
 	private int boom=0;
-	private int level=1;
 	
 	// Constructors
 	public Level1State() {

@@ -1,18 +1,9 @@
 package rbadia.voidspace.main;
 
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
-import java.util.Random;
-
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-
 import rbadia.voidspace.graphics.GraphicsManager;
 import rbadia.voidspace.model.Floor;
 import rbadia.voidspace.model.MegaMan;
-import rbadia.voidspace.model.Platform;
 import rbadia.voidspace.sounds.SoundManager;
 
 public abstract class GameState extends JPanel {
