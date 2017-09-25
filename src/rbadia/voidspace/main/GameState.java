@@ -19,19 +19,33 @@ public abstract class GameState extends JPanel {
 	
 	protected static final long serialVersionUID = 1L;
 	
+	private GraphicsManager graphicsManager;
+	private GameLogic gameLogic;
+	private InputHandler inputHandler;
+	private MainFrame mainFrame;
+	private GameStatus status;
+	private SoundManager soundManager;
+
+	
 	// Getters
-	public abstract GameStatus getStatus();
+	public GraphicsManager getGraphicsManager() { return graphicsManager; }
+	public GameLogic getGameLogic() { return gameLogic; }
+	public InputHandler getInputHandler() { return inputHandler; }
+	public MainFrame getMainFrame() { return mainFrame; }
+	public GameStatus getStatus() { return status; }
+	public SoundManager getSoundManager() { return soundManager; }
+	
 	public abstract int getBoom();
 	public abstract MegaMan getMegaMan();
 	public abstract Floor[] getFloor();
-	public abstract GameLogic getGameLogic();
-	public abstract InputHandler getInputHandler();
 	
 	// Setters
-	protected abstract void setGraphicsMan(GraphicsManager graphicsMan);
-	protected abstract void setGameLogic(GameLogic gameLogic);
-	protected abstract void setInputHandler(InputHandler inputHandler);
-	public abstract void setMainFrame ( MainFrame mainFrame);
+	protected void setGraphicsManager(GraphicsManager graphicsManager) { this.graphicsManager = graphicsManager; }
+	protected void setGameLogic(GameLogic gameLogic) { this.gameLogic = gameLogic; }
+	protected void setInputHandler(InputHandler inputHandler) { this.inputHandler = inputHandler; }
+	public void setMainFrame ( MainFrame mainFrame) { this.mainFrame = mainFrame; }
+	public void setStatus(GameStatus status) { this.status = status; }
+	public void setSoundManager(SoundManager soundManager) { this.soundManager = soundManager; }
 		
 	// Game evolution methods
 	protected abstract void updateScreen();	

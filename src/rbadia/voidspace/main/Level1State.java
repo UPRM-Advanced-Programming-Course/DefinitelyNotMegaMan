@@ -34,11 +34,12 @@ import rbadia.voidspace.sounds.SoundManager;
 public class Level1State extends GameState {
 
 	private static final long serialVersionUID = 1L;
+	
+	private GraphicsManager graphicsMan;
+
 	protected BufferedImage backBuffer;
 	protected Graphics2D g2d;
 
-	private GameStatus status;
-	private SoundManager soundMan;
 	private MegaMan megaMan;
 	private Boss boss;
 	private Boss boss2;
@@ -68,12 +69,6 @@ public class Level1State extends GameState {
 	private Font bigFont;
 	private Font biggestFont;
 
-	private GraphicsManager graphicsMan;
-	private GameLogic gameLogic;
-	private InputHandler inputHandler;
-	
-	private MainFrame mainFrame;
-
 	private int boom=0;
 	private int level=1;
 	
@@ -94,8 +89,8 @@ public class Level1State extends GameState {
 		backBuffer = new BufferedImage(500, 400, BufferedImage.TYPE_INT_RGB);
 		g2d = backBuffer.createGraphics();
 		
-		status = new GameStatus();
-		soundMan = new SoundManager();
+		this.setStatus(new GameStatus());
+		this.setSoundManager(new SoundManager());
 
 		// init some variables
 		bullets = new ArrayList<Bullet>();
@@ -105,25 +100,7 @@ public class Level1State extends GameState {
 	}
 	
 	// Getters
-	public GameStatus getStatus() {
-		return status;
-	}
-	
-	public SoundManager getSoundManager() {
-		return soundMan;
-	}
-	
-	public GameLogic getGameLogic() {
-		return gameLogic;
-	}
-	
-	public InputHandler getInputHandler() {
-		return inputHandler;
-	}
-	
-	public MainFrame getMainFrame() {
-		return mainFrame;
-	}
+
 	public int getBoom(){
 		return boom;
 	}
@@ -196,29 +173,6 @@ public class Level1State extends GameState {
 		return bigBullets;
 	}
 	
-	// Setters
-	public void setGraphicsMan(GraphicsManager graphicsMan) {
-		this.graphicsMan = graphicsMan;
-	}
-	
-	public void setGameLogic(GameLogic gameLogic) {
-		this.gameLogic = gameLogic;
-		this.status = this.getStatus();
-		this.soundMan = this.getSoundManager();
-	}
-	
-	/**
-	 * Sets the game input handler
-	 * @param inputHandler the game input handler
-	 */
-	public void setInputHandler(InputHandler inputHandler) {
-		this.inputHandler = inputHandler;
-	}
-	
-	public void setMainFrame(MainFrame mainFrame) {
-		this.mainFrame = mainFrame;
-	}
-
 	/**
 	 * Update the game screen.
 	 */
@@ -246,7 +200,7 @@ public class Level1State extends GameState {
 		//		Boss boss = gameLogic.getBoss();
 		//		Boss boss2 = gameLogic.getBoss2();
 
-
+		GameStatus status = this.getStatus();
 		// set orignal font - for later use
 		if(this.originalFont == null){
 			this.originalFont = g2d.getFont();
@@ -645,6 +599,8 @@ public class Level1State extends GameState {
 		bulletsBoss2 = new ArrayList<BulletBoss2>();
 		bigBullets = new ArrayList<BigBullet>();
 		//numPlatforms = new Platform[5];
+		
+		GameStatus status = this.getStatus();
 
 		status.setGameStarting(true);
 		status.setShipsLeft(3);
@@ -771,7 +727,7 @@ public class Level1State extends GameState {
 				n=n+2;
 			}
 		}
-		status.setLevel(status.getLevel() + 1);
+		this.getStatus().setLevel(this.getStatus().getLevel() + 1);
 	}
 
 	public void removeAsteroid(Asteroid asteroid){
@@ -782,11 +738,11 @@ public class Level1State extends GameState {
 				asteroid.width,
 				asteroid.height);
 		asteroid.setLocation(-asteroid.width, -asteroid.height);
-		status.setNewAsteroid(true);
+		this.getStatus().setNewAsteroid(true);
 		lastAsteroidTime = System.currentTimeMillis();
 
 		// play asteroid explosion sound
-		soundMan.playAsteroidExplosionSound();
+		this.getSoundManager().playAsteroidExplosionSound();
 	}
 	
 	// BEGIN Moved from GameLogic
@@ -796,7 +752,7 @@ public class Level1State extends GameState {
 	public void fireBullet(){
 		Bullet bullet = new Bullet(megaMan);
 		bullets.add(bullet);
-		soundMan.playBulletSound();
+		this.getSoundManager().playBulletSound();
 	}
 
 	/**
@@ -805,7 +761,7 @@ public class Level1State extends GameState {
 	public void fireBigBullet(){
 		BigBullet bigBullet = new BigBullet(megaMan);
 		bigBullets.add(bigBullet);
-		soundMan.playBulletSound();
+		this.getSoundManager().playBulletSound();
 	}
 
 	/**
