@@ -6,7 +6,7 @@ import rbadia.voidspace.model.Floor;
 import rbadia.voidspace.model.MegaMan;
 import rbadia.voidspace.sounds.SoundManager;
 
-public abstract class GameState extends JPanel {
+public abstract class LevelState extends JPanel {
 	
 	protected static final long serialVersionUID = 1L;
 	

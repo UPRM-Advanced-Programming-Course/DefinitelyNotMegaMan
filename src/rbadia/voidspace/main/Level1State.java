@@ -28,7 +28,7 @@ import rbadia.voidspace.sounds.SoundManager;
 /**
  * Main game screen. Handles all game graphics updates and some of the game logic.
  */
-public class Level1State extends GameState {
+public class Level1State extends LevelState {
 
 	private static final long serialVersionUID = 1L;
 	

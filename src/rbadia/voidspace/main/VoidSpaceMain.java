@@ -58,11 +58,11 @@ public class VoidSpaceMain {
 		int playAgain = 2;
 		while(playAgain != 1) {
 
-			GameState level1State = new Level1State(1);
-			GameState level2State = new Level1State(2);
-			GameState levels[] = { level1State, level2State };
+			LevelState level1State = new Level1State(1);
+			LevelState level2State = new Level1State(2);
+			LevelState levels[] = { level1State, level2State };
 
-			for (GameState nextLevel : levels) {
+			for (LevelState nextLevel : levels) {
 
 				System.out.println("Next Level Started");
 				frame.setLevelState(nextLevel);

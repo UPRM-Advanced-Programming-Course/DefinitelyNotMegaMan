@@ -18,7 +18,7 @@ public class MainFrame extends JFrame {
 
 	private JPanel jContentPane = null;
 
-	private GameState levelState = null;
+	private LevelState levelState = null;
 	
 	private JLabel destroyedLabel;
 	private JLabel destroyedValueLabel;
@@ -82,7 +82,7 @@ public class MainFrame extends JFrame {
 	 * 	
 	 * @return GameScreen
 	 */
-	public GameState getLevelState() {
+	public LevelState getLevelState() {
 //		if (gameState == null) {
 //			gameState = new Level1State();
 //			gameState.setShipsValueLabel(shipsValueLabel);
@@ -92,7 +92,7 @@ public class MainFrame extends JFrame {
 		return levelState;
 	}
 	
-	public void setLevelState(GameState levelState) {
+	public void setLevelState(LevelState levelState) {
 		this.levelState = levelState;
 		this.jContentPane = null;
 		this.setContentPane(getJContentPane());

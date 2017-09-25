@@ -33,17 +33,17 @@ public class InputHandler implements KeyListener{
 
 
 
-	private GameState gameState;
+	private LevelState levelState;
 	//private GameScreen gScreen;
 	
-	public GameState getGameState() { return gameState; }
+	public LevelState getLevelState() { return levelState; }
 
 	/**
 	 * Create a new input handler
 	 * @param gameLogic the game logic handler
 	 */
-	public InputHandler(GameState gameState){
-		this.gameState = gameState;
+	public InputHandler(LevelState levelState){
+		this.levelState = levelState;
 	}
 
 	public boolean isLeftPressed() {
@@ -87,7 +87,7 @@ public class InputHandler implements KeyListener{
 	 * Handle a key input event.
 	 */
 	public void keyPressed(KeyEvent e) {
-		GameStatus status = gameState.getStatus();
+		GameStatus status = levelState.getStatus();
 		switch(e.getKeyCode()){
 		case KeyEvent.VK_UP:
 			if(!status.isGameStarted() && !status.isGameOver() && !status.isGameStarting() && !status.isGameWon()){
@@ -126,7 +126,7 @@ public class InputHandler implements KeyListener{
 				downIsPressed = false;
 				upIsPressed = false;
 				spaceIsPressed = false;
-				gameState.getGameLogic().newGame();
+				levelState.getGameLogic().newGame();
 
 				//WIP
 				//				if(mute==0){
@@ -236,7 +236,7 @@ public class InputHandler implements KeyListener{
 			break;
 		case KeyEvent.VK_SHIFT:
 			this.shiftIsPressed = false;
-			MegaMan megaMan = this.getGameState().getMegaMan(); 
+			MegaMan megaMan = this.getLevelState().getMegaMan(); 
 			megaMan.setSpeed(megaMan.getDefaultSpeed());
 			break;
 		case KeyEvent.VK_E:

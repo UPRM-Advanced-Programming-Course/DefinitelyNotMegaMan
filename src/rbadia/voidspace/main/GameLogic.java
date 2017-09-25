@@ -26,18 +26,18 @@ public class GameLogic {
 	private int stack= 0;
 	private int mute = 0;
 
-	private GameState gameState;
+	private LevelState levelState;
 
 	/**
 	 * Create a new game logic handler
 	 * @param gameScreen the game screen
 	 */
-	public GameLogic(GameState gameState){
-		this.gameState = gameState;
+	public GameLogic(LevelState levelState){
+		this.levelState = levelState;
 	}
 
-	public GameState getGameState() {
-		return gameState;
+	public LevelState getLevelState() {
+		return levelState;
 	}
 
 	public int getMute(){
@@ -51,13 +51,13 @@ public class GameLogic {
 	public void newGame(){
 
 		// prepare game screen
-		gameState.doNewGame();
+		levelState.doNewGame();
 
 		// delay to display "Get Ready" message for 1.5 seconds
 		Timer timer = new Timer(1500, new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				getGameState().getStatus().setGameStarting(false);
-				getGameState().getStatus().setGameStarted(true);
+				getLevelState().getStatus().setGameStarting(false);
+				getLevelState().getStatus().setGameStarted(true);
 			}
 		});
 		timer.setRepeats(false);
@@ -69,11 +69,11 @@ public class GameLogic {
 	 */
 	public void checkConditions(){
 		// check game over conditions
-		if(getGameState().getStatus().isGameStarted()) {
-			if (!getGameState().getStatus().isGameOver() && getGameState().getStatus().getShipsLeft() == 0) {
+		if(getLevelState().getStatus().isGameStarted()) {
+			if (!getLevelState().getStatus().isGameOver() && getLevelState().getStatus().getShipsLeft() == 0) {
 				gameOver();
 			}
-			if(!getGameState().getStatus().isGameWon() && getGameState().getBoom() == 2) {
+			if(!getLevelState().getStatus().isGameWon() && getLevelState().getBoom() == 2) {
 				gameWon();
 			}
 		}
@@ -83,14 +83,14 @@ public class GameLogic {
 	 * Actions to take when the game is over.
 	 */
 	public void gameOver(){
-		getGameState().getStatus().setGameStarted(false);
-		getGameState().getStatus().setGameOver(true);
-		gameState.doGameOver();
+		getLevelState().getStatus().setGameStarted(false);
+		getLevelState().getStatus().setGameOver(true);
+		levelState.doGameOver();
 
 		// delay to display "Game Over" message for 3 seconds
 		Timer timer = new Timer(5000, new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				getGameState().getStatus().setGameOver(false);
+				getLevelState().getStatus().setGameOver(false);
 			}
 		});
 		timer.setRepeats(false);
@@ -121,13 +121,13 @@ public class GameLogic {
 	//GAME LOOPS ON THE FIRST GAMESCREEN AND RESETS ALL VARIABLE COUNTERS
 	public void gameWon(){
 		//status.setGameStarted(false);  //SENDS TO MAIN SCREEN/ IF COMMENTED OUT LOOPS THE GAME
-		getGameState().getStatus().setGameWon(true);
-		gameState.doGameOver();
+		getLevelState().getStatus().setGameWon(true);
+		levelState.doGameOver();
 
 		// delay to display "Game Won" message for 3 seconds
 		Timer timer = new Timer(3000, new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				getGameState().getStatus().setGameWon(false);
+				getLevelState().getStatus().setGameWon(false);
 			}
 		});
 		timer.setRepeats(false);
@@ -156,11 +156,11 @@ public class GameLogic {
 
 	/**
 	 * Handle user input after screen update.
-	 * @param gameState he game screen
+	 * @param levelState he game screen
 	 */
-	public void handleInput(InputHandler ih, GameState gameState){
+	public void handleInput(InputHandler ih, LevelState levelState){
 
-		GameStatus status = getGameState().getStatus();
+		GameStatus status = getLevelState().getStatus();
 
 		if(!status.isGameOver() && !status.isNewMegaMan() && !status.isGameStarting() && !status.isGameWon()){
 			// fire bullet if space is pressed
@@ -170,7 +170,7 @@ public class GameLogic {
 				long currentTime = System.currentTimeMillis();
 				if((currentTime - lastBulletTime) > 1000/5){
 					lastBulletTime = currentTime;
-					getGameState().fireBullet();
+					getLevelState().fireBullet();
 				}
 			}
 
@@ -195,7 +195,7 @@ public class GameLogic {
 						long currentTime = System.currentTimeMillis();
 						if((currentTime - lastBigBulletTime) > 1000){
 							lastBigBulletTime = currentTime;
-							getGameState().fireBigBullet();
+							getLevelState().fireBigBullet();
 						}
 
 					}
@@ -205,8 +205,8 @@ public class GameLogic {
 				}
 			}
 
-			MegaMan megaMan = getGameState().getMegaMan();
-			Floor[] floor = getGameState().getFloor();
+			MegaMan megaMan = getLevelState().getMegaMan();
+			Floor[] floor = getLevelState().getFloor();
 
 			if(ih.isShiftPressed()){
 				megaMan.setSpeed(megaMan.getDefaultSpeed() * 2 +1);
@@ -217,21 +217,21 @@ public class GameLogic {
 				if((currentTime - lastBigBulletTime) > 570){ //if i<10 (700)
 					lastBigBulletTime = currentTime;
 					for(int i=0; i<6; i++){
-						getGameState().moveMegaManUp(megaMan);
+						getLevelState().moveMegaManUp(megaMan);
 					}
 				}
 			}
 
 			if(ih.isDownPressed()){
-				getGameState().moveMegaManDown(megaMan, gameState.getHeight(), floor);
+				getLevelState().moveMegaManDown(megaMan, levelState.getHeight(), floor);
 			}
 
 			if(ih.isLeftPressed()){
-				getGameState().moveMegaManLeft(megaMan);
+				getLevelState().moveMegaManLeft(megaMan);
 			}
 
 			if(ih.isRightPressed()){
-				getGameState().moveMegaManRight(megaMan, gameState.getWidth());
+				getLevelState().moveMegaManRight(megaMan, levelState.getWidth());
 			}
 		}
 	}
