@@ -19,13 +19,13 @@ import rbadia.voidspace.model.MegaMan;
  * Handles general game logic and status.
  */
 public class GameLogic {
-	
+
 	private long lastBulletTime;
 	private long lastExchangeTime;
 	private long lastBigBulletTime;
 	private int stack= 0;
 	private int mute = 0;
-	
+
 	private GameState gameState;
 
 	/**
@@ -39,7 +39,7 @@ public class GameLogic {
 	public GameState getGameState() {
 		return gameState;
 	}
-	
+
 	public int getMute(){
 		return mute;
 	}
@@ -69,14 +69,13 @@ public class GameLogic {
 	 */
 	public void checkConditions(){
 		// check game over conditions
-		if(!getGameState().getStatus().isGameOver() && getGameState().getStatus().isGameStarted()){
-			if(getGameState().getStatus().getShipsLeft() == 0){
+		if(getGameState().getStatus().isGameStarted()) {
+			if (!getGameState().getStatus().isGameOver() && getGameState().getStatus().getShipsLeft() == 0) {
 				gameOver();
 			}
-		}
-		if(!getGameState().getStatus().isGameWon()){
-			if(getGameState().getBoom() == 2)
+			if(!getGameState().getStatus().isGameWon() && getGameState().getBoom() == 2) {
 				gameWon();
+			}
 		}
 	}
 
@@ -154,13 +153,13 @@ public class GameLogic {
 
 
 
-	
+
 	/**
 	 * Handle user input after screen update.
 	 * @param gameState he game screen
 	 */
 	public void handleInput(InputHandler ih, GameState gameState){
-		
+
 		GameStatus status = getGameState().getStatus();
 
 		if(!status.isGameOver() && !status.isNewMegaMan() && !status.isGameStarting() && !status.isGameWon()){

@@ -16,6 +16,7 @@ public abstract class GameState extends JPanel {
 	private MainFrame mainFrame;
 	private GameStatus status;
 	private SoundManager soundManager;
+	private int level;
 
 	
 	// Getters
@@ -25,6 +26,7 @@ public abstract class GameState extends JPanel {
 	public MainFrame getMainFrame() { return mainFrame; }
 	public GameStatus getStatus() { return status; }
 	public SoundManager getSoundManager() { return soundManager; }
+	public int getLevel() { return level; }
 	
 	public abstract int getBoom();
 	public abstract MegaMan getMegaMan();
@@ -37,6 +39,7 @@ public abstract class GameState extends JPanel {
 	public void setMainFrame ( MainFrame mainFrame) { this.mainFrame = mainFrame; }
 	public void setStatus(GameStatus status) { this.status = status; }
 	public void setSoundManager(SoundManager soundManager) { this.soundManager = soundManager; }
+	public void setLevel(int level) { this.level = level; }
 		
 	// Game evolution methods
 	protected abstract void updateScreen();	
@@ -47,6 +50,8 @@ public abstract class GameState extends JPanel {
 	protected abstract void initialMessage();
 	protected abstract void doGameOver();
 	protected abstract void doNewGame();
+//	public abstract boolean isGameOver();
+//	public abstract boolean isGameWon();
 	
 	// User actions and character reactions
 	protected abstract boolean Gravity();

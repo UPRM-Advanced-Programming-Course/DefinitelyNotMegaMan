@@ -11,14 +11,15 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  * Main game class. Starts the game.
  */
 public class VoidSpaceMain {
-	
+
 	//Starts playing menu music as soon as the game frame is created
-	
+
 	public static AudioInputStream audioStream;
 	public static Clip audioClip;
 	public static File audioFile;	
@@ -27,7 +28,7 @@ public class VoidSpaceMain {
 	 * @param args
 	 */
 	public static void main(String[] args) throws InterruptedException, IOException  {
-		
+
 		//Music
 		//allows music to be played while playing
 		audioFile = new File("audio/menuScreen.wav");
@@ -36,10 +37,10 @@ public class VoidSpaceMain {
 		} catch (UnsupportedAudioFileException e) {
 			e.printStackTrace();
 		}
-		
+
 		AudioFormat format = audioStream.getFormat();
 		DataLine.Info info = new DataLine.Info(Clip.class, format);
-		
+
 		try {
 			audioClip = (Clip) AudioSystem.getLine(info);
 			audioClip.open(audioStream);
@@ -49,33 +50,42 @@ public class VoidSpaceMain {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		// get game screen
-        GameState gameState = new Level1State();
 
-        // init main frame
-		MainFrame frame = new MainFrame(gameState);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-        gameState.setMainFrame(frame);
-        		
-		// init game logic handler
-		GameLogic gameLogic = new GameLogic(gameState);
-		gameState.setGameLogic(gameLogic);
-		
-       	frame.setGameState(gameState);
-		       
-		// init input handler
-        InputHandler inputHandler = new InputHandler(gameState);
-        frame.addKeyListener(inputHandler);
-        gameState.setInputHandler(inputHandler);
-        
-        // show main frame
+		MainFrame frame = new MainFrame();
 		frame.setVisible(true);
-		
-		// init main game loop
-		new Thread(new GameLoop(gameState)).start();
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		int playAgain = 2;
+		while(playAgain != 1) {
+
+			GameState level1State = new Level1State(1);
+			GameState level2State = new Level1State(2);
+			GameState levels[] = { level1State, level2State };
+
+			for (GameState nextLevel : levels) {
+
+				System.out.println("Next Level Started");
+				frame.setLevelState(nextLevel);
+				nextLevel.setMainFrame(frame);
+				GameLogic gameLogic = new GameLogic(nextLevel);
+				nextLevel.setGameLogic(gameLogic);
+				InputHandler inputHandler = new InputHandler(nextLevel);
+				frame.addKeyListener(inputHandler);
+				nextLevel.setInputHandler(inputHandler);
+				frame.setVisible(true);
+
+				// init main game loop
+				Thread nextLevelThread = new Thread(new GameLoop(nextLevel));
+				nextLevelThread.start();
+				nextLevelThread.join();
+
+				if (nextLevel.getStatus().isGameOver()) {
+					break;
+				}
+
+			}
+			playAgain = JOptionPane.showConfirmDialog(null, "Play Again?", "GAME OVER", JOptionPane.YES_NO_OPTION);
+		}
+		System.exit(0);
 	}
-
-
 }

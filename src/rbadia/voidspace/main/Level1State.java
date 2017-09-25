@@ -69,12 +69,13 @@ public class Level1State extends GameState {
 	private int boom=0;
 	
 	// Constructors
-	public Level1State() {
+	public Level1State(int level) {
 		super();
 		
 		this.setSize(new Dimension(500, 400));
 		this.setPreferredSize(new Dimension(500, 400));
 		this.setBackground(Color.BLACK);
+		this.setLevel(level);
 
 		// initialize random number generator
 		rand = new Random();
@@ -94,7 +95,7 @@ public class Level1State extends GameState {
 		bulletsBoss2 = new ArrayList<BulletBoss2>();
 		bigBullets = new ArrayList<BigBullet>();
 	}
-	
+
 	// Getters
 
 	public int getBoom(){
@@ -431,7 +432,7 @@ public class Level1State extends GameState {
 	 * Draws the "Game Over" message.
 	 */
 	protected void drawGameOver() {
-		String gameOverStr = "GAME OVER";
+		String gameOverStr = "LEVEL " + this.getLevel() + " COMPLETED";
 
 		Font currentFont = biggestFont == null? bigFont : biggestFont;
 		float fontSize = currentFont.getSize2D();
@@ -525,7 +526,7 @@ public class Level1State extends GameState {
 	 * Display initial game title screen.
 	 */
 	protected void initialMessage() {
-		String gameTitleStr = "Definitely Not MegaMan";
+		String gameTitleStr = "Get Ready for Level " + this.getLevel();
 
 		Font currentFont = biggestFont == null? bigFont : biggestFont;
 		float fontSize = currentFont.getSize2D();
@@ -547,7 +548,7 @@ public class Level1State extends GameState {
 
 		g2d.setFont(originalFont);
 		fm = g2d.getFontMetrics();
-		String newGameStr = "Press <Space> to Start a New Game.";
+		String newGameStr = "Press <Space> to Start the Level";
 		strWidth = fm.stringWidth(newGameStr);
 		strX = (this.getWidth() - strWidth)/2;
 		strY = (this.getHeight() + fm.getAscent())/2 + ascent + 16;

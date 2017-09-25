@@ -4,27 +4,27 @@ package rbadia.voidspace.main;
  * Implements the main game loop, i.e. what actions should be taken on each frame update.
  */
 public class GameLoop implements Runnable{
-	private GameState gameScreen;
+	private GameState gameState;
 	private GameLogic gameLogic;
 	private InputHandler inputHandler;
 
 	/**
 	 * Creates a new game loop.
-	 * @param gameScreen the game screen
+	 * @param gameState the game screen
 	 * @param gameLogic the game logic handler
 	 * @param inputHandler the user input handler
 	 */
-	public GameLoop(GameState gameScreen){
-		this.gameScreen = gameScreen;
-		this.gameLogic = gameScreen.getGameLogic();
-		this.inputHandler = gameScreen.getInputHandler();
+	public GameLoop(GameState gameState){
+		this.gameState = gameState;
+		this.gameLogic = gameState.getGameLogic();
+		this.inputHandler = gameState.getInputHandler();
 	}
 
 	/**
 	 * Implements the run interface method. Should be called by the running thread.
 	 */
 	public void run() {
-		while(true){
+		while(!gameState.getStatus().isGameOver() && !gameState.getStatus().isGameWon()) {
 			// main game loop
 			try{
 				// sleep/wait for 1/60th of a second,
@@ -38,16 +38,16 @@ public class GameLoop implements Runnable{
 			// check game or level ending conditions
 			gameLogic.checkConditions();
 			
-			gameLogic.handleInput(inputHandler, gameScreen);
+			gameLogic.handleInput(inputHandler, gameState);
 			
 			// update the game graphics
-			gameScreen.updateScreen();
+			gameState.updateScreen();
 			
 			// handle input
-			gameLogic.handleInput(inputHandler, gameScreen);
+			gameLogic.handleInput(inputHandler, gameState);
 			
 			// repaint the graphics unto screen
-			gameScreen.repaint();
+			gameState.repaint();
 		}
 	}
 

@@ -18,7 +18,7 @@ public class MainFrame extends JFrame {
 
 	private JPanel jContentPane = null;
 
-	private GameState gameState = null;
+	private GameState levelState = null;
 	
 	private JLabel destroyedLabel;
 	private JLabel destroyedValueLabel;
@@ -32,9 +32,8 @@ public class MainFrame extends JFrame {
 	/**
 	 * This is the default constructor
 	 */
-	public MainFrame(GameState gameState) {
+	public MainFrame() {
 		super();
-		this.gameState = gameState;
 		initialize();
 	}
 
@@ -77,6 +76,27 @@ public class MainFrame extends JFrame {
 	public void setShipsValueLabel(JLabel shipsValueLabel) {
 		this.shipsValueLabel = shipsValueLabel;
 	}
+	
+	/**
+	 * This method initializes gameScreen	
+	 * 	
+	 * @return GameScreen
+	 */
+	public GameState getLevelState() {
+//		if (gameState == null) {
+//			gameState = new Level1State();
+//			gameState.setShipsValueLabel(shipsValueLabel);
+//			gameState.setDestroyedValueLabel(destroyedValueLabel);
+//			gameState.setLevelValueLabel(levelValueLabel);
+//		}
+		return levelState;
+	}
+	
+	public void setLevelState(GameState levelState) {
+		this.levelState = levelState;
+		this.jContentPane = null;
+		this.setContentPane(getJContentPane());
+	}
 
 	/**
 	 * This method initializes this
@@ -85,8 +105,8 @@ public class MainFrame extends JFrame {
 	 */
 	private void initialize() {
 		this.setSize(530, 480);
-		this.setContentPane(getJContentPane());
-		this.setTitle("Void Space");
+		//this.setContentPane(getJContentPane());
+		this.setTitle("Mega Man");
 //		this.setResizable(false);
 		
 		Dimension dim = this.getToolkit().getScreenSize();
@@ -159,7 +179,7 @@ public class MainFrame extends JFrame {
 			levelValueLabel = new JLabel("1");
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new GridBagLayout());
-			jContentPane.add(getGameState(), gridBagConstraints);
+			jContentPane.add(getLevelState(), gridBagConstraints);
 			jContentPane.add(shipsLabel, gridBagConstraints1);
 			jContentPane.add(shipsValueLabel, gridBagConstraints2);
 			jContentPane.add(destroyedLabel, gridBagConstraints3);
@@ -170,24 +190,6 @@ public class MainFrame extends JFrame {
 		return jContentPane;
 	}
 
-	/**
-	 * This method initializes gameScreen	
-	 * 	
-	 * @return GameScreen
-	 */
-	public GameState getGameState() {
-//		if (gameState == null) {
-//			gameState = new Level1State();
-//			gameState.setShipsValueLabel(shipsValueLabel);
-//			gameState.setDestroyedValueLabel(destroyedValueLabel);
-//			gameState.setLevelValueLabel(levelValueLabel);
-//		}
-		return gameState;
-	}
-	
-	public void setGameState(GameState gameScreen) {
-		this.gameState = gameScreen;
-	}
 
 
 }  //  @jve:decl-index=0:visual-constraint="10,10"
