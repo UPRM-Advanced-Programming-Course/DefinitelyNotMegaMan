@@ -59,7 +59,7 @@ public class VoidSpaceMain {
 		while(playAgain != 1) {
 
 			LevelState level1State = new Level1State(1);
-			LevelState level2State = new Level1State(2);
+			LevelState level2State = new Level2State(2);
 			LevelState levels[] = { level1State, level2State };
 
 			for (LevelState nextLevel : levels) {

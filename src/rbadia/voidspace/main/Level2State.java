@@ -1,18 +1,13 @@
 package rbadia.voidspace.main;
 import java.awt.Color;
 
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-import rbadia.voidspace.graphics.GraphicsManager;
 import rbadia.voidspace.model.Asteroid;
 import rbadia.voidspace.model.BigAsteroid;
 import rbadia.voidspace.model.BigBullet;
@@ -23,158 +18,158 @@ import rbadia.voidspace.model.BulletBoss2;
 import rbadia.voidspace.model.Floor;
 import rbadia.voidspace.model.MegaMan;
 import rbadia.voidspace.model.Platform;
-import rbadia.voidspace.sounds.SoundManager;
 
 /**
  * Main game screen. Handles all game graphics updates and some of the game logic.
  */
-public class Level1State extends LevelState {
+public class Level2State extends Level1State {
 
-	private static final long serialVersionUID = 1L;
+/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2094575762243216079L;
 
-	protected GraphicsManager graphicsMan;
-
-	protected BufferedImage backBuffer;
-	protected Graphics2D g2d;
-
-	protected MegaMan megaMan;
-	protected Boss boss;
-	protected Boss boss2;
-	protected Asteroid asteroid;
-	protected Asteroid asteroid2;
-	protected BigAsteroid bigAsteroid;
-	protected List<Bullet> bullets;
-	protected List<BulletBoss> bulletsBoss;
-	protected List<BulletBoss2> bulletsBoss2;
-	protected List<BigBullet> bigBullets;
-	protected Floor[] floor;	// END Moved from GameLogic class
-	protected int numPlatforms=8;
-	protected Platform[] platforms;
-
-	protected int damage=0;
-	protected static final int NEW_SHIP_DELAY = 500;
-	protected static final int NEW_ASTEROID_DELAY = 500;
-
-	protected long lastAsteroidTime;
-	protected long lastShipTime;
-
-	protected Rectangle asteroidExplosion;
-
-	protected Random rand;
-
-	protected Font originalFont;
-	protected Font bigFont;
-	protected Font biggestFont;
-
-	protected int boom=0;
-	protected int levelAsteroidsDestroyed = 0;
-
+//	private static final long serialVersionUID = 1L;
+//	
+//	private GraphicsManager graphicsMan;
+//
+//	protected BufferedImage backBuffer;
+//	protected Graphics2D g2d;
+//
+//	private MegaMan megaMan;
+//	private Boss boss;
+//	private Boss boss2;
+//	private Asteroid asteroid;
+//	private Asteroid asteroid2;
+//	private BigAsteroid bigAsteroid;
+//	private List<Bullet> bullets;
+//	private List<BulletBoss> bulletsBoss;
+//	private List<BulletBoss2> bulletsBoss2;
+//	private List<BigBullet> bigBullets;
+//	private Platform[] numPlatforms;
+//	private Floor[] floor;	// END Moved from GameLogic class
+//	protected Platform[] platforms;
+//
+//	protected int damage=0;
+//	private static final int NEW_SHIP_DELAY = 500;
+//	private static final int NEW_ASTEROID_DELAY = 500;
+//
+//	private long lastAsteroidTime;
+//	protected long lastShipTime;
+//		
+//	private Rectangle asteroidExplosion;
+//
+//	private Random rand;
+//
+//	private Font originalFont;
+//	private Font bigFont;
+//	private Font biggestFont;
+//
+//	private int boom=0;
+//	private int levelAsteroidsDestroyed = 0;
+	
 	// Constructors
-	public Level1State(int level) {
-		super();
-
-		this.setSize(new Dimension(500, 400));
-		this.setPreferredSize(new Dimension(500, 400));
-		this.setBackground(Color.BLACK);
-		this.setLevel(level);
-
-		// initialize random number generator
-		rand = new Random();
-
-		graphicsMan = new GraphicsManager();
-
-		// init back buffer image
-		backBuffer = new BufferedImage(500, 400, BufferedImage.TYPE_INT_RGB);
-		g2d = backBuffer.createGraphics();
-
-		this.setStatus(new GameStatus());
-		this.setSoundManager(new SoundManager());
-
-		// init some variables
-		bullets = new ArrayList<Bullet>();
-		bulletsBoss = new ArrayList<BulletBoss>();
-		bulletsBoss2 = new ArrayList<BulletBoss2>();
-		bigBullets = new ArrayList<BigBullet>();
+	public Level2State(int level) {
+		super(level);
+		
+//		this.setSize(new Dimension(500, 400));
+//		this.setPreferredSize(new Dimension(500, 400));
+//		this.setBackground(Color.BLACK);
+//		this.setLevel(level);
+//
+//		// initialize random number generator
+//		rand = new Random();
+//		
+//		graphicsMan = new GraphicsManager();
+//
+//		// init back buffer image
+//		backBuffer = new BufferedImage(500, 400, BufferedImage.TYPE_INT_RGB);
+//		g2d = backBuffer.createGraphics();
+//		
+//		this.setStatus(new GameStatus());
+//		this.setSoundManager(new SoundManager());
+//
+//		// init some variables
+//		bullets = new ArrayList<Bullet>();
+//		bulletsBoss = new ArrayList<BulletBoss>();
+//		bulletsBoss2 = new ArrayList<BulletBoss2>();
+//		bigBullets = new ArrayList<BigBullet>();
 	}
 
 	// Getters
 
-	public int getBoom(){
-		return boom;
-	}
-
-	public MegaMan getMegaMan() {
-		return megaMan;
-	}
-
-	public Floor[] getFloor(){
-		return floor;	
-	}
-
-	public int getNumPlatforms(){
-		return numPlatforms;
-	}
-
-	public Platform[] getPlatforms(){
-		return platforms;
-	}
-
-	public Boss getBoss() {
-		return boss;
-	}
-
-	public Boss getBoss2() {
-		return boss2;
-	}
+//	public int getBoom(){
+//		return boom;
+//	}
+//
+//	public MegaMan getMegaMan() {
+//		return megaMan;
+//	}
+//
+//	public Floor[] getFloor(){
+//		return floor;	
+//	}
+//
+//	public Platform[] getNumPlatforms(){
+//		return numPlatforms;
+//	}
+//
+//	public Boss getBoss() {
+//		return boss;
+//	}
+//
+//	public Boss getBoss2() {
+//		return boss2;
+//	}
 
 	/**
 	 * Returns the asteroid.
 	 * @return the asteroid
 	 */
-	public Asteroid getAsteroid() {
-		return asteroid;
-	}
-
-	public Asteroid getAsteroid2() {
-		return asteroid2;
-	}
-
-	public BigAsteroid getBigAsteroid() {
-		return bigAsteroid;
-	}
-
-	/**
-	 * Returns the list of bullets.
-	 * @return the list of bullets
-	 */
-	public List<Bullet> getBullets() {
-		return bullets;
-	}
-
-	/**
-	 * Returns the list of the boss's bullets.
-	 * @return the list of the boss's bullets
-	 */
-	public List<BulletBoss> getBulletBoss() {
-		return bulletsBoss;
-	}
-
-	/**
-	 * Returns the list of the second boss's bullets.
-	 * @return the list of the second boss's bullets
-	 */
-	public List<BulletBoss2> getBulletBoss2() {
-		return bulletsBoss2;
-	}
-
-	/**
-	 * Returns the list of "Power Shot" bullets.
-	 * @return the list of "Power Shot" bullets
-	 */
-	public List<BigBullet> getBigBullets(){
-		return bigBullets;
-	}
-
+//	public Asteroid getAsteroid() {
+//		return asteroid;
+//	}
+//
+//	public Asteroid getAsteroid2() {
+//		return asteroid2;
+//	}
+//
+//	public BigAsteroid getBigAsteroid() {
+//		return bigAsteroid;
+//	}
+//
+//	/**
+//	 * Returns the list of bullets.
+//	 * @return the list of bullets
+//	 */
+//	public List<Bullet> getBullets() {
+//		return bullets;
+//	}
+//
+//	/**
+//	 * Returns the list of the boss's bullets.
+//	 * @return the list of the boss's bullets
+//	 */
+//	public List<BulletBoss> getBulletBoss() {
+//		return bulletsBoss;
+//	}
+//
+//	/**
+//	 * Returns the list of the second boss's bullets.
+//	 * @return the list of the second boss's bullets
+//	 */
+//	public List<BulletBoss2> getBulletBoss2() {
+//		return bulletsBoss2;
+//	}
+//
+//	/**
+//	 * Returns the list of "Power Shot" bullets.
+//	 * @return the list of "Power Shot" bullets
+//	 */
+//	public List<BigBullet> getBigBullets(){
+//		return bigBullets;
+//	}
+	
 	/**
 	 * Update the game screen.
 	 */
@@ -192,7 +187,7 @@ public class Level1State extends LevelState {
 	public void updateScreen(){
 		MegaMan megaMan = this.getMegaMan();
 		Floor[] floor = this.getFloor();
-		Platform[] numPlatforms = this.getPlatforms();
+		Platform[] platforms = this.getPlatforms();
 		List<Bullet> bullets = this.getBullets();
 		Asteroid asteroid = this.getAsteroid();
 		List<BigBullet> bigBullets = this.getBigBullets();
@@ -217,7 +212,6 @@ public class Level1State extends LevelState {
 		// draw 50 random stars
 		drawStars(50);
 
-		// TODO THIS SECTION SHOULD GO IN GameLogic as it pertains to game instead of level
 		// if the game is starting, draw "Get Ready" message
 		if(status.isGameStarting()){
 			drawGetReady();
@@ -259,7 +253,6 @@ public class Level1State extends LevelState {
 			initialMessage();
 			return;
 		}
-		// TODO THIS SECTION SHOULD GO IN GameLogic as it pertains to game instead of level
 
 		//draw Floor
 		for(int i=0; i<9; i++){
@@ -270,7 +263,7 @@ public class Level1State extends LevelState {
 		//		if(level==1){
 		//draw Platform LV. 1
 		for(int i=0; i<getNumPlatforms(); i++){
-			graphicsMan.drawPlatform(numPlatforms[i], g2d, this, i);
+			graphicsMan.drawPlatform(platforms[i], g2d, this, i);
 			//			}
 		}
 		//		//draw Platform LV. 2
@@ -372,9 +365,9 @@ public class Level1State extends LevelState {
 				status.setAsteroidsDestroyed(status.getAsteroidsDestroyed() + 100);
 
 				removeAsteroid(asteroid);
-
+				
 				levelAsteroidsDestroyed++;
-
+				
 				if(boom != 5 && boom != 15){
 					boom=boom + 1;
 				}
@@ -418,12 +411,12 @@ public class Level1State extends LevelState {
 		}
 		//
 
-//		if(boom == 2)
-//			restructure();
+		if(boom == 2)
+			restructure();
 
-//		status.getAsteroidsDestroyed();
-//		status.getShipsLeft();
-//		status.getLevel();
+		status.getAsteroidsDestroyed();
+		status.getShipsLeft();
+		status.getLevel();
 
 		// update asteroids destroyed label  
 		getMainFrame().getDestroyedValueLabel().setText(Long.toString(status.getAsteroidsDestroyed()));
@@ -593,21 +586,21 @@ public class Level1State extends LevelState {
 	}
 
 	public void doLevelWin(){
-
+		
 	}
 
 	/**
 	 * Prepare screen for a new game.
 	 */
 	public void doLevelStart() {	
-
+		
 		// init game variables
 		bullets = new ArrayList<Bullet>();
 		bulletsBoss = new ArrayList<BulletBoss>();
 		bulletsBoss2 = new ArrayList<BulletBoss2>();
 		bigBullets = new ArrayList<BigBullet>();
 		//numPlatforms = new Platform[5];
-
+		
 		GameStatus status = this.getStatus();
 
 		status.setGameStarting(true);
@@ -634,7 +627,7 @@ public class Level1State extends LevelState {
 		newAsteroid2(this);
 		newBigAsteroid(this);
 		// END Moved from GameLogic
-
+		
 		lastAsteroidTime = -NEW_ASTEROID_DELAY;
 		//lastBigAsteroidTime = -NEW_BIG_ASTEROID_DELAY;
 		lastShipTime = -NEW_SHIP_DELAY;
@@ -647,12 +640,12 @@ public class Level1State extends LevelState {
 		getMainFrame().getDestroyedValueLabel().setText(Integer.toString(status.getShipsLeft()));
 		getMainFrame().getDestroyedValueLabel().setText(Long.toString(status.getAsteroidsDestroyed()));
 		getMainFrame().getDestroyedValueLabel().setText(Long.toString(status.getLevel()));
-
-
+		
+		
 	}
 
 	public boolean isLevelWon() {
-		return boom >= 3; // TODO change to use asteroids destroyed in this level
+		return levelAsteroidsDestroyed >= 3;
 	}
 
 	public int boomReset(){
@@ -683,7 +676,7 @@ public class Level1State extends LevelState {
 		}
 		return false;
 	}
-
+	
 	//Bullet fire pose
 	protected boolean Fire(){
 		MegaMan megaMan = this.getMegaMan();
@@ -716,7 +709,7 @@ public class Level1State extends LevelState {
 	public boolean Fall(){
 		MegaMan megaMan = this.getMegaMan(); 
 		Platform[] platforms = this.getPlatforms();
-		for(int i=0; i<getNumPlatforms(); i++){
+		for(int i=0; i<8; i++){
 			if((((platforms[i].getX() < megaMan.getX()) && (megaMan.getX()< platforms[i].getX() + platforms[i].getPlatformWidth()))
 					|| ((platforms[i].getX() < megaMan.getX() + megaMan.getMegaManWidth()) 
 							&& (megaMan.getX() + megaMan.getMegaManWidth()< platforms[i].getX() + platforms[i].getPlatformWidth())))
@@ -728,19 +721,19 @@ public class Level1State extends LevelState {
 		return true;
 	}
 
-//	public void restructure(){
-//		Platform[] platform = this.getPlatforms();
-//		for(int i=0; i< getNumPlatforms(); i++){
-//			if(i<4)	platform[i].setLocation(50+ i*50, getHeight()/2 + 140 - i*40);
-//			if(i==4) platform[i].setLocation(50 +i*50, getHeight()/2 + 140 - 3*40);
-//			if(i>4){	
-//				int n=4;
-//				platform[i].setLocation(50 + i*50, getHeight()/2 + 20 + (i-n)*40 );
-//				n=n+2;
-//			}
-//		}
-//		this.getStatus().setLevel(this.getStatus().getLevel() + 1);
-//	}
+	public void restructure(){
+		Platform[] platforms = this.getPlatforms();
+		for(int i=0; i<8; i++){
+			if(i<4)	platforms[i].setLocation(50+ i*50, getHeight()/2 + 140 - i*40);
+			if(i==4) platforms[i].setLocation(50 +i*50, getHeight()/2 + 140 - 3*40);
+			if(i>4){	
+				int n=4;
+				platforms[i].setLocation(50 + i*50, getHeight()/2 + 20 + (i-n)*40 );
+				n=n+2;
+			}
+		}
+		this.getStatus().setLevel(this.getStatus().getLevel() + 1);
+	}
 
 	public void removeAsteroid(Asteroid asteroid){
 		// "remove" asteroid
@@ -756,13 +749,13 @@ public class Level1State extends LevelState {
 		// play asteroid explosion sound
 		this.getSoundManager().playAsteroidExplosionSound();
 	}
-
+	
 	// BEGIN Moved from GameLogic
 	/**
 	 * Fire a bullet from ship.
 	 */
 	public void fireBullet(){
-		Bullet bullet = new Bullet(megaMan);
+		Bullet bullet = new Bullet(getMegaMan());
 		bullets.add(bullet);
 		this.getSoundManager().playBulletSound();
 	}
@@ -771,7 +764,7 @@ public class Level1State extends LevelState {
 	 * Fire the "Power Shot" bullet
 	 */
 	public void fireBigBullet(){
-		BigBullet bigBullet = new BigBullet(megaMan);
+		BigBullet bigBullet = new BigBullet(getMegaMan());
 		bigBullets.add(bigBullet);
 		this.getSoundManager().playBulletSound();
 	}
@@ -837,12 +830,12 @@ public class Level1State extends LevelState {
 	/**
 	 * Create a new ship (and replace current one).
 	 */
-	public MegaMan newMegaMan(Level1State screen){
+	public MegaMan newMegaMan(Level2State screen){
 		this.megaMan = new MegaMan(screen);
 		return megaMan;
 	}
 
-	public Floor[] newFloor(Level1State screen, int n){
+	public Floor[] newFloor(Level2State screen, int n){
 		floor = new Floor[n];
 		for(int i=0; i<n; i++){
 			this.floor[i] = new Floor(screen, i);
@@ -851,20 +844,26 @@ public class Level1State extends LevelState {
 		return floor;
 	}
 
-	public Platform[] newNumPlatforms(Level1State screen, int n){
+	public Platform[] newNumPlatforms(Level2State screen, int n){
 		platforms = new Platform[n];
 		for(int i=0; i<n; i++){
 			this.platforms[i] = new Platform(screen, i);
+			if(i<4)	platforms[i].setLocation(50+ i*50, getHeight()/2 + 140 - i*40);
+			if(i==4) platforms[i].setLocation(50 +i*50, getHeight()/2 + 140 - 3*40);
+			if(i>4){	
+				int k=4;
+				platforms[i].setLocation(50 + i*50, getHeight()/2 + 20 + (i-k)*40 );
+				k=k+2;
+			}
 		}
 		return platforms;
-
 	}
 
 
 	/**
 	 * Create the first boss.
 	 */
-	public Boss newBoss(Level1State screen){
+	public Boss newBoss(Level2State screen){
 		this.boss = new Boss(screen);
 		return boss;
 	}
@@ -872,7 +871,7 @@ public class Level1State extends LevelState {
 	/**
 	 * Create the second boss.
 	 */
-	public Boss newBoss2(Level1State screen){
+	public Boss newBoss2(Level2State screen){
 		this.boss2 = new Boss(screen);
 		return boss2;
 	}
@@ -880,7 +879,7 @@ public class Level1State extends LevelState {
 	/**
 	 * Create a new asteroid.
 	 */
-	public Asteroid newAsteroid(Level1State screen){
+	public Asteroid newAsteroid(Level2State screen){
 		this.asteroid = new Asteroid(screen);
 		return asteroid;
 	}
@@ -888,7 +887,7 @@ public class Level1State extends LevelState {
 	/**
 	 * Create a second asteroid.
 	 */
-	public Asteroid newAsteroid2(Level1State screen){
+	public Asteroid newAsteroid2(Level2State screen){
 		this.asteroid2 = new Asteroid(screen);
 		return asteroid2;
 	}
@@ -896,13 +895,13 @@ public class Level1State extends LevelState {
 	/**
 	 * Create a new big asteroid.
 	 */
-	public BigAsteroid newBigAsteroid(Level1State screen){
+	public BigAsteroid newBigAsteroid(Level2State screen){
 		this.bigAsteroid = new BigAsteroid(screen);
 		return bigAsteroid;
 	}
 
 
-
+	
 	/**
 	 * Move the megaMan up
 	 * @param megaMan the megaMan
@@ -944,11 +943,11 @@ public class Level1State extends LevelState {
 			megaMan.translate(megaMan.getSpeed(), 0);
 		}
 	}
-
+	
 	public void speedUpMegaMan() {
 		megaMan.setSpeed(megaMan.getDefaultSpeed() * 2 +1);
 	}
-
+	
 	public void slowDownMegaMan() {
 		megaMan.setSpeed(megaMan.getDefaultSpeed());
 	}
