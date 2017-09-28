@@ -1,11 +1,8 @@
 package rbadia.voidspace.main;
 
 import java.awt.Graphics2D;
-
 import javax.swing.JPanel;
 import rbadia.voidspace.graphics.GraphicsManager;
-import rbadia.voidspace.model.Floor;
-import rbadia.voidspace.model.MegaMan;
 import rbadia.voidspace.sounds.SoundManager;
 
 public abstract class LevelState extends JPanel {
@@ -68,7 +65,6 @@ public abstract class LevelState extends JPanel {
 	public abstract void doLevelWon();
 	
 	public abstract boolean isLevelWon();
-	public abstract void updateScreen();	
 	
 	// User actions and character reactions
 	public abstract void fireBullet();
@@ -79,10 +75,5 @@ public abstract class LevelState extends JPanel {
 	public abstract void moveMegaManRight();
 	public abstract void speedUpMegaMan();
 	public abstract void slowDownMegaMan();
-
-	// TODO Verify is these methods are really part of the LevelState API
-	public abstract int getBoom();
-	public abstract MegaMan getMegaMan();
-	public abstract Floor[] getFloor();
 	
 }
