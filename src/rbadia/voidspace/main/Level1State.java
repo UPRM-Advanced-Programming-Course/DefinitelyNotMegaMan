@@ -225,18 +225,12 @@ public class Level1State extends LevelState {
 	}
 
 	public void doGameOverScreen(){
+		setCurrentState(GAME_OVER_SCREEN);
 		getGameLogic().drawGameOver();
 		getMainFrame().getDestroyedValueLabel().setForeground(new Color(128, 0, 0));
-		if (getCurrentState() == GAME_OVER_SCREEN) return;
-		setCurrentState(GAME_OVER_SCREEN);	
-		Timer timer = new Timer(1500, new ActionListener(){
-			public void actionPerformed(ActionEvent e) {
-				setCurrentState(GAME_OVER);
-			}
-		});
-		timer.setRepeats(false);
-		timer.start();
-	}
+		repaint();
+		LevelLogic.delay(1500);
+		}
 
 	public void doGameOver(){
 		this.getGameStatus().setGameOver(true);

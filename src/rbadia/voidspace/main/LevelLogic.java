@@ -169,7 +169,7 @@ public class LevelLogic {
 			this.bigFont = originalFont;
 		}
 
-		String gameOverStr = "LEVEL " + levelState.getLevel() + " COMPLETED";
+		String gameOverStr = "Game Over";
 
 		Font currentFont = biggestFont == null? bigFont : biggestFont;
 		float fontSize = currentFont.getSize2D();
@@ -186,12 +186,8 @@ public class LevelLogic {
 		int strX = (levelState.getWidth() - strWidth)/2;
 		int strY = (levelState.getHeight() + ascent)/2;
 		g2d.setFont(bigFont);
-		g2d.setPaint(Color.WHITE);
+		g2d.setPaint(Color.RED);
 		g2d.drawString(gameOverStr, strX, strY);
-
-		//		boomReset();
-		//		healthReset();
-		//		delayReset();
 	}
 
 	protected void drawYouWin() {
@@ -344,7 +340,7 @@ public class LevelLogic {
 
 		case LevelState.GETTING_READY:
 			levelState.doGettingReady();
-			levelState.setCurrentState(LevelState.PLAYING); // TODO Should be done after a delay
+			levelState.setCurrentState(LevelState.PLAYING);
 			break;
 
 		case LevelState.PLAYING:
@@ -364,6 +360,7 @@ public class LevelLogic {
 
 		case LevelState.GAME_OVER_SCREEN:
 			levelState.doGameOverScreen();
+			levelState.setCurrentState(LevelState.GAME_OVER);
 			break;
 
 		case LevelState.GAME_OVER:
