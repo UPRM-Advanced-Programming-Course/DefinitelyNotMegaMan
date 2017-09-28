@@ -222,6 +222,9 @@ public class Level1State extends LevelState {
 	
 	public void doLevelWon(){
 		setCurrentState(LEVEL_WON);
+		getGameLogic().drawYouWin();
+		repaint();
+		LevelLogic.delay(5000);
 	}
 
 	public void doGameOverScreen(){

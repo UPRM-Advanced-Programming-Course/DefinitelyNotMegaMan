@@ -201,11 +201,12 @@ public class LevelLogic {
 			this.bigFont = originalFont;
 		}
 
-		String youWinStr = "You Pass";
+		String youWinStr = "Level " + levelState.getLevel() + " Completed";
 
-		Font currentFont = biggestFont == null? bigFont : biggestFont;
+		//Font currentFont = biggestFont == null? bigFont : biggestFont;
+		Font currentFont = originalFont;
 		float fontSize = currentFont.getSize2D();
-		bigFont = currentFont.deriveFont(fontSize + 1).deriveFont(Font.BOLD);
+		bigFont = currentFont.deriveFont(fontSize + 5).deriveFont(Font.BOLD);
 		FontMetrics fm = g2d.getFontMetrics(bigFont);
 		int strWidth = fm.stringWidth(youWinStr);
 		if(strWidth > levelState.getWidth() - 10){
@@ -221,14 +222,14 @@ public class LevelLogic {
 		g2d.setPaint(Color.YELLOW);
 		g2d.drawString(youWinStr, strX, strY);
 
-		g2d.setFont(originalFont);
-		fm = g2d.getFontMetrics();
-		String newGameStr = "Next level starting soon";
-		strWidth = fm.stringWidth(newGameStr);
-		strX = (levelState.getWidth() - strWidth)/2;
-		strY = (levelState.getHeight() + fm.getAscent())/2 + ascent + 16;
-		g2d.setPaint(Color.YELLOW);
-		g2d.drawString(newGameStr, strX, strY);
+//		g2d.setFont(originalFont);
+//		fm = g2d.getFontMetrics();
+//		String newGameStr = "Next level starting soon";
+//		strWidth = fm.stringWidth(newGameStr);
+//		strX = (levelState.getWidth() - strWidth)/2;
+//		strY = (levelState.getHeight() + fm.getAscent())/2 + ascent + 16;
+//		g2d.setPaint(Color.YELLOW);
+//		g2d.drawString(newGameStr, strX, strY);
 
 		//boom=3;	//Change value in order for the next level to start
 

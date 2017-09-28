@@ -67,6 +67,7 @@ public class MegaManMain {
 			LevelState level2State = new Level2State(2, frame, gameStatus, gameLogic, inputHandler);
 			LevelState levels[] = { level1State, level2State };
 
+			String outcome = "CONGRATS!! YOU WON!!";
 			for (LevelState nextLevel : levels) {
 
 				System.out.println("Next Level Started");
@@ -82,11 +83,12 @@ public class MegaManMain {
 				nextLevelLoop.join();
 
 				if (nextLevel.getGameStatus().isGameOver()) {
+					outcome = "SORRY YOU LOST";
 					break;
 				}
 
 			}
-			playAgain = JOptionPane.showConfirmDialog(null, "Play Again?", "GAME OVER", JOptionPane.YES_NO_OPTION);
+			playAgain = JOptionPane.showConfirmDialog(null, outcome + " ... Play Again?", "", JOptionPane.YES_NO_OPTION);
 		}
 		System.exit(0);
 	}
