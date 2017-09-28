@@ -54,7 +54,7 @@ public abstract class LevelState extends JPanel {
 	public void setCurrentState(int nextState) { this.currentState = nextState; }
 	public void setStartState(int startState) { this.startState = startState; }
 		
-	// Level state methods
+	// Level FSM state methods
 	public abstract void doStart();
 	public abstract void doInitialScreen();
 	public abstract void doGettingReady();
@@ -66,7 +66,7 @@ public abstract class LevelState extends JPanel {
 	
 	public abstract boolean isLevelWon();
 	
-	// User actions and character reactions
+	// Game Actions in response to user controls
 	public abstract void fireBullet();
 	public abstract void fireBigBullet();
 	public abstract void moveMegaManUp();
