@@ -131,11 +131,7 @@ public class Level1State extends LevelState {
 	@Override
 	public void doInitialScreen() {
 		setCurrentState(INITIAL_SCREEN);
-		//updateScreen();
-		// erase screen
-		Graphics2D g2d = getGraphics2D();
-		g2d.setPaint(Color.BLACK);
-		g2d.fillRect(0, 0, getSize().width, getSize().height);
+		clearScreen();
 		getGameLogic().drawInitialMessage();
 	};
 
@@ -208,11 +204,6 @@ public class Level1State extends LevelState {
 	 * Update the game screen's backbuffer image.
 	 */
 	public void updateScreen(){
-		MegaMan megaMan = this.getMegaMan();
-		Platform[] numPlatforms = this.getPlatforms();
-		List<Bullet> bullets = this.getBullets();
-		Asteroid asteroid = this.getAsteroid();
-		List<BigBullet> bigBullets = this.getBigBullets();
 		Graphics2D g2d = getGraphics2D();
 		GameStatus status = this.getGameStatus();
 
@@ -222,39 +213,125 @@ public class Level1State extends LevelState {
 			this.bigFont = originalFont;
 		}
 
-		// clear screen
-		g2d.setPaint(Color.BLACK);
-		g2d.fillRect(0, 0, getSize().width, getSize().height);
+		clearScreen();
 
 		// draw 50 random stars
 		drawStars(50);
 
-		//draw Floor
+		drawFloor();
+
+		drawPlatforms();
+
+		drawMegaMan();
+
+		drawAsteroid();
+
+
+		drawBullets();
+
+		drawBigBullets();
+
+		checkBullletAsteroidCollisions();
+
+		checkBigBulletAsteroidCollisions();
+
+		checkMegaManAsteroidCollisions();
+
+		checkAsteroidFloorCollisions();
+
+		// update asteroids destroyed (score) label  
+		getMainFrame().getDestroyedValueLabel().setText(Long.toString(status.getAsteroidsDestroyed()));
+		// update lives left label
+		getMainFrame().getShipsValueLabel().setText(Integer.toString(status.getLivesLeft()));
+		//update level label
+		getMainFrame().getLevelValueLabel().setText(Long.toString(status.getLevel()));
+	}
+
+	protected void checkAsteroidFloorCollisions() {
+		//Asteroid-Floor collision
 		for(int i=0; i<9; i++){
-			graphicsMan.drawFloor(floor[i], g2d, this, i);	
-		}
+			if(asteroid.intersects(floor[i])){
+				removeAsteroid(asteroid);
 
-		//draw platforms
-		for(int i=0; i<getNumPlatforms(); i++){
-			graphicsMan.drawPlatform(numPlatforms[i], g2d, this, i);
-		}
-
-		//draw one of three possible MegaMan poses according to situation
-		if(!status.isNewMegaMan()){
-			if((Gravity() == true) || ((Gravity() == true) && (Fire() == true || Fire2() == true))){
-				graphicsMan.drawMegaFallR(megaMan, g2d, this);
 			}
 		}
+	}
 
-		if((Fire() == true || Fire2()== true) && (Gravity()==false)){
-			graphicsMan.drawMegaFireR(megaMan, g2d, this);
+	protected void checkMegaManAsteroidCollisions() {
+		GameStatus status = getGameStatus();
+		//MM-Asteroid collision
+		if(asteroid.intersects(megaMan)){
+			status.setLivesLeft(status.getLivesLeft() - 1);
+			removeAsteroid(asteroid);
 		}
+	}
 
-		if((Gravity()==false) && (Fire()==false) && (Fire2()==false)){
-			graphicsMan.drawMegaMan(megaMan, g2d, this);
+	protected void checkBigBulletAsteroidCollisions() {
+		// check for big bullet-asteroid collisions
+		GameStatus status = getGameStatus();
+		for(int i=0; i<bigBullets.size(); i++){
+			BigBullet bigBullet = bigBullets.get(i);
+			if(asteroid.intersects(bigBullet)){
+				// increase asteroids destroyed count
+				status.setAsteroidsDestroyed(status.getAsteroidsDestroyed() + 100);
+				removeAsteroid(asteroid);
+				damage=0;
+			}
 		}
+	}
 
+	protected void checkBullletAsteroidCollisions() {
+		// check for bullet-asteroid collisions
+		GameStatus status = getGameStatus();
+		for(int i=0; i<bullets.size(); i++){
+			Bullet bullet = bullets.get(i);
+			if(asteroid.intersects(bullet)){
+				// increase asteroids destroyed count
+				status.setAsteroidsDestroyed(status.getAsteroidsDestroyed() + 100);
+				removeAsteroid(asteroid);
+				levelAsteroidsDestroyed++;
+				damage=0;
+				// remove bullet
+				bullets.remove(i);
+				break;
+			}
+		}
+	}
+
+	protected void drawBigBullets() {
+		// draw big bullets
+		Graphics2D g2d = getGraphics2D();
+		for(int i=0; i<bigBullets.size(); i++){
+			BigBullet bigBullet = bigBullets.get(i);
+			graphicsMan.drawBigBullet(bigBullet, g2d, this);
+
+			boolean remove = this.moveBigBullet(bigBullet);
+			if(remove){
+				bigBullets.remove(i);
+				i--;
+			}
+		}
+	}
+
+	protected void drawBullets() {
+		// draw bullets   
+		Graphics2D g2d = getGraphics2D();
+		for(int i=0; i<bullets.size(); i++){
+			Bullet bullet = bullets.get(i);
+			graphicsMan.drawBullet(bullet, g2d, this);
+
+			boolean remove =   this.moveBullet(bullet);
+			if(remove){
+				bullets.remove(i);
+				i--;
+			}
+		}
+	}
+
+	protected void drawAsteroid() {
 		// draw asteroid
+		Graphics2D g2d = getGraphics2D();
+		GameStatus status = getGameStatus();
 		if((asteroid.getX() + asteroid.getAsteroidWidth() >  0)){
 			asteroid.translate(-asteroid.getSpeed(), 0);
 			graphicsMan.drawAsteroid(asteroid, g2d, this);	
@@ -274,78 +351,48 @@ public class Level1State extends LevelState {
 				graphicsMan.drawAsteroidExplosion(asteroidExplosion, g2d, this);
 			}
 		}
+	}
 
-
-		// draw bullets   
-		for(int i=0; i<bullets.size(); i++){
-			Bullet bullet = bullets.get(i);
-			graphicsMan.drawBullet(bullet, g2d, this);
-
-			boolean remove =   this.moveBullet(bullet);
-			if(remove){
-				bullets.remove(i);
-				i--;
+	protected void drawMegaMan() {
+		//draw one of three possible MegaMan poses according to situation
+		Graphics2D g2d = getGraphics2D();
+		GameStatus status = getGameStatus();
+		if(!status.isNewMegaMan()){
+			if((Gravity() == true) || ((Gravity() == true) && (Fire() == true || Fire2() == true))){
+				graphicsMan.drawMegaFallR(megaMan, g2d, this);
 			}
 		}
 
-		// draw big bullets
-		for(int i=0; i<bigBullets.size(); i++){
-			BigBullet bigBullet = bigBullets.get(i);
-			graphicsMan.drawBigBullet(bigBullet, g2d, this);
-
-			boolean remove = this.moveBigBullet(bigBullet);
-			if(remove){
-				bigBullets.remove(i);
-				i--;
-			}
+		if((Fire() == true || Fire2()== true) && (Gravity()==false)){
+			graphicsMan.drawMegaFireR(megaMan, g2d, this);
 		}
 
-		// check for bullet-asteroid collisions
-		for(int i=0; i<bullets.size(); i++){
-			Bullet bullet = bullets.get(i);
-			if(asteroid.intersects(bullet)){
-				// increase asteroids destroyed count
-				status.setAsteroidsDestroyed(status.getAsteroidsDestroyed() + 100);
-				removeAsteroid(asteroid);
-				levelAsteroidsDestroyed++;
-				damage=0;
-				// remove bullet
-				bullets.remove(i);
-				break;
-			}
+		if((Gravity()==false) && (Fire()==false) && (Fire2()==false)){
+			graphicsMan.drawMegaMan(megaMan, g2d, this);
 		}
+	}
 
-		// check for big bullet-asteroid collisions
-		for(int i=0; i<bigBullets.size(); i++){
-			BigBullet bigBullet = bigBullets.get(i);
-			if(asteroid.intersects(bigBullet)){
-				// increase asteroids destroyed count
-				status.setAsteroidsDestroyed(status.getAsteroidsDestroyed() + 100);
-				removeAsteroid(asteroid);
-				damage=0;
-			}
+	protected void drawPlatforms() {
+		//draw platforms
+		Graphics2D g2d = getGraphics2D();
+		for(int i=0; i<getNumPlatforms(); i++){
+			graphicsMan.drawPlatform(platforms[i], g2d, this, i);
 		}
+	}
 
-		//MM-Asteroid collision
-		if(asteroid.intersects(megaMan)){
-			status.setLivesLeft(status.getLivesLeft() - 1);
-			removeAsteroid(asteroid);
-		}
-
-		//Asteroid-Floor collision
+	protected void drawFloor() {
+		//draw Floor
+		Graphics2D g2d = getGraphics2D();
 		for(int i=0; i<9; i++){
-			if(asteroid.intersects(floor[i])){
-				removeAsteroid(asteroid);
-
-			}
+			graphicsMan.drawFloor(floor[i], g2d, this, i);	
 		}
+	}
 
-		// update asteroids destroyed (score) label  
-		getMainFrame().getDestroyedValueLabel().setText(Long.toString(status.getAsteroidsDestroyed()));
-		// update lives left label
-		getMainFrame().getShipsValueLabel().setText(Integer.toString(status.getLivesLeft()));
-		//update level label
-		getMainFrame().getLevelValueLabel().setText(Long.toString(status.getLevel()));
+	protected void clearScreen() {
+		// clear screen
+		Graphics2D g2d = getGraphics2D();
+		g2d.setPaint(Color.BLACK);
+		g2d.fillRect(0, 0, getSize().width, getSize().height);
 	}
 
 
