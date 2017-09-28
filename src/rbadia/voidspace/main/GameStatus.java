@@ -34,6 +34,14 @@ public class GameStatus {
 		return gameStarted;
 	}
 	
+	public synchronized boolean isGameNotStarted() {
+		return !isGameStarted() && !isGameOver() && !isGameStarting() && !isGameWon();
+	}
+	
+	public synchronized boolean isGameGoing() {
+		return !isGameOver() && !isNewMegaMan() && !isGameStarting() && isGameWon();
+	}
+
 	public synchronized void setGameStarted(boolean gameStarted) {
 		this.gameStarted = gameStarted;
 	}

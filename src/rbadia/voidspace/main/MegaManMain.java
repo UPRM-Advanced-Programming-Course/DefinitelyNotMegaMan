@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
 /**
  * Main game class. Starts the game.
  */
-public class VoidSpaceMain {
+public class MegaManMain {
 
 	//Starts playing menu music as soon as the game frame is created
 
@@ -51,35 +51,37 @@ public class VoidSpaceMain {
 			e.printStackTrace();
 		}
 
-		MainFrame frame = new MainFrame();
-		frame.setVisible(true);
+		MainFrame frame = new MainFrame();              // Main Game Window
+		GameStatus gameStatus = new GameStatus();       // Records overall status of game across all levels
+		LevelLogic gameLogic = new LevelLogic();          // Coordinates among various levels
+		InputHandler inputHandler = new InputHandler(); // Keyboard listener
+		
+		frame.addKeyListener(inputHandler);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//frame.setVisible(true);
 
 		int playAgain = 2;
 		while(playAgain != 1) {
 
-			LevelState level1State = new Level1State(1);
-			LevelState level2State = new Level2State(2);
+			LevelState level1State = new Level1State(1, frame, gameStatus, gameLogic, inputHandler);
+			LevelState level2State = new Level2State(2, frame, gameStatus, gameLogic, inputHandler);
 			LevelState levels[] = { level1State, level2State };
 
 			for (LevelState nextLevel : levels) {
 
 				System.out.println("Next Level Started");
 				frame.setLevelState(nextLevel);
-				nextLevel.setMainFrame(frame);
-				GameLogic gameLogic = new GameLogic(nextLevel);
-				nextLevel.setGameLogic(gameLogic);
-				InputHandler inputHandler = new InputHandler(nextLevel);
-				frame.addKeyListener(inputHandler);
-				nextLevel.setInputHandler(inputHandler);
-				frame.setVisible(true);
+				gameLogic.setLevelState(nextLevel);
+				inputHandler.setLevelState(nextLevel);
+				
+				frame.setVisible(true);  // TODO verify whether this is necessary
 
 				// init main game loop
-				Thread nextLevelThread = new Thread(new GameLoop(nextLevel));
-				nextLevelThread.start();
-				nextLevelThread.join();
+				Thread nextLevelLoop = new Thread(new LevelLoop(nextLevel));
+				nextLevelLoop.start();
+				nextLevelLoop.join();
 
-				if (nextLevel.getStatus().isGameOver()) {
+				if (nextLevel.getGameStatus().isGameOver()) {
 					break;
 				}
 

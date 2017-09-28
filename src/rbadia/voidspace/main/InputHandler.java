@@ -30,20 +30,35 @@ public class InputHandler implements KeyListener{
 	private boolean eIsPressed;
 	private boolean qIsPressed;
 	private boolean mIsPressed;
-
-
+	private boolean sIsPressed;
+	private boolean iIsPressed;
 
 	private LevelState levelState;
 	//private GameScreen gScreen;
-	
+
 	public LevelState getLevelState() { return levelState; }
+	public void setLevelState(LevelState levelState) { this.levelState = levelState; }
 
 	/**
 	 * Create a new input handler
 	 * @param gameLogic the game logic handler
 	 */
-	public InputHandler(LevelState levelState){
-		this.levelState = levelState;
+	public InputHandler(){
+		reset();
+	}
+
+	public void reset() {
+		leftIsPressed = false;
+		rightIsPressed = false;
+		downIsPressed = false;
+		upIsPressed = false;
+		spaceIsPressed = false;
+		shiftIsPressed = false;
+		eIsPressed = false;
+		qIsPressed = false;
+		mIsPressed = false;
+		sIsPressed = false;
+		iIsPressed = false;
 	}
 
 	public boolean isLeftPressed() {
@@ -82,77 +97,81 @@ public class InputHandler implements KeyListener{
 		return mIsPressed;
 	}
 
+	public boolean isSPressed() {
+		return sIsPressed;
+	}
+
+	public boolean isIPressed() {
+		return iIsPressed;
+	}
 
 	/**
 	 * Handle a key input event.
 	 */
 	public void keyPressed(KeyEvent e) {
-		GameStatus status = levelState.getStatus();
+		GameStatus status = levelState.getGameStatus();
+		System.out.println("Input Handler Detected: " + e.getKeyCode());
 		switch(e.getKeyCode()){
 		case KeyEvent.VK_UP:
-			if(!status.isGameStarted() && !status.isGameOver() && !status.isGameStarting() && !status.isGameWon()){
-			}
-			else{
-				this.upIsPressed = true;
-			}
+			//			if(!status.isGameStarted() && !status.isGameOver() && !status.isGameStarting() && !status.isGameWon()){
+			//			}
+			//			else{
+			this.upIsPressed = true;
+			//			}
 			break;
 		case KeyEvent.VK_DOWN:
-			if(!status.isGameStarted() && !status.isGameOver() && !status.isGameStarting() && !status.isGameWon()){
-			}
-			else{
-				this.downIsPressed = true;
-			}
+			//			if(!status.isGameStarted() && !status.isGameOver() && !status.isGameStarting() && !status.isGameWon()){
+			//			}
+			//			else{
+			this.downIsPressed = true;
+			//			}
 			break;
 		case KeyEvent.VK_LEFT:
-			if(!status.isGameStarted() && !status.isGameOver() && !status.isGameStarting() && !status.isGameWon()){
-			}
-			else{
-				this.leftIsPressed = true;
-			}
+			//			if(!status.isGameStarted() && !status.isGameOver() && !status.isGameStarting() && !status.isGameWon()){
+			//			}
+			//			else{
+			this.leftIsPressed = true;
+			//			}
 			break;
 		case KeyEvent.VK_RIGHT:
-			if(!status.isGameStarted() && !status.isGameOver() && !status.isGameStarting() && !status.isGameWon()){
-			}
-			else{
-				this.rightIsPressed = true;
-			}
+			//			if(!status.isGameStarted() && !status.isGameOver() && !status.isGameStarting() && !status.isGameWon()){
+			//			}
+			//			else{
+			this.rightIsPressed = true;
+			//			}
 			break;
 		case KeyEvent.VK_SPACE:
-			if(!status.isGameStarted() && !status.isGameOver() && !status.isGameStarting() && !status.isGameWon()){
-				// new game
-				//lastBulletTime = System.currentTimeMillis();
-				leftIsPressed = false;
-				rightIsPressed = false;
-				downIsPressed = false;
-				upIsPressed = false;
-				spaceIsPressed = false;
-				levelState.getGameLogic().newGame();
+			//			if(status.isGameNotStarted()) {
+			//				// new game
+			//				//lastBulletTime = System.currentTimeMillis();
+			//				this.reset();
+			//				levelState.getGameLogic().newGame();
+			//
+			//				//WIP
+			//				//				if(mute==0){
+			//
+			//				//Music
+			//				//changes music from "menu music" to "ingame music"
+			//				MegaManMain.audioClip.close();
+			//				MegaManMain.audioFile = new File("audio/mainGame.wav");
+			//				try {
+			//					MegaManMain.audioStream = AudioSystem.getAudioInputStream(MegaManMain.audioFile);
+			//					MegaManMain.audioClip.open(MegaManMain.audioStream);
+			//					MegaManMain.audioClip.start();
+			//					MegaManMain.audioClip.loop(Clip.LOOP_CONTINUOUSLY);
+			//				} catch (UnsupportedAudioFileException e1) {
+			//					e1.printStackTrace();
+			//				} catch (IOException e1) {
+			//					e1.printStackTrace();
+			//				} catch (LineUnavailableException e1) {
+			//					e1.printStackTrace();
+			//				}
+			//				//				}
+			//			}
+			//			else{
+			this.spaceIsPressed = true;
 
-				//WIP
-				//				if(mute==0){
-
-				//Music
-				//changes music from "menu music" to "ingame music"
-				VoidSpaceMain.audioClip.close();
-				VoidSpaceMain.audioFile = new File("audio/mainGame.wav");
-				try {
-					VoidSpaceMain.audioStream = AudioSystem.getAudioInputStream(VoidSpaceMain.audioFile);
-					VoidSpaceMain.audioClip.open(VoidSpaceMain.audioStream);
-					VoidSpaceMain.audioClip.start();
-					VoidSpaceMain.audioClip.loop(Clip.LOOP_CONTINUOUSLY);
-				} catch (UnsupportedAudioFileException e1) {
-					e1.printStackTrace();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				} catch (LineUnavailableException e1) {
-					e1.printStackTrace();
-				}
-				//				}
-			}
-			else{
-				this.spaceIsPressed = true;
-
-			}
+			//			}
 			break;
 		case KeyEvent.VK_SHIFT:
 			this.shiftIsPressed = true;
@@ -161,56 +180,55 @@ public class InputHandler implements KeyListener{
 			System.exit(1);
 			break;
 		case KeyEvent.VK_E:
-			if(!status.isGameStarted() && !status.isGameOver() && !status.isGameStarting() && !status.isGameWon()){
-			}
-			else if(status.getAsteroidsDestroyed() < 1500){
-			}
-			else{
-				this.eIsPressed = true;
-			}
+			//			if(!status.isGameStarted() && !status.isGameOver() && !status.isGameStarting() && !status.isGameWon()){
+			//			}
+			//			else if(status.getAsteroidsDestroyed() < 1500){
+			//			}
+			//			else{
+			this.eIsPressed = true;
+			//			}
 			break;
-		case KeyEvent.VK_S:
-			if(!status.isGameStarted() && !status.isGameOver() && !status.isGameStarting() && !status.isGameWon()){
-				JOptionPane.showMessageDialog( null, 
-						"Item:                Price\r\n"+
-								"\r\n"+
-								"Extra Life:      1500\r\n"+ 
-								"Power Shot:  1000\r\n"+
-						"\r\n");
-
-			}
-			else{
-			}
-			break;
-		case KeyEvent.VK_I:
-			if(!status.isGameStarted() && !status.isGameOver() && !status.isGameStarting() && !status.isGameWon()){
-				JOptionPane.showMessageDialog( null, 
-						"Power Up:     Explanation\r\n"+
-								"\r\n"+
-								"Extra Life:      Gives an extra life (One Extra Life per second)\r\n"+ 
-								"                           (Press E to buy, limit of one life per second.)\r\n" +
-								"Power Shot:  Activates the Power Shot which kills the asteroid in one hit\r\n"+
-						"                           (Press Q to buy, afterwards press Q to fire.)\r\n");
-
-			}
-			else{
-			}
-			break;
-
 		case KeyEvent.VK_Q:
-			if(!status.isGameStarted() && !status.isGameOver() && !status.isGameStarting() && !status.isGameWon()){		
-			}
-			else{
-				this.qIsPressed= true;
-			}
+			//			if(!status.isGameStarted() && !status.isGameOver() && !status.isGameStarting() && !status.isGameWon()){		
+			//			}
+			//			else{
+			this.qIsPressed= true;
+			//			}
 			break;
 
 		case KeyEvent.VK_M:
 			this.mIsPressed= true;
 			break;
+		case KeyEvent.VK_S:
+			//			if(!status.isGameStarted() && !status.isGameOver() && !status.isGameStarting() && !status.isGameWon()){
+			//				JOptionPane.showMessageDialog( null, 
+			//						"Item:                Price\r\n"+
+			//								"\r\n"+
+			//								"Extra Life:      1500\r\n"+ 
+			//								"Power Shot:  1000\r\n"+
+			//						"\r\n");
+			//
+			//			}
+			//			else{
+			//			}
+			this.sIsPressed = true;
+			break;
+		case KeyEvent.VK_I:
+			//			if(!status.isGameStarted() && !status.isGameOver() && !status.isGameStarting() && !status.isGameWon()){
+			//				JOptionPane.showMessageDialog( null, 
+			//						"Power Up:     Explanation\r\n"+
+			//								"\r\n"+
+			//								"Extra Life:      Gives an extra life (One Extra Life per second)\r\n"+ 
+			//								"                           (Press E to buy, limit of one life per second.)\r\n" +
+			//								"Power Shot:  Activates the Power Shot which kills the asteroid in one hit\r\n"+
+			//						"                           (Press Q to buy, afterwards press Q to fire.)\r\n");
+			//
+			//			}
+			//			else{
+			//			}
+			this.iIsPressed = true;
+			break;
 		}
-
-
 		e.consume();
 	}
 
@@ -248,6 +266,9 @@ public class InputHandler implements KeyListener{
 
 		case KeyEvent.VK_M:
 			this.mIsPressed = false;
+			break;
+		case KeyEvent.VK_S:
+			this.sIsPressed = false;
 			break;
 		}
 		e.consume();

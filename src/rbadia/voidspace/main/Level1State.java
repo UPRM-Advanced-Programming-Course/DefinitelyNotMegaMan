@@ -3,14 +3,23 @@ import java.awt.Color;
 
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.Timer;
 
 import rbadia.voidspace.graphics.GraphicsManager;
 import rbadia.voidspace.model.Asteroid;
@@ -35,7 +44,7 @@ public class Level1State extends LevelState {
 	protected GraphicsManager graphicsMan;
 
 	protected BufferedImage backBuffer;
-	protected Graphics2D g2d;
+	//protected Graphics2D g2d;
 
 	protected MegaMan megaMan;
 	protected Boss boss;
@@ -70,13 +79,17 @@ public class Level1State extends LevelState {
 	protected int levelAsteroidsDestroyed = 0;
 
 	// Constructors
-	public Level1State(int level) {
+	public Level1State(int level, MainFrame frame, GameStatus status, LevelLogic gameLogic, InputHandler inputHandler) {
 		super();
-
+		this.setLevel(level);
+		this.setMainFrame(frame);
+		this.setGameStatus(status);
+		this.setGameLogic(gameLogic);
+		this.setInputHandler(inputHandler);
+		
 		this.setSize(new Dimension(500, 400));
 		this.setPreferredSize(new Dimension(500, 400));
 		this.setBackground(Color.BLACK);
-		this.setLevel(level);
 
 		// initialize random number generator
 		rand = new Random();
@@ -85,9 +98,9 @@ public class Level1State extends LevelState {
 
 		// init back buffer image
 		backBuffer = new BufferedImage(500, 400, BufferedImage.TYPE_INT_RGB);
-		g2d = backBuffer.createGraphics();
+		this.setGraphics2D(backBuffer.createGraphics());
 
-		this.setStatus(new GameStatus());
+		//this.setGameStatus(new GameStatus());
 		this.setSoundManager(new SoundManager());
 
 		// init some variables
@@ -98,81 +111,135 @@ public class Level1State extends LevelState {
 	}
 
 	// Getters
+	public int getBoom()							{ return boom; 			}
+	public MegaMan getMegaMan() 					{ return megaMan; 		}
+	public Floor[] getFloor()					{ return floor; 			}
+	public int getNumPlatforms()					{ return numPlatforms; 	}
+	public Platform[] getPlatforms()				{ return platforms; 		}
+	public Boss getBoss() 						{ return boss; 			}
+	public Boss getBoss2() 						{ return boss2; 			}
+	public Asteroid getAsteroid() 				{ return asteroid; 		}
+	public Asteroid getAsteroid2() 				{ return asteroid2; 		}
+	public BigAsteroid getBigAsteroid() 			{ return bigAsteroid; 	}
+	public List<Bullet> getBullets() 			{ return bullets; 		}
+	public List<BulletBoss> getBulletBoss() 		{ return bulletsBoss;	}
+	public List<BulletBoss2> getBulletBoss2()	{ return bulletsBoss2; 	}
+	public List<BigBullet> getBigBullets()		{ return bigBullets;   	}
+	
+	// Level state methods
+	// The method associated with the current state will be called 
+	// repeatedly during each LevelLoop iteration until the next a state 
+	// transition occurs
+	
+	public void doStart() {	
+		
+		setStartState(START_STATE);
+		setCurrentState(getStartState());
+		// init game variables
+		bullets = new ArrayList<Bullet>();
+		bulletsBoss = new ArrayList<BulletBoss>();
+		bulletsBoss2 = new ArrayList<BulletBoss2>();
+		bigBullets = new ArrayList<BigBullet>();
+		//numPlatforms = new Platform[5];
 
-	public int getBoom(){
-		return boom;
+		GameStatus status = this.getGameStatus();
+
+		//status.setGameStarting(true);
+		status.setShipsLeft(3);
+		//status.setLevel(1);
+		status.setGameOver(false);
+		status.setAsteroidsDestroyed(0);
+		status.setNewAsteroid(false);
+		status.setNewAsteroid2(false);
+		status.setNewBigAsteroid(false);
+		//status.setNewFloor(false);
+
+		// init the ship and the asteroid
+		newMegaMan(this);
+		newFloor(this, 9);
+		newPlatforms(getNumPlatforms());
+		newBoss(this);
+		newBoss2(this);
+		newAsteroid(this);
+		newAsteroid2(this);
+		newBigAsteroid(this);
+
+		lastAsteroidTime = -NEW_ASTEROID_DELAY;
+		//lastBigAsteroidTime = -NEW_BIG_ASTEROID_DELAY;
+		lastShipTime = -NEW_SHIP_DELAY;
+
+		bigFont = originalFont;
+		biggestFont = null;
+
+		// Display initial values for scores
+		getMainFrame().getDestroyedValueLabel().setForeground(Color.BLACK);
+		getMainFrame().getDestroyedValueLabel().setText(Integer.toString(status.getShipsLeft()));
+		getMainFrame().getDestroyedValueLabel().setText(Long.toString(status.getAsteroidsDestroyed()));
+		getMainFrame().getDestroyedValueLabel().setText(Long.toString(status.getLevel()));
+		
+	}
+	
+	public void doInitialScreen() {
+		setCurrentState(INITIAL_SCREEN);
+		//updateScreen();
+		// erase screen
+		Graphics2D g2d = getGraphics2D();
+		g2d.setPaint(Color.BLACK);
+		g2d.fillRect(0, 0, getSize().width, getSize().height);
+		getGameLogic().drawInitialMessage();
+	};
+	
+	public void doGettingReady() {
+		setCurrentState(GETTING_READY);
+		getGameLogic().drawGetReady();
+		repaint();
+		LevelLogic.delay(2000);
+		//Changes music from "menu music" to "ingame music"
+		MegaManMain.audioClip.close();
+		MegaManMain.audioFile = new File("audio/mainGame.wav");
+		try {
+			MegaManMain.audioStream = AudioSystem.getAudioInputStream(MegaManMain.audioFile);
+			MegaManMain.audioClip.open(MegaManMain.audioStream);
+			MegaManMain.audioClip.start();
+			MegaManMain.audioClip.loop(Clip.LOOP_CONTINUOUSLY);
+		} catch (UnsupportedAudioFileException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		} catch (LineUnavailableException e1) {
+			e1.printStackTrace();
+		}
+	};
+	
+	public void doPlaying() {
+		setCurrentState(PLAYING);
+		updateScreen();
+	};
+	
+	public void doNewMegaman() {
+		setCurrentState(NEW_MEGAMAN);
+	};
+	
+	public void doLevelWon(){
+		setCurrentState(LEVEL_WON);
 	}
 
-	public MegaMan getMegaMan() {
-		return megaMan;
+	public void doGameOverScreen(){
+		getGameLogic().drawGameOver();
+		getMainFrame().getDestroyedValueLabel().setForeground(new Color(128, 0, 0));
+		if (getCurrentState() == GAME_OVER_SCREEN) return;
+		setCurrentState(GAME_OVER_SCREEN);	
+		Timer timer = new Timer(1500, new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				setCurrentState(GAME_OVER);
+			}
+		});
+		timer.setRepeats(false);
+		timer.start();
 	}
 
-	public Floor[] getFloor(){
-		return floor;	
-	}
-
-	public int getNumPlatforms(){
-		return numPlatforms;
-	}
-
-	public Platform[] getPlatforms(){
-		return platforms;
-	}
-
-	public Boss getBoss() {
-		return boss;
-	}
-
-	public Boss getBoss2() {
-		return boss2;
-	}
-
-	/**
-	 * Returns the asteroid.
-	 * @return the asteroid
-	 */
-	public Asteroid getAsteroid() {
-		return asteroid;
-	}
-
-	public Asteroid getAsteroid2() {
-		return asteroid2;
-	}
-
-	public BigAsteroid getBigAsteroid() {
-		return bigAsteroid;
-	}
-
-	/**
-	 * Returns the list of bullets.
-	 * @return the list of bullets
-	 */
-	public List<Bullet> getBullets() {
-		return bullets;
-	}
-
-	/**
-	 * Returns the list of the boss's bullets.
-	 * @return the list of the boss's bullets
-	 */
-	public List<BulletBoss> getBulletBoss() {
-		return bulletsBoss;
-	}
-
-	/**
-	 * Returns the list of the second boss's bullets.
-	 * @return the list of the second boss's bullets
-	 */
-	public List<BulletBoss2> getBulletBoss2() {
-		return bulletsBoss2;
-	}
-
-	/**
-	 * Returns the list of "Power Shot" bullets.
-	 * @return the list of "Power Shot" bullets
-	 */
-	public List<BigBullet> getBigBullets(){
-		return bigBullets;
+	public void doGameOver(){
+		this.getGameStatus().setGameOver(true);
 	}
 
 	/**
@@ -191,11 +258,12 @@ public class Level1State extends LevelState {
 	@Override
 	public void updateScreen(){
 		MegaMan megaMan = this.getMegaMan();
-		Floor[] floor = this.getFloor();
+		//Floor[] floor = this.getFloor();
 		Platform[] numPlatforms = this.getPlatforms();
 		List<Bullet> bullets = this.getBullets();
 		Asteroid asteroid = this.getAsteroid();
 		List<BigBullet> bigBullets = this.getBigBullets();
+		Graphics2D g2d = getGraphics2D();
 		//		Asteroid asteroid2 = gameLogic.getAsteroid2();
 		//		BigAsteroid bigAsteroid = gameLogic.getBigAsteroid();
 		//		List<BulletBoss> bulletsBoss = gameLogic.getBulletBoss();
@@ -203,7 +271,7 @@ public class Level1State extends LevelState {
 		//		Boss boss = gameLogic.getBoss();
 		//		Boss boss2 = gameLogic.getBoss2();
 
-		GameStatus status = this.getStatus();
+		GameStatus status = this.getGameStatus();
 		// set orignal font - for later use
 		if(this.originalFont == null){
 			this.originalFont = g2d.getFont();
@@ -217,49 +285,6 @@ public class Level1State extends LevelState {
 		// draw 50 random stars
 		drawStars(50);
 
-		// TODO THIS SECTION SHOULD GO IN GameLogic as it pertains to game instead of level
-		// if the game is starting, draw "Get Ready" message
-		if(status.isGameStarting()){
-			drawGetReady();
-			return;
-		}
-
-		// if the game is over, draw the "Game Over" message
-		if(status.isGameOver()){
-			// draw the message
-			drawGameOver();
-
-			long currentTime = System.currentTimeMillis();
-			// draw the explosions until their time passes
-			if((currentTime - lastAsteroidTime) < NEW_ASTEROID_DELAY){
-				graphicsMan.drawAsteroidExplosion(asteroidExplosion, g2d, this);
-			}
-			//			if((currentTime - lastShipTime) < NEW_SHIP_DELAY){
-			//				graphicsMan.drawShipExplosion(shipExplosion, g2d, this);
-			//			}
-			return;
-		}
-
-		//if the game is won, draw the "You Win!!!" message
-		if(status.isGameWon()){
-			// draw the message
-			drawYouWin();
-
-			long currentTime = System.currentTimeMillis();
-			// draw the explosions until their time passes
-			if((currentTime - lastAsteroidTime) < NEW_ASTEROID_DELAY){
-				graphicsMan.drawAsteroidExplosion(asteroidExplosion, g2d, this);
-			}
-			return;
-		}
-
-		// the game has not started yet
-		if(!status.isGameStarted()){
-			// draw game title screen
-			initialMessage();
-			return;
-		}
-		// TODO THIS SECTION SHOULD GO IN GameLogic as it pertains to game instead of level
 
 		//draw Floor
 		for(int i=0; i<9; i++){
@@ -436,92 +461,14 @@ public class Level1State extends LevelState {
 		getMainFrame().getDestroyedValueLabel().setText(Long.toString(status.getLevel()));
 	}
 
-	/**
-	 * Draws the "Game Over" message.
-	 */
-	protected void drawGameOver() {
-		String gameOverStr = "LEVEL " + this.getLevel() + " COMPLETED";
 
-		Font currentFont = biggestFont == null? bigFont : biggestFont;
-		float fontSize = currentFont.getSize2D();
-		bigFont = currentFont.deriveFont(fontSize + 1).deriveFont(Font.BOLD);
-		FontMetrics fm = g2d.getFontMetrics(bigFont);
-		int strWidth = fm.stringWidth(gameOverStr);
-		if(strWidth > this.getWidth() - 10){
-			biggestFont = currentFont;
-			bigFont = biggestFont;
-			fm = g2d.getFontMetrics(bigFont);
-			strWidth = fm.stringWidth(gameOverStr);
-		}
-		int ascent = fm.getAscent();
-		int strX = (this.getWidth() - strWidth)/2;
-		int strY = (this.getHeight() + ascent)/2;
-		g2d.setFont(bigFont);
-		g2d.setPaint(Color.WHITE);
-		g2d.drawString(gameOverStr, strX, strY);
-
-		boomReset();
-		healthReset();
-		delayReset();
-	}
-
-	protected void drawYouWin() {
-		String youWinStr = "You Pass";
-
-		Font currentFont = biggestFont == null? bigFont : biggestFont;
-		float fontSize = currentFont.getSize2D();
-		bigFont = currentFont.deriveFont(fontSize + 1).deriveFont(Font.BOLD);
-		FontMetrics fm = g2d.getFontMetrics(bigFont);
-		int strWidth = fm.stringWidth(youWinStr);
-		if(strWidth > this.getWidth() - 10){
-			biggestFont = currentFont;
-			bigFont = biggestFont;
-			fm = g2d.getFontMetrics(bigFont);
-			strWidth = fm.stringWidth(youWinStr);
-		}
-		int ascent = fm.getAscent();
-		int strX = (this.getWidth() - strWidth)/2;
-		int strY = (this.getHeight() + ascent)/2;
-		g2d.setFont(bigFont);
-		g2d.setPaint(Color.YELLOW);
-		g2d.drawString(youWinStr, strX, strY);
-
-		g2d.setFont(originalFont);
-		fm = g2d.getFontMetrics();
-		String newGameStr = "Next level starting soon";
-		strWidth = fm.stringWidth(newGameStr);
-		strX = (this.getWidth() - strWidth)/2;
-		strY = (this.getHeight() + fm.getAscent())/2 + ascent + 16;
-		g2d.setPaint(Color.YELLOW);
-		g2d.drawString(newGameStr, strX, strY);
-
-		boom=3;	//Change value in order for the next level to start
-
-		//		boomReset();
-		//		healthReset();
-		//		delayReset();
-	}
-
-	/**
-	 * Draws the initial "Get Ready!" message.
-	 */
-	protected void drawGetReady() {
-		String readyStr = "Get Ready"; 
-		g2d.setFont(originalFont.deriveFont(originalFont.getSize2D() + 1));
-		FontMetrics fm = g2d.getFontMetrics();
-		int ascent = fm.getAscent();
-		int strWidth = fm.stringWidth(readyStr);
-		int strX = (this.getWidth() - strWidth)/2;
-		int strY = (this.getHeight() + ascent)/2;
-		g2d.setPaint(Color.WHITE);
-		g2d.drawString(readyStr, strX, strY);
-	}
 
 	/**
 	 * Draws the specified number of stars randomly on the game screen.
 	 * @param numberOfStars the number of stars to draw
 	 */
 	protected void drawStars(int numberOfStars) {
+		Graphics2D g2d = getGraphics2D();
 		g2d.setColor(Color.WHITE);
 		for(int i=0; i<numberOfStars; i++){
 			int x = (int)(Math.random() * this.getWidth());
@@ -530,142 +477,11 @@ public class Level1State extends LevelState {
 		}
 	}
 
-	/**
-	 * Display initial game title screen.
-	 */
-	protected void initialMessage() {
-		String gameTitleStr = "Get Ready for Level " + this.getLevel();
-
-		Font currentFont = biggestFont == null? bigFont : biggestFont;
-		float fontSize = currentFont.getSize2D();
-		bigFont = currentFont.deriveFont(fontSize + 1).deriveFont(Font.BOLD).deriveFont(Font.ITALIC);
-		FontMetrics fm = g2d.getFontMetrics(bigFont);
-		int strWidth = fm.stringWidth(gameTitleStr);
-		if(strWidth > this.getWidth() - 10){
-			bigFont = currentFont;
-			biggestFont = currentFont;
-			fm = g2d.getFontMetrics(currentFont);
-			strWidth = fm.stringWidth(gameTitleStr);
-		}
-		g2d.setFont(bigFont);
-		int ascent = fm.getAscent();
-		int strX = (this.getWidth() - strWidth)/2;
-		int strY = (this.getHeight() + ascent)/2 - ascent;
-		g2d.setPaint(Color.YELLOW);
-		g2d.drawString(gameTitleStr, strX, strY);
-
-		g2d.setFont(originalFont);
-		fm = g2d.getFontMetrics();
-		String newGameStr = "Press <Space> to Start the Level";
-		strWidth = fm.stringWidth(newGameStr);
-		strX = (this.getWidth() - strWidth)/2;
-		strY = (this.getHeight() + fm.getAscent())/2 + ascent + 16;
-		g2d.setPaint(Color.WHITE);
-		g2d.drawString(newGameStr, strX, strY);
-
-		fm = g2d.getFontMetrics();
-		String itemGameStr = "Press <I> for Item Menu.";
-		strWidth = fm.stringWidth(itemGameStr);
-		strX = (this.getWidth() - strWidth)/2;
-		strY = strY + 16;
-		g2d.drawString(itemGameStr, strX, strY);
-
-		fm = g2d.getFontMetrics();
-		String shopGameStr = "Press <S> for Shop Menu.";
-		strWidth = fm.stringWidth(shopGameStr);
-		strX = (this.getWidth() - strWidth)/2;
-		strY = strY + 16;
-		g2d.drawString(shopGameStr, strX, strY);
-
-		fm = g2d.getFontMetrics();
-		String exitGameStr = "Press <Esc> to Exit the Game.";
-		strWidth = fm.stringWidth(exitGameStr);
-		strX = (this.getWidth() - strWidth)/2;
-		strY = strY + 16;
-		g2d.drawString(exitGameStr, strX, strY);
-	}
-
-	/**
-	 * Prepare screen for game over.
-	 */
-	public void doLevelOver(){
-		getMainFrame().getDestroyedValueLabel().setForeground(new Color(128, 0, 0));
-	}
-
-	public void doLevelWin(){
-
-	}
-
-	/**
-	 * Prepare screen for a new game.
-	 */
-	public void doLevelStart() {	
-
-		// init game variables
-		bullets = new ArrayList<Bullet>();
-		bulletsBoss = new ArrayList<BulletBoss>();
-		bulletsBoss2 = new ArrayList<BulletBoss2>();
-		bigBullets = new ArrayList<BigBullet>();
-		//numPlatforms = new Platform[5];
-
-		GameStatus status = this.getStatus();
-
-		status.setGameStarting(true);
-		status.setShipsLeft(3);
-		status.setLevel(1);
-		status.setGameOver(false);
-		status.setAsteroidsDestroyed(0);
-		status.setNewAsteroid(false);
-		status.setNewAsteroid2(false);
-		status.setNewBigAsteroid(false);
-		//status.setNewFloor(false);
-
-		// init the ship and the asteroid
-		newMegaMan(this);
-		newFloor(this, 9);
-
-		newNumPlatforms(this, getNumPlatforms());
-
-		//        newPlatform(gameScreen/*, 1*/);
-		//        newPlatform1(gameScreen);
-		newBoss(this);
-		newBoss2(this);
-		newAsteroid(this);
-		newAsteroid2(this);
-		newBigAsteroid(this);
-		// END Moved from GameLogic
-
-		lastAsteroidTime = -NEW_ASTEROID_DELAY;
-		//lastBigAsteroidTime = -NEW_BIG_ASTEROID_DELAY;
-		lastShipTime = -NEW_SHIP_DELAY;
-
-		bigFont = originalFont;
-		biggestFont = null;
-
-		// set labels' text
-		getMainFrame().getDestroyedValueLabel().setForeground(Color.BLACK);
-		getMainFrame().getDestroyedValueLabel().setText(Integer.toString(status.getShipsLeft()));
-		getMainFrame().getDestroyedValueLabel().setText(Long.toString(status.getAsteroidsDestroyed()));
-		getMainFrame().getDestroyedValueLabel().setText(Long.toString(status.getLevel()));
 
 
-	}
 
 	public boolean isLevelWon() {
 		return boom >= 3; // TODO change to use asteroids destroyed in this level
-	}
-
-	public int boomReset(){
-		boom= 0;
-		return boom;
-	}
-	public long healthReset(){
-		boom= 0;
-		return boom;
-	}
-	public long delayReset(){
-		boom= 0;
-		return boom;
 	}
 
 	protected boolean Gravity(){
@@ -728,20 +544,6 @@ public class Level1State extends LevelState {
 		return true;
 	}
 
-//	public void restructure(){
-//		Platform[] platform = this.getPlatforms();
-//		for(int i=0; i< getNumPlatforms(); i++){
-//			if(i<4)	platform[i].setLocation(50+ i*50, getHeight()/2 + 140 - i*40);
-//			if(i==4) platform[i].setLocation(50 +i*50, getHeight()/2 + 140 - 3*40);
-//			if(i>4){	
-//				int n=4;
-//				platform[i].setLocation(50 + i*50, getHeight()/2 + 20 + (i-n)*40 );
-//				n=n+2;
-//			}
-//		}
-//		this.getStatus().setLevel(this.getStatus().getLevel() + 1);
-//	}
-
 	public void removeAsteroid(Asteroid asteroid){
 		// "remove" asteroid
 		asteroidExplosion = new Rectangle(
@@ -750,7 +552,7 @@ public class Level1State extends LevelState {
 				asteroid.width,
 				asteroid.height);
 		asteroid.setLocation(-asteroid.width, -asteroid.height);
-		this.getStatus().setNewAsteroid(true);
+		this.getGameStatus().setNewAsteroid(true);
 		lastAsteroidTime = System.currentTimeMillis();
 
 		// play asteroid explosion sound
@@ -851,10 +653,10 @@ public class Level1State extends LevelState {
 		return floor;
 	}
 
-	public Platform[] newNumPlatforms(Level1State screen, int n){
+	public Platform[] newPlatforms(int n){
 		platforms = new Platform[n];
 		for(int i=0; i<n; i++){
-			this.platforms[i] = new Platform(screen, i);
+			this.platforms[i] = new Platform(this, i);
 		}
 		return platforms;
 
