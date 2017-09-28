@@ -72,7 +72,7 @@ public class LevelLogic {
 	public void checkConditions(){
 		// check game over conditions
 		if(getLevelState().getGameStatus().isGameStarted()) {
-			if (!getLevelState().getGameStatus().isGameOver() && getLevelState().getGameStatus().getShipsLeft() == 0) {
+			if (!getLevelState().getGameStatus().isGameOver() && getLevelState().getGameStatus().getLivesLeft() == 0) {
 				gameOver();
 			}
 			if(!getLevelState().getGameStatus().isGameWon() && getLevelState().getBoom() == 2) {
@@ -347,7 +347,7 @@ public class LevelLogic {
 		case LevelState.PLAYING:
 			levelState.doPlaying();
 			handleKeysDuringPlay(ih, levelState);
-			if(status.getShipsLeft() == 0) {
+			if(status.getLivesLeft() == 0) {
 				levelState.setCurrentState(LevelState.GAME_OVER_SCREEN);
 			}
 			if(levelState.isLevelWon()) {
@@ -423,7 +423,7 @@ public class LevelLogic {
 				if((currentTime - lastExchangeTime > 1000)){
 					lastExchangeTime = currentTime;
 					status.setAsteroidsDestroyed(status.getAsteroidsDestroyed() - 1500);
-					status.setShipsLeft(status.getShipsLeft() + 1);
+					status.setLivesLeft(status.getLivesLeft() + 1);
 				}
 			}
 		}
@@ -569,7 +569,7 @@ public class LevelLogic {
 					if((currentTime - lastExchangeTime > 1000)){
 						lastExchangeTime = currentTime;
 						status.setAsteroidsDestroyed(status.getAsteroidsDestroyed() - 1500);
-						status.setShipsLeft(status.getShipsLeft() + 1);
+						status.setLivesLeft(status.getLivesLeft() + 1);
 					}
 				}
 			}
@@ -625,7 +625,7 @@ public class LevelLogic {
 
 		// if the game is over, draw the "Game Over" message
 		if(status.isGameStarted()) {
-			if (!status.isGameOver() && status.getShipsLeft() == 0) {
+			if (!status.isGameOver() && status.getLivesLeft() == 0) {
 				gameOver();
 			}
 			if(!status.isGameWon() && getLevelState().getBoom() == 2) {

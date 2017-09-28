@@ -19,7 +19,7 @@ public class GameStatus {
 	//private boolean newFloor;
 	//private boolean newPlatform;
 	private long asteroidsDestroyed = 0;
-	private int shipsLeft;
+	private int livesLeft;
 	private int level = 1;
 	
 	public GameStatus(){
@@ -83,8 +83,8 @@ public class GameStatus {
 	}
 	
 	/**
-	 * Indicates if a new ship should be created/drawn.
-	 * @return if a new ship should be created/drawn
+	 * Indicates if a new MegaMan should be created/drawn.
+	 * @return if a new life should be created/drawn
 	 */
 	public synchronized boolean isNewMegaMan() {
 		return newMegaMan;
@@ -171,15 +171,15 @@ public class GameStatus {
 	}
 
 	/**
-	 * Returns the number ships/lives left.
-	 * @return the number ships left
+	 * Returns the number lives left.
+	 * @return the number lifes left
 	 */
-	public synchronized int getShipsLeft() {
-		return shipsLeft;
+	public synchronized int getLivesLeft() {
+		return livesLeft;
 	}
 
-	public synchronized void setShipsLeft(int shipsLeft) {
-		this.shipsLeft = shipsLeft;
+	public synchronized void setLivesLeft(int livesLeft) {
+		this.livesLeft = livesLeft;
 	}
 
 	public int getLevel() {

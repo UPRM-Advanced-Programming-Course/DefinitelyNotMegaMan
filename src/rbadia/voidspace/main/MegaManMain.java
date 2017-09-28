@@ -29,36 +29,23 @@ public class MegaManMain {
 	 */
 	public static void main(String[] args) throws InterruptedException, IOException  {
 
-		//Music
-		//allows music to be played while playing
+
+		MainFrame frame = new MainFrame();              // Main Game Window
+		GameStatus gameStatus = new GameStatus();       // Records overall status of game across all levels
+		LevelLogic gameLogic = new LevelLogic();          // Coordinates among various levels
+		InputHandler inputHandler = new InputHandler(); // Keyboard listener
+
 		audioFile = new File("audio/menuScreen.wav");
 		try {
 			audioStream = AudioSystem.getAudioInputStream(audioFile);
 		} catch (UnsupportedAudioFileException e) {
 			e.printStackTrace();
 		}
-
-		AudioFormat format = audioStream.getFormat();
-		DataLine.Info info = new DataLine.Info(Clip.class, format);
-
-		try {
-			audioClip = (Clip) AudioSystem.getLine(info);
-			audioClip.open(audioStream);
-			audioClip.start();
-			audioClip.loop(Clip.LOOP_CONTINUOUSLY);
-		} catch (LineUnavailableException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		MainFrame frame = new MainFrame();              // Main Game Window
-		GameStatus gameStatus = new GameStatus();       // Records overall status of game across all levels
-		LevelLogic gameLogic = new LevelLogic();          // Coordinates among various levels
-		InputHandler inputHandler = new InputHandler(); // Keyboard listener
 		
 		frame.addKeyListener(inputHandler);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//frame.setVisible(true);
+		gameStatus.setAsteroidsDestroyed(0);
+		gameStatus.setLivesLeft(3);
 
 		int playAgain = 2;
 		while(playAgain != 1) {
@@ -74,8 +61,10 @@ public class MegaManMain {
 				frame.setLevelState(nextLevel);
 				gameLogic.setLevelState(nextLevel);
 				inputHandler.setLevelState(nextLevel);
+				gameStatus.setLevel(nextLevel.getLevel());
 				
 				frame.setVisible(true);  // TODO verify whether this is necessary
+				startInitialMusic();
 
 				// init main game loop
 				Thread nextLevelLoop = new Thread(new LevelLoop(nextLevel));
@@ -91,5 +80,23 @@ public class MegaManMain {
 			playAgain = JOptionPane.showConfirmDialog(null, outcome + " ... Play Again?", "", JOptionPane.YES_NO_OPTION);
 		}
 		System.exit(0);
+	}
+	
+	public static void startInitialMusic() throws InterruptedException, IOException {
+		// Music 
+		// allows music to be played while playing
+
+		AudioFormat format = audioStream.getFormat();
+		DataLine.Info info = new DataLine.Info(Clip.class, format);
+
+		try {
+			audioClip = (Clip) AudioSystem.getLine(info);
+			audioClip.open(audioStream);
+			audioClip.start();
+			audioClip.loop(Clip.LOOP_CONTINUOUSLY);
+		} catch (LineUnavailableException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

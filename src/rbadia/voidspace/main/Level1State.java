@@ -1,13 +1,10 @@
 package rbadia.voidspace.main;
 import java.awt.Color;
-
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +16,6 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
-import javax.swing.Timer;
 
 import rbadia.voidspace.graphics.GraphicsManager;
 import rbadia.voidspace.model.Asteroid;
@@ -40,12 +36,8 @@ import rbadia.voidspace.sounds.SoundManager;
 public class Level1State extends LevelState {
 
 	private static final long serialVersionUID = 1L;
-
 	protected GraphicsManager graphicsMan;
-
 	protected BufferedImage backBuffer;
-	//protected Graphics2D g2d;
-
 	protected MegaMan megaMan;
 	protected Boss boss;
 	protected Boss boss2;
@@ -61,11 +53,11 @@ public class Level1State extends LevelState {
 	protected Platform[] platforms;
 
 	protected int damage=0;
-	protected static final int NEW_SHIP_DELAY = 500;
+	protected static final int NEW_MEGAMAN_DELAY = 500;
 	protected static final int NEW_ASTEROID_DELAY = 500;
 
 	protected long lastAsteroidTime;
-	protected long lastShipTime;
+	protected long lastLifeTime;
 
 	protected Rectangle asteroidExplosion;
 
@@ -81,33 +73,20 @@ public class Level1State extends LevelState {
 	// Constructors
 	public Level1State(int level, MainFrame frame, GameStatus status, LevelLogic gameLogic, InputHandler inputHandler) {
 		super();
+		this.setSize(new Dimension(500, 400));
+		this.setPreferredSize(new Dimension(500, 400));
+		this.setBackground(Color.BLACK);
+		
 		this.setLevel(level);
 		this.setMainFrame(frame);
 		this.setGameStatus(status);
 		this.setGameLogic(gameLogic);
 		this.setInputHandler(inputHandler);
-		
-		this.setSize(new Dimension(500, 400));
-		this.setPreferredSize(new Dimension(500, 400));
-		this.setBackground(Color.BLACK);
-
-		// initialize random number generator
-		rand = new Random();
-
-		graphicsMan = new GraphicsManager();
-
-		// init back buffer image
 		backBuffer = new BufferedImage(500, 400, BufferedImage.TYPE_INT_RGB);
 		this.setGraphics2D(backBuffer.createGraphics());
-
-		//this.setGameStatus(new GameStatus());
 		this.setSoundManager(new SoundManager());
-
-		// init some variables
-		bullets = new ArrayList<Bullet>();
-		bulletsBoss = new ArrayList<BulletBoss>();
-		bulletsBoss2 = new ArrayList<BulletBoss2>();
-		bigBullets = new ArrayList<BigBullet>();
+		graphicsMan = new GraphicsManager();
+		rand = new Random();
 	}
 
 	// Getters
@@ -130,6 +109,7 @@ public class Level1State extends LevelState {
 	// The method associated with the current state will be called 
 	// repeatedly during each LevelLoop iteration until the next a state 
 	// transition occurs
+	// To understand when each invoked see LevelLogic.stateTransition() & LevelLoop class
 	
 	public void doStart() {	
 		
@@ -144,17 +124,12 @@ public class Level1State extends LevelState {
 
 		GameStatus status = this.getGameStatus();
 
-		//status.setGameStarting(true);
-		status.setShipsLeft(3);
-		//status.setLevel(1);
 		status.setGameOver(false);
-		status.setAsteroidsDestroyed(0);
 		status.setNewAsteroid(false);
 		status.setNewAsteroid2(false);
 		status.setNewBigAsteroid(false);
-		//status.setNewFloor(false);
 
-		// init the ship and the asteroid
+		// init the life and the asteroid
 		newMegaMan(this);
 		newFloor(this, 9);
 		newPlatforms(getNumPlatforms());
@@ -166,16 +141,16 @@ public class Level1State extends LevelState {
 
 		lastAsteroidTime = -NEW_ASTEROID_DELAY;
 		//lastBigAsteroidTime = -NEW_BIG_ASTEROID_DELAY;
-		lastShipTime = -NEW_SHIP_DELAY;
+		lastLifeTime = -NEW_MEGAMAN_DELAY;
 
 		bigFont = originalFont;
 		biggestFont = null;
 
 		// Display initial values for scores
 		getMainFrame().getDestroyedValueLabel().setForeground(Color.BLACK);
-		getMainFrame().getDestroyedValueLabel().setText(Integer.toString(status.getShipsLeft()));
+		getMainFrame().getShipsValueLabel().setText(Integer.toString(status.getLivesLeft()));
 		getMainFrame().getDestroyedValueLabel().setText(Long.toString(status.getAsteroidsDestroyed()));
-		getMainFrame().getDestroyedValueLabel().setText(Long.toString(status.getLevel()));
+		getMainFrame().getLevelValueLabel().setText(Long.toString(status.getLevel()));
 		
 	}
 	
@@ -245,7 +220,6 @@ public class Level1State extends LevelState {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		// draw current backbuffer to the actual game screen
 		g.drawImage(backBuffer, 0, 0, this);
 	}
 
@@ -427,7 +401,7 @@ public class Level1State extends LevelState {
 
 		//MM-Asteroid collision
 		if(asteroid.intersects(megaMan)){
-			status.setShipsLeft(status.getShipsLeft() - 1);
+			status.setLivesLeft(status.getLivesLeft() - 1);
 			removeAsteroid(asteroid);
 		}
 
@@ -438,24 +412,15 @@ public class Level1State extends LevelState {
 
 			}
 		}
-		//
-
-//		if(boom == 2)
-//			restructure();
-
-//		status.getAsteroidsDestroyed();
-//		status.getShipsLeft();
-//		status.getLevel();
 
 		// update asteroids destroyed label  
 		getMainFrame().getDestroyedValueLabel().setText(Long.toString(status.getAsteroidsDestroyed()));
 
-		// update ships left label
-		getMainFrame().getDestroyedValueLabel().setText(Integer.toString(status.getShipsLeft()));
+		// update lives left label
+		getMainFrame().getShipsValueLabel().setText(Integer.toString(status.getLivesLeft()));
 
 		//update level label
-
-		getMainFrame().getDestroyedValueLabel().setText(Long.toString(status.getLevel()));
+		getMainFrame().getLevelValueLabel().setText(Long.toString(status.getLevel()));
 	}
 
 
@@ -558,7 +523,7 @@ public class Level1State extends LevelState {
 
 	// BEGIN Moved from GameLogic
 	/**
-	 * Fire a bullet from ship.
+	 * Fire a bullet from life.
 	 */
 	public void fireBullet(){
 		Bullet bullet = new Bullet(megaMan);
@@ -576,7 +541,7 @@ public class Level1State extends LevelState {
 	}
 
 	/**
-	 * Move a bullet once fired from the ship.
+	 * Move a bullet once fired.
 	 * @param bullet the bullet to move
 	 * @return if the bullet should be removed from screen
 	 */
@@ -619,7 +584,7 @@ public class Level1State extends LevelState {
 		}
 	}
 
-	/** Move a "Power Shot" bullet once fired from the ship.
+	/** Move a "Power Shot" bullet once fired.
 	 * @param bulletBoss2 the bullet to move
 	 * @return if the bullet should be removed from screen
 	 */
@@ -634,7 +599,7 @@ public class Level1State extends LevelState {
 	}
 
 	/**
-	 * Create a new ship (and replace current one).
+	 * Create a new MegaMan (and replace current one).
 	 */
 	public MegaMan newMegaMan(Level1State screen){
 		this.megaMan = new MegaMan(screen);
