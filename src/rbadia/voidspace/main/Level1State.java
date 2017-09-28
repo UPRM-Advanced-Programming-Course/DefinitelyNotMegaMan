@@ -226,7 +226,6 @@ public class Level1State extends LevelState {
 
 		drawAsteroid();
 
-
 		drawBullets();
 
 		drawBigBullets();
