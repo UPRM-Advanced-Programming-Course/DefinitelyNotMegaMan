@@ -2,33 +2,13 @@ package rbadia.voidspace.model;
 
 import java.awt.Rectangle;
 
-import rbadia.voidspace.main.Level1State;
-
 public class Platform extends Rectangle {
 	private static final long serialVersionUID = 1L;
 
-	//	public static final int DEFAULT_SPEED = 4;
-	private int platformWidth = 44;
-	private int platformHeight = 4;
-//	private int platformX=0;
-//	private int platformY=0;
-	//	private int speed = DEFAULT_SPEED;
+	private static final int WIDTH = 44;
+	private static final int HEIGHT = 4;
 
-	/**
-	 * Crates a new asteroid at a random x location at the top of the screen 
-	 * @param screen the game screen
-	 */
-	public Platform(Level1State screen, int n){
-
-		this.setLocation( 0 , screen.getHeight()/2 + 140 - n*40);
-		this.setSize(platformWidth, platformHeight);
-		
-	}
-
-	public int getPlatformWidth() {
-		return platformWidth;
-	}
-	public int getPlatformHeight() {
-		return platformHeight;
+	public Platform(int xPos, int yPos) {
+		super(xPos, yPos, WIDTH, HEIGHT);
 	}
 }

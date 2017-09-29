@@ -108,13 +108,12 @@ public class Level1State extends LevelState {
 		status.setNewAsteroid(false);
 
 		// init the life and the asteroid
-		newMegaMan(this);
+		newMegaMan();
 		newFloor(this, 9);
 		newPlatforms(getNumPlatforms());
 		newAsteroid(this);
 
 		lastAsteroidTime = -NEW_ASTEROID_DELAY;
-		//lastBigAsteroidTime = -NEW_BIG_ASTEROID_DELAY;
 		lastLifeTime = -NEW_MEGAMAN_DELAY;
 
 		bigFont = originalFont;
@@ -399,7 +398,7 @@ public class Level1State extends LevelState {
 		Floor[] floor = this.getFloor();
 
 		for(int i=0; i<9; i++){
-			if((megaMan.getY() + megaMan.getMegaManHeight() -17 < this.getHeight() - floor[i].getFloorHeight()/2) 
+			if((megaMan.getY() + megaMan.getHeight() -17 < this.getHeight() - floor[i].getHeight()/2) 
 					&& Fall() == true){
 
 				megaMan.translate(0 , 2);
@@ -416,8 +415,8 @@ public class Level1State extends LevelState {
 		List<Bullet> bullets = this.getBullets();
 		for(int i=0; i<bullets.size(); i++){
 			Bullet bullet = bullets.get(i);
-			if((bullet.getX() > megaMan.getX() + megaMan.getMegaManWidth()) && 
-					(bullet.getX() <= megaMan.getX() + megaMan.getMegaManWidth() + 60)){
+			if((bullet.getX() > megaMan.getX() + megaMan.getWidth()) && 
+					(bullet.getX() <= megaMan.getX() + megaMan.getWidth() + 60)){
 				return true;
 			}
 		}
@@ -430,8 +429,8 @@ public class Level1State extends LevelState {
 		List<BigBullet> bigBullets = this.getBigBullets();
 		for(int i=0; i<bigBullets.size(); i++){
 			BigBullet bigBullet = bigBullets.get(i);
-			if((bigBullet.getX() > megaMan.getX() + megaMan.getMegaManWidth()) && 
-					(bigBullet.getX() <= megaMan.getX() + megaMan.getMegaManWidth() + 60)){
+			if((bigBullet.getX() > megaMan.getX() + megaMan.getWidth()) && 
+					(bigBullet.getX() <= megaMan.getX() + megaMan.getWidth() + 60)){
 				return true;
 			}
 		}
@@ -443,10 +442,10 @@ public class Level1State extends LevelState {
 		MegaMan megaMan = this.getMegaMan(); 
 		Platform[] platforms = this.getPlatforms();
 		for(int i=0; i<getNumPlatforms(); i++){
-			if((((platforms[i].getX() < megaMan.getX()) && (megaMan.getX()< platforms[i].getX() + platforms[i].getPlatformWidth()))
-					|| ((platforms[i].getX() < megaMan.getX() + megaMan.getMegaManWidth()) 
-							&& (megaMan.getX() + megaMan.getMegaManWidth()< platforms[i].getX() + platforms[i].getPlatformWidth())))
-					&& megaMan.getY() + megaMan.getMegaManHeight() == platforms[i].getY()
+			if((((platforms[i].getX() < megaMan.getX()) && (megaMan.getX()< platforms[i].getX() + platforms[i].getWidth()))
+					|| ((platforms[i].getX() < megaMan.getX() + megaMan.getWidth()) 
+							&& (megaMan.getX() + megaMan.getWidth()< platforms[i].getX() + platforms[i].getWidth())))
+					&& megaMan.getY() + megaMan.getHeight() == platforms[i].getY()
 					){
 				return false;
 			}
@@ -472,7 +471,8 @@ public class Level1State extends LevelState {
 	 * Fire a bullet from life.
 	 */
 	public void fireBullet(){
-		Bullet bullet = new Bullet(megaMan);
+		Bullet bullet = new Bullet(megaMan.x + megaMan.width - Bullet.WIDTH/2,
+				megaMan.y + megaMan.width/2 - Bullet.HEIGHT +2);
 		bullets.add(bullet);
 		this.getSoundManager().playBulletSound();
 	}
@@ -481,7 +481,10 @@ public class Level1State extends LevelState {
 	 * Fire the "Power Shot" bullet
 	 */
 	public void fireBigBullet(){
-		BigBullet bigBullet = new BigBullet(megaMan);
+		//BigBullet bigBullet = new BigBullet(megaMan);
+		int xPos = megaMan.x + megaMan.width - BigBullet.WIDTH / 2;
+		int yPos = megaMan.y + megaMan.width/2 - BigBullet.HEIGHT + 4;
+		BigBullet  bigBullet = new BigBullet(xPos, yPos);
 		bigBullets.add(bigBullet);
 		this.getSoundManager().playBulletSound();
 	}
@@ -506,8 +509,8 @@ public class Level1State extends LevelState {
 	 * @return if the bullet should be removed from screen
 	 */
 	public boolean moveBigBullet(BigBullet bigBullet){
-		if(bigBullet.getY() - bigBullet.getBigSpeed() >= 0){
-			bigBullet.translate(bigBullet.getBigSpeed(), 0);
+		if(bigBullet.getY() - bigBullet.getSpeed() >= 0){
+			bigBullet.translate(bigBullet.getSpeed(), 0);
 			return false;
 		}
 		else{
@@ -518,15 +521,15 @@ public class Level1State extends LevelState {
 	/**
 	 * Create a new MegaMan (and replace current one).
 	 */
-	public MegaMan newMegaMan(Level1State screen){
-		this.megaMan = new MegaMan(screen);
+	public MegaMan newMegaMan(){
+		this.megaMan = new MegaMan((getWidth() - MegaMan.WIDTH) / 2, (getHeight() - MegaMan.HEIGHT - MegaMan.Y_OFFSET) / 2);
 		return megaMan;
 	}
 
 	public Floor[] newFloor(Level1State screen, int n){
 		floor = new Floor[n];
 		for(int i=0; i<n; i++){
-			this.floor[i] = new Floor(screen, i);
+			this.floor[i] = new Floor(0 + i * Floor.WIDTH, screen.getHeight()- Floor.HEIGHT/2);
 		}
 
 		return floor;
@@ -535,7 +538,7 @@ public class Level1State extends LevelState {
 	public Platform[] newPlatforms(int n){
 		platforms = new Platform[n];
 		for(int i=0; i<n; i++){
-			this.platforms[i] = new Platform(this, i);
+			this.platforms[i] = new Platform(0 , getHeight()/2 + 140 - i*40);
 		}
 		return platforms;
 
@@ -567,7 +570,7 @@ public class Level1State extends LevelState {
 	 */
 	public void moveMegaManDown(){
 		for(int i=0; i<9; i++){
-			if(megaMan.getY() + megaMan.getSpeed() + megaMan.height < getHeight() - floor[i].getFloorHeight()/2){
+			if(megaMan.getY() + megaMan.getSpeed() + megaMan.height < getHeight() - floor[i].getHeight()/2){
 				megaMan.translate(0, 2);
 			}
 		}

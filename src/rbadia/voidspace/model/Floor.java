@@ -1,33 +1,12 @@
 package rbadia.voidspace.model;
 
-import java.awt.Rectangle;
-
-import rbadia.voidspace.main.Level1State;
-
-public class Floor extends Rectangle {
+public class Floor extends GameObject {
 	private static final long serialVersionUID = 1L;
 
-	//	public static final int DEFAULT_SPEED = 4;
+	public static final int WIDTH = 64;
+	public static final int HEIGHT = 64;
 
-	private int floorWidth = 64;
-	private int floorHeight = 64;
-//	private int floorX = 0;
-//	private int floorY =0;
-	//	private int speed = DEFAULT_SPEED;
-
-	/**
-	 * Crates a new asteroid at a random x location at the top of the screen 
-	 * @param screen the game screen
-	 */
-	public Floor(Level1State screen, int n){
-			this.setLocation(0 + n*floorWidth , screen.getHeight()- floorHeight/2);
-			this.setSize(floorWidth, floorHeight);
-	}
-
-	public int getFloorWidth() {
-		return floorWidth;
-	}
-	public int getFloorHeight() {
-		return floorHeight;
+	public Floor(int xPos, int yPos) {
+		super(xPos, yPos, WIDTH, HEIGHT);
 	}
 }

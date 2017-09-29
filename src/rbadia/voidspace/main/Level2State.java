@@ -49,7 +49,7 @@ public class Level2State extends Level1State {
 	public Platform[] newPlatforms(int n){
 		platforms = new Platform[n];
 		for(int i=0; i<n; i++){
-			this.platforms[i] = new Platform(this, i);
+			this.platforms[i] = new Platform(0,0);
 			if(i<4)	platforms[i].setLocation(50+ i*50, getHeight()/2 + 140 - i*40);
 			if(i==4) platforms[i].setLocation(50 +i*50, getHeight()/2 + 140 - 3*40);
 			if(i>4){	
