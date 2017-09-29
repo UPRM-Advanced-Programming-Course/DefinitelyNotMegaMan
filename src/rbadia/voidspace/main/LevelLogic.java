@@ -414,9 +414,6 @@ public class LevelLogic {
 
 				}
 			}
-			else{
-
-			}
 		}
 
 		if(ih.isShiftPressed()){
@@ -448,8 +445,6 @@ public class LevelLogic {
 
 	public static void delay(long millis) {
 		try{
-			// sleep/wait for 1/60th of a second,
-			// for a resulting refresh rate of 60 frames per second (fps) 
 			Thread.sleep(millis);
 		}
 		catch(Exception e){

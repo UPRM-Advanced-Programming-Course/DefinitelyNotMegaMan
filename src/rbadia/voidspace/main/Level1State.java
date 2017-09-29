@@ -87,10 +87,10 @@ public class Level1State extends LevelState {
 	public List<BigBullet> getBigBullets()		{ return bigBullets;   	}
 
 	// Level state methods
-	// The method associated with the current state will be called 
+	// The method associated with the current level state will be called 
 	// repeatedly during each LevelLoop iteration until the next a state 
 	// transition occurs
-	// To understand when each invoked see LevelLogic.stateTransition() & LevelLoop class
+	// To understand when each is invoked see LevelLogic.stateTransition() & LevelLoop class
 
 	@Override
 	public void doStart() {	
@@ -122,7 +122,7 @@ public class Level1State extends LevelState {
 
 		// Display initial values for scores
 		getMainFrame().getDestroyedValueLabel().setForeground(Color.BLACK);
-		getMainFrame().getShipsValueLabel().setText(Integer.toString(status.getLivesLeft()));
+		getMainFrame().getLivesValueLabel().setText(Integer.toString(status.getLivesLeft()));
 		getMainFrame().getDestroyedValueLabel().setText(Long.toString(status.getAsteroidsDestroyed()));
 		getMainFrame().getLevelValueLabel().setText(Long.toString(status.getLevel()));
 
@@ -214,40 +214,27 @@ public class Level1State extends LevelState {
 		}
 
 		clearScreen();
-
-		// draw 50 random stars
 		drawStars(50);
-
 		drawFloor();
-
 		drawPlatforms();
-
 		drawMegaMan();
-
 		drawAsteroid();
-
 		drawBullets();
-
 		drawBigBullets();
-
 		checkBullletAsteroidCollisions();
-
 		checkBigBulletAsteroidCollisions();
-
 		checkMegaManAsteroidCollisions();
-
 		checkAsteroidFloorCollisions();
 
 		// update asteroids destroyed (score) label  
 		getMainFrame().getDestroyedValueLabel().setText(Long.toString(status.getAsteroidsDestroyed()));
 		// update lives left label
-		getMainFrame().getShipsValueLabel().setText(Integer.toString(status.getLivesLeft()));
+		getMainFrame().getLivesValueLabel().setText(Integer.toString(status.getLivesLeft()));
 		//update level label
 		getMainFrame().getLevelValueLabel().setText(Long.toString(status.getLevel()));
 	}
 
 	protected void checkAsteroidFloorCollisions() {
-		//Asteroid-Floor collision
 		for(int i=0; i<9; i++){
 			if(asteroid.intersects(floor[i])){
 				removeAsteroid(asteroid);
@@ -258,7 +245,6 @@ public class Level1State extends LevelState {
 
 	protected void checkMegaManAsteroidCollisions() {
 		GameStatus status = getGameStatus();
-		//MM-Asteroid collision
 		if(asteroid.intersects(megaMan)){
 			status.setLivesLeft(status.getLivesLeft() - 1);
 			removeAsteroid(asteroid);
@@ -266,7 +252,6 @@ public class Level1State extends LevelState {
 	}
 
 	protected void checkBigBulletAsteroidCollisions() {
-		// check for big bullet-asteroid collisions
 		GameStatus status = getGameStatus();
 		for(int i=0; i<bigBullets.size(); i++){
 			BigBullet bigBullet = bigBullets.get(i);
@@ -280,7 +265,6 @@ public class Level1State extends LevelState {
 	}
 
 	protected void checkBullletAsteroidCollisions() {
-		// check for bullet-asteroid collisions
 		GameStatus status = getGameStatus();
 		for(int i=0; i<bullets.size(); i++){
 			Bullet bullet = bullets.get(i);
@@ -298,7 +282,6 @@ public class Level1State extends LevelState {
 	}
 
 	protected void drawBigBullets() {
-		// draw big bullets
 		Graphics2D g2d = getGraphics2D();
 		for(int i=0; i<bigBullets.size(); i++){
 			BigBullet bigBullet = bigBullets.get(i);
@@ -313,7 +296,6 @@ public class Level1State extends LevelState {
 	}
 
 	protected void drawBullets() {
-		// draw bullets   
 		Graphics2D g2d = getGraphics2D();
 		for(int i=0; i<bullets.size(); i++){
 			Bullet bullet = bullets.get(i);
@@ -328,7 +310,6 @@ public class Level1State extends LevelState {
 	}
 
 	protected void drawAsteroid() {
-		// draw asteroid
 		Graphics2D g2d = getGraphics2D();
 		GameStatus status = getGameStatus();
 		if((asteroid.getX() + asteroid.getAsteroidWidth() >  0)){
@@ -393,8 +374,6 @@ public class Level1State extends LevelState {
 		g2d.setPaint(Color.BLACK);
 		g2d.fillRect(0, 0, getSize().width, getSize().height);
 	}
-
-
 
 	/**
 	 * Draws the specified number of stars randomly on the game screen.

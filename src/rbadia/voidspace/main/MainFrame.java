@@ -26,12 +26,9 @@ public class MainFrame extends JFrame {
 	private JLabel levelLabel;
 	private JLabel levelValueLabel;
 
-	private JLabel shipsLabel;
-	private JLabel shipsValueLabel;
+	private JLabel livesLabel;
+	private JLabel livesValueLabel;
 	
-	/**
-	 * This is the default constructor
-	 */
 	public MainFrame() {
 		super();
 		initialize();
@@ -45,12 +42,12 @@ public class MainFrame extends JFrame {
 		return levelValueLabel;
 	}
 
-	public JLabel getShipsLabel() {
-		return shipsLabel;
+	public JLabel getLivesLabel() {
+		return livesLabel;
 	}
 
-	public JLabel getShipsValueLabel() {
-		return shipsValueLabel;
+	public JLabel getLivesValueLabel() {
+		return livesValueLabel;
 	}
 
 	public JLabel getDestroyedValueLabel() {
@@ -69,26 +66,15 @@ public class MainFrame extends JFrame {
 		this.levelValueLabel = levelValueLabel;
 	}
 
-	public void setShipsLabel(JLabel shipsLabel) {
-		this.shipsLabel = shipsLabel;
+	public void setLivesLabel(JLabel livesLabel) {
+		this.livesLabel = livesLabel;
 	}
 
-	public void setShipsValueLabel(JLabel shipsValueLabel) {
-		this.shipsValueLabel = shipsValueLabel;
+	public void setLivesValueLabel(JLabel livesValueLabel) {
+		this.livesValueLabel = livesValueLabel;
 	}
 	
-	/**
-	 * This method initializes gameScreen	
-	 * 	
-	 * @return GameScreen
-	 */
 	public LevelState getLevelState() {
-//		if (gameState == null) {
-//			gameState = new Level1State();
-//			gameState.setShipsValueLabel(shipsValueLabel);
-//			gameState.setDestroyedValueLabel(destroyedValueLabel);
-//			gameState.setLevelValueLabel(levelValueLabel);
-//		}
 		return levelState;
 	}
 	
@@ -98,17 +84,9 @@ public class MainFrame extends JFrame {
 		this.setContentPane(getJContentPane());
 	}
 
-	/**
-	 * This method initializes this
-	 * 
-	 * @return void
-	 */
 	private void initialize() {
 		this.setSize(530, 480);
-		//this.setContentPane(getJContentPane());
 		this.setTitle("Mega Man");
-//		this.setResizable(false);
-		
 		Dimension dim = this.getToolkit().getScreenSize();
 		Rectangle bounds = this.getBounds();
 		this.setLocation(
@@ -171,8 +149,8 @@ public class MainFrame extends JFrame {
 			gridBagConstraints.gridy = 0;
 			gridBagConstraints.fill = GridBagConstraints.NONE;
 			gridBagConstraints.gridwidth = 6;	
-			shipsLabel = new JLabel("Ships Left: ");
-			shipsValueLabel = new JLabel("3");
+			livesLabel = new JLabel("Lives Left: ");
+			livesValueLabel = new JLabel("3");
 			destroyedLabel = new JLabel("Score: ");
 			destroyedValueLabel = new JLabel("0");
 			levelLabel = new JLabel("Level: ");
@@ -180,8 +158,8 @@ public class MainFrame extends JFrame {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new GridBagLayout());
 			jContentPane.add(getLevelState(), gridBagConstraints);
-			jContentPane.add(shipsLabel, gridBagConstraints1);
-			jContentPane.add(shipsValueLabel, gridBagConstraints2);
+			jContentPane.add(livesLabel, gridBagConstraints1);
+			jContentPane.add(livesValueLabel, gridBagConstraints2);
 			jContentPane.add(destroyedLabel, gridBagConstraints3);
 			jContentPane.add(destroyedValueLabel, gridBagConstraints4);
 			jContentPane.add(levelLabel, gridBagConstraints5);

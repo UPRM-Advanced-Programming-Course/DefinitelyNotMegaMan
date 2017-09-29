@@ -32,7 +32,7 @@ public class MegaManMain {
 
 		MainFrame frame = new MainFrame();              // Main Game Window
 		GameStatus gameStatus = new GameStatus();       // Records overall status of game across all levels
-		LevelLogic gameLogic = new LevelLogic();          // Coordinates among various levels
+		LevelLogic gameLogic = new LevelLogic();        // Coordinates among various levels
 		InputHandler inputHandler = new InputHandler(); // Keyboard listener
 
 		audioFile = new File("audio/menuScreen.wav");
