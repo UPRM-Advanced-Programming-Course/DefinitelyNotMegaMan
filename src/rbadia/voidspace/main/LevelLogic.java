@@ -16,10 +16,8 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
-
-
 /**
- * Handles general game logic and status.
+ * Handles general level logic and status.
  */
 public class LevelLogic {
 
@@ -400,19 +398,17 @@ public class LevelLogic {
 		}
 
 		if(ih.isQPressed()){
-			if(!status.isGameOver() && !status.isNewMegaMan() && !status.isGameStarting() && !status.isGameWon()){
-				if(stack==0 && status.getAsteroidsDestroyed()>= 0){
-					stack++;
-					status.setAsteroidsDestroyed(status.getAsteroidsDestroyed()-0);
+			if(stack==0 && status.getAsteroidsDestroyed()>= 0){
+				stack++;
+				status.setAsteroidsDestroyed(status.getAsteroidsDestroyed()-0);
+			}
+			else if(stack>= 1){
+				long currentTime = System.currentTimeMillis();
+				if((currentTime - lastBigBulletTime) > 1000){
+					lastBigBulletTime = currentTime;
+					getLevelState().fireBigBullet();
 				}
-				else if(stack>= 1){
-					long currentTime = System.currentTimeMillis();
-					if((currentTime - lastBigBulletTime) > 1000){
-						lastBigBulletTime = currentTime;
-						getLevelState().fireBigBullet();
-					}
 
-				}
 			}
 		}
 
