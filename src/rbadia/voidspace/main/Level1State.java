@@ -312,7 +312,7 @@ public class Level1State extends LevelState {
 	protected void drawAsteroid() {
 		Graphics2D g2d = getGraphics2D();
 		GameStatus status = getGameStatus();
-		if((asteroid.getX() + asteroid.getAsteroidWidth() >  0)){
+		if((asteroid.getX() + asteroid.getWidth() >  0)){
 			asteroid.translate(-asteroid.getSpeed(), 0);
 			graphicsMan.drawAsteroid(asteroid, g2d, this);	
 		}
@@ -322,8 +322,8 @@ public class Level1State extends LevelState {
 				// draw a new asteroid
 				lastAsteroidTime = currentTime;
 				status.setNewAsteroid(false);
-				asteroid.setLocation(this.getWidth() - asteroid.getAsteroidWidth(),
-						rand.nextInt(this.getHeight() - asteroid.getAsteroidHeight() - 32));
+				asteroid.setLocation((int) (this.getWidth() - asteroid.getPixelsWide()),
+						(rand.nextInt((int) (this.getHeight() - asteroid.getPixelsTall() - 32))));
 			}
 
 			else{
@@ -459,9 +459,9 @@ public class Level1State extends LevelState {
 		asteroidExplosion = new Rectangle(
 				asteroid.x,
 				asteroid.y,
-				asteroid.width,
-				asteroid.height);
-		asteroid.setLocation(-asteroid.width, -asteroid.height);
+				asteroid.getPixelsWide(),
+				asteroid.getPixelsTall());
+		asteroid.setLocation(-asteroid.getPixelsWide(), -asteroid.getPixelsTall());
 		this.getGameStatus().setNewAsteroid(true);
 		lastAsteroidTime = System.currentTimeMillis();
 		// play asteroid explosion sound
@@ -545,7 +545,9 @@ public class Level1State extends LevelState {
 	 * Create a new asteroid.
 	 */
 	public Asteroid newAsteroid(Level1State screen){
-		this.asteroid = new Asteroid(screen);
+		int xPos = (int) (screen.getWidth() - Asteroid.WIDTH);
+		int yPos = rand.nextInt((int)(screen.getHeight() - Asteroid.HEIGHT- 32));
+		asteroid = new Asteroid(xPos, yPos);
 		return asteroid;
 	}
 

@@ -27,7 +27,7 @@ public class Level2State extends Level1State {
 	@Override
 	protected void drawAsteroid() {
 		Graphics2D g2d = getGraphics2D();
-		if((asteroid.getX() + asteroid.getAsteroidWidth() >  0)) {
+		if((asteroid.getX() + asteroid.getPixelsWide() >  0)) {
 			asteroid.translate(-asteroid.getSpeed(), asteroid.getSpeed()/2);
 			graphicsMan.drawAsteroid(asteroid, g2d, this);	
 		}
@@ -35,8 +35,8 @@ public class Level2State extends Level1State {
 			long currentTime = System.currentTimeMillis();
 			if((currentTime - lastAsteroidTime) > NEW_ASTEROID_DELAY){
 
-				asteroid.setLocation(this.getWidth() - asteroid.getAsteroidWidth(),
-						rand.nextInt(this.getHeight() - asteroid.getAsteroidHeight() - 32));
+				asteroid.setLocation(this.getWidth() - asteroid.getPixelsWide(),
+						rand.nextInt(this.getHeight() - asteroid.getPixelsTall() - 32));
 			}
 			else {
 				// draw explosion

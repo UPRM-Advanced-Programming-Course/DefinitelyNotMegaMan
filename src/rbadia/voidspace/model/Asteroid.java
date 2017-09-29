@@ -1,61 +1,18 @@
 package rbadia.voidspace.model;
 
-import java.awt.Rectangle;
-import java.util.Random;
-
-import rbadia.voidspace.main.LevelState;
-import rbadia.voidspace.main.Level1State;
-
-public class Asteroid extends Rectangle {
+public class Asteroid extends GameObject {
 	private static final long serialVersionUID = 1L;
 	
 	public static final int DEFAULT_SPEED = 4;
 	
-	private int asteroidWidth = 32;
-	private int asteroidHeight = 32;
-	private int speed = DEFAULT_SPEED;
-
-	private Random rand = new Random();
+	public static final int WIDTH = 32;
+	public static final int HEIGHT = 32;
 	
-	/**
-	 * Crates a new asteroid at a random x location at the top of the screen 
-	 * @param screen the game screen
-	 */
-	public Asteroid(LevelState screen){
-		this.setLocation(
-				screen.getWidth() - asteroidWidth,
-        		rand.nextInt(screen.getHeight() - asteroidHeight - 32)
-        		);
-		this.setSize(asteroidWidth, asteroidHeight);
-	}
-	
-	public int getAsteroidWidth() {
-		return asteroidWidth;
-	}
-	public int getAsteroidHeight() {
-		return asteroidHeight;
+	public Asteroid(int xPos, int yPos) {
+		super(xPos, yPos, Asteroid.WIDTH, Asteroid.HEIGHT);
+		this.setSpeed(DEFAULT_SPEED);
 	}
 
-	/**
-	 * Returns the current asteroid speed
-	 * @return the current asteroid speed
-	 */
-	public int getSpeed() {
-		return speed;
-	}
-	
-	/**
-	 * Set the current asteroid speed
-	 * @param speed the speed to set
-	 */
-	public void setSpeed(int speed) {
-		this.speed = speed;
-	}
-	
-	/**
-	 * Returns the default asteroid speed.
-	 * @return the default asteroid speed
-	 */
 	public int getDefaultSpeed(){
 		return DEFAULT_SPEED;
 	}
