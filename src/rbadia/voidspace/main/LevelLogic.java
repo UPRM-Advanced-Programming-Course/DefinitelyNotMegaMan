@@ -68,7 +68,7 @@ public class LevelLogic {
 	 * Actions to take when the game is over.
 	 */
 	public void gameOver(){
-		getLevelState().getGameStatus().setGameStarted(false);
+		//getLevelState().getGameStatus().setGameStarted(false);
 		getLevelState().getGameStatus().setGameOver(true);
 
 		levelState.doGameOverScreen();
