@@ -1,7 +1,9 @@
 package rbadia.voidspace.main;
 import java.awt.Graphics2D;
 
+import rbadia.voidspace.graphics.GraphicsManager;
 import rbadia.voidspace.model.Platform;
+import rbadia.voidspace.sounds.SoundManager;
 
 /**
  * Level very similar to LevelState1.  
@@ -13,8 +15,10 @@ public class Level2State extends Level1State {
 	private static final long serialVersionUID = -2094575762243216079L;
 
 	// Constructors
-	public Level2State(int level, MainFrame frame, GameStatus status, LevelLogic gameLogic, InputHandler inputHandler) {
-		super(level, frame, status, gameLogic, inputHandler);
+	public Level2State(int level, MainFrame frame, GameStatus status, 
+			LevelLogic gameLogic, InputHandler inputHandler,
+			GraphicsManager graphicsMan, SoundManager soundMan) {
+		super(level, frame, status, gameLogic, inputHandler, graphicsMan, soundMan);
 	}
 
 	@Override
@@ -29,7 +33,7 @@ public class Level2State extends Level1State {
 		Graphics2D g2d = getGraphics2D();
 		if((asteroid.getX() + asteroid.getPixelsWide() >  0)) {
 			asteroid.translate(-asteroid.getSpeed(), asteroid.getSpeed()/2);
-			graphicsMan.drawAsteroid(asteroid, g2d, this);	
+			getGraphicsManager().drawAsteroid(asteroid, g2d, this);	
 		}
 		else {
 			long currentTime = System.currentTimeMillis();
@@ -40,7 +44,7 @@ public class Level2State extends Level1State {
 			}
 			else {
 				// draw explosion
-				graphicsMan.drawAsteroidExplosion(asteroidExplosion, g2d, this);
+				getGraphicsManager().drawAsteroidExplosion(asteroidExplosion, g2d, this);
 			}
 		}	
 	}

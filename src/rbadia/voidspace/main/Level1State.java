@@ -32,7 +32,7 @@ import rbadia.voidspace.sounds.SoundManager;
 public class Level1State extends LevelState {
 
 	private static final long serialVersionUID = 1L;
-	protected GraphicsManager graphicsMan;
+	//protected GraphicsManager graphicsManager;
 	protected BufferedImage backBuffer;
 	protected MegaMan megaMan;
 	protected Asteroid asteroid;
@@ -60,7 +60,9 @@ public class Level1State extends LevelState {
 	protected int levelAsteroidsDestroyed = 0;
 
 	// Constructors
-	public Level1State(int level, MainFrame frame, GameStatus status, LevelLogic gameLogic, InputHandler inputHandler) {
+	public Level1State(int level, MainFrame frame, GameStatus status, 
+			LevelLogic gameLogic, InputHandler inputHandler,
+			GraphicsManager graphicsMan, SoundManager soundMan) {
 		super();
 		this.setSize(new Dimension(500, 400));
 		this.setPreferredSize(new Dimension(500, 400));
@@ -70,10 +72,10 @@ public class Level1State extends LevelState {
 		this.setGameStatus(status);
 		this.setGameLogic(gameLogic);
 		this.setInputHandler(inputHandler);
+		this.setSoundManager(soundMan);
+		this.setGraphicsManager(graphicsMan);
 		backBuffer = new BufferedImage(500, 400, BufferedImage.TYPE_INT_RGB);
 		this.setGraphics2D(backBuffer.createGraphics());
-		this.setSoundManager(new SoundManager());
-		graphicsMan = new GraphicsManager();
 		rand = new Random();
 	}
 
@@ -284,7 +286,7 @@ public class Level1State extends LevelState {
 		Graphics2D g2d = getGraphics2D();
 		for(int i=0; i<bigBullets.size(); i++){
 			BigBullet bigBullet = bigBullets.get(i);
-			graphicsMan.drawBigBullet(bigBullet, g2d, this);
+			getGraphicsManager().drawBigBullet(bigBullet, g2d, this);
 
 			boolean remove = this.moveBigBullet(bigBullet);
 			if(remove){
@@ -298,7 +300,7 @@ public class Level1State extends LevelState {
 		Graphics2D g2d = getGraphics2D();
 		for(int i=0; i<bullets.size(); i++){
 			Bullet bullet = bullets.get(i);
-			graphicsMan.drawBullet(bullet, g2d, this);
+			getGraphicsManager().drawBullet(bullet, g2d, this);
 
 			boolean remove =   this.moveBullet(bullet);
 			if(remove){
@@ -313,7 +315,7 @@ public class Level1State extends LevelState {
 		GameStatus status = getGameStatus();
 		if((asteroid.getX() + asteroid.getWidth() >  0)){
 			asteroid.translate(-asteroid.getSpeed(), 0);
-			graphicsMan.drawAsteroid(asteroid, g2d, this);	
+			getGraphicsManager().drawAsteroid(asteroid, g2d, this);	
 		}
 		else {
 			long currentTime = System.currentTimeMillis();
@@ -327,7 +329,7 @@ public class Level1State extends LevelState {
 
 			else{
 				// draw explosion
-				graphicsMan.drawAsteroidExplosion(asteroidExplosion, g2d, this);
+				getGraphicsManager().drawAsteroidExplosion(asteroidExplosion, g2d, this);
 			}
 		}
 	}
@@ -338,16 +340,16 @@ public class Level1State extends LevelState {
 		GameStatus status = getGameStatus();
 		if(!status.isNewMegaMan()){
 			if((Gravity() == true) || ((Gravity() == true) && (Fire() == true || Fire2() == true))){
-				graphicsMan.drawMegaFallR(megaMan, g2d, this);
+				getGraphicsManager().drawMegaFallR(megaMan, g2d, this);
 			}
 		}
 
 		if((Fire() == true || Fire2()== true) && (Gravity()==false)){
-			graphicsMan.drawMegaFireR(megaMan, g2d, this);
+			getGraphicsManager().drawMegaFireR(megaMan, g2d, this);
 		}
 
 		if((Gravity()==false) && (Fire()==false) && (Fire2()==false)){
-			graphicsMan.drawMegaMan(megaMan, g2d, this);
+			getGraphicsManager().drawMegaMan(megaMan, g2d, this);
 		}
 	}
 
@@ -355,7 +357,7 @@ public class Level1State extends LevelState {
 		//draw platforms
 		Graphics2D g2d = getGraphics2D();
 		for(int i=0; i<getNumPlatforms(); i++){
-			graphicsMan.drawPlatform(platforms[i], g2d, this, i);
+			getGraphicsManager().drawPlatform(platforms[i], g2d, this, i);
 		}
 	}
 
@@ -363,7 +365,7 @@ public class Level1State extends LevelState {
 		//draw Floor
 		Graphics2D g2d = getGraphics2D();
 		for(int i=0; i<9; i++){
-			graphicsMan.drawFloor(floor[i], g2d, this, i);	
+			getGraphicsManager().drawFloor(floor[i], g2d, this, i);	
 		}
 	}
 

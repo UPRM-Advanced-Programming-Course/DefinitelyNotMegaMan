@@ -33,9 +33,6 @@ public class GraphicsManager {
 	private BufferedImage asteroidImg;
 	private BufferedImage asteroidExplosionImg;
 	private BufferedImage megaManExplosionImg;
-	//	private BufferedImage bossImg;
-	//	private BufferedImage bossImg2;
-	//	private BufferedImage bigAsteroidImg;
 	private BufferedImage bigAsteroidExplosionImg;
 
 	/**
@@ -49,15 +46,10 @@ public class GraphicsManager {
 			this.megaFireRImg = ImageIO.read(getClass().getResource("/rbadia/voidspace/graphics/megaFireRight.png"));
 			this.floorImg = ImageIO.read(getClass().getResource("/rbadia/voidspace/graphics/megaFloor.png"));
 			this.platformImg = ImageIO.read(getClass().getResource("/rbadia/voidspace/graphics/platform3.png"));
-			//			this.bossImg = ImageIO.read(getClass().getResource("/rbadia/voidspace/graphics/boss1.png"));
-			//			this.bossImg2 = ImageIO.read(getClass().getResource("/rbadia/voidspace/graphics/boss2.png"));
 			this.asteroidImg = ImageIO.read(getClass().getResource("/rbadia/voidspace/graphics/asteroid.png"));
 			this.asteroidExplosionImg = ImageIO.read(getClass().getResource("/rbadia/voidspace/graphics/asteroidExplosion.png"));
-			//this.megaManExplosionImg = ImageIO.read(getClass().getResource("/rbadia/voidspace/graphics/megaManExplosion.png"));
 			this.bulletImg = ImageIO.read(getClass().getResource("/rbadia/voidspace/graphics/bullet.png"));
 			this.bigBulletImg = ImageIO.read(getClass().getResource("/rbadia/voidspace/graphics/bigBullet.png"));
-			//			this.bigAsteroidImg = ImageIO.read(getClass().getResource("/rbadia/voidspace/graphics/BigAsteroid.png"));
-			//			this.bigAsteroidExplosionImg = ImageIO.read(getClass().getResource("/rbadia/voidspace/graphics/bigAsteroidExplosion.png"));
 
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "The graphic files are either corrupt or missing.",
@@ -68,8 +60,8 @@ public class GraphicsManager {
 	}
 
 	/**
-	 * Draws a ship image to the specified graphics canvas.
-	 * @param ship the ship to draw
+	 * Draws a MegaMan image to the specified graphics canvas.
+	 * @param MegaMan the ship to draw
 	 * @param g2d the graphics canvas
 	 * @param observer object to be notified
 	 */
@@ -128,8 +120,8 @@ public class GraphicsManager {
 	}
 
 	/**
-	 * Draws a ship explosion image to the specified graphics canvas.
-	 * @param shipExplosion the bounding rectangle of the explosion
+	 * Draws a MegaMan explosion image to the specified graphics canvas.
+	 * @param megaManExplosion the bounding rectangle of the explosion
 	 * @param g2d the graphics canvas
 	 * @param observer object to be notified
 	 */

@@ -13,6 +13,9 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import rbadia.voidspace.graphics.GraphicsManager;
+import rbadia.voidspace.sounds.SoundManager;
+
 /**
  * Main game class. Starts the game.
  */
@@ -30,10 +33,12 @@ public class MegaManMain {
 	public static void main(String[] args) throws InterruptedException, IOException  {
 
 
-		MainFrame frame = new MainFrame();              // Main Game Window
-		GameStatus gameStatus = new GameStatus();       // Records overall status of game across all levels
-		LevelLogic gameLogic = new LevelLogic();        // Coordinates among various levels
-		InputHandler inputHandler = new InputHandler(); // Keyboard listener
+		MainFrame frame = new MainFrame();              		// Main Game Window
+		GameStatus gameStatus = new GameStatus();       		// Records overall status of game across all levels
+		LevelLogic gameLogic = new LevelLogic();        		// Coordinates among various levels
+		InputHandler inputHandler = new InputHandler(); 		// Keyboard listener
+		GraphicsManager graphicsMan = new GraphicsManager(); // Draws all graphics for game objects
+		SoundManager soundMan = new SoundManager();			// Loads and plays all sounds during the game
 
 		audioFile = new File("audio/menuScreen.wav");
 		try {
@@ -50,8 +55,8 @@ public class MegaManMain {
 		int playAgain = 2;
 		while(playAgain != 1) {
 
-			LevelState level1State = new Level1State(1, frame, gameStatus, gameLogic, inputHandler);
-			LevelState level2State = new Level2State(2, frame, gameStatus, gameLogic, inputHandler);
+			LevelState level1State = new Level1State(1, frame, gameStatus, gameLogic, inputHandler, graphicsMan, soundMan);
+			LevelState level2State = new Level2State(2, frame, gameStatus, gameLogic, inputHandler, graphicsMan, soundMan);
 			LevelState levels[] = { level1State, level2State };
 
 			String outcome = "CONGRATS!! YOU WON!!";
