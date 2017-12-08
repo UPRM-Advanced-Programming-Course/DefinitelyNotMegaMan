@@ -172,6 +172,9 @@ public class InputHandler implements KeyListener{
 		case KeyEvent.VK_S:
 			this.sIsPressed = false;
 			break;
+		case KeyEvent.VK_I:
+			this.iIsPressed = false;
+			break;
 		}
 		e.consume();
 	}

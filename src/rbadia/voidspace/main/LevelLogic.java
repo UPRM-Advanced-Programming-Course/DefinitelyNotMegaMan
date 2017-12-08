@@ -348,7 +348,6 @@ public class LevelLogic {
 		if(ih.isSpacePressed()) {
 			ih.reset();
 			levelState.setCurrentState(LevelState.GETTING_READY);	
-			return;
 		}
 		if(ih.isSPressed()) {
 			JOptionPane.showMessageDialog( null, 
@@ -357,7 +356,6 @@ public class LevelLogic {
 							"Extra Life:      1500\r\n"+ 
 							"Power Shot:  1000\r\n"+
 					"\r\n");
-			return;
 		}
 		if(ih.isIPressed()) {
 			JOptionPane.showMessageDialog( null, 
@@ -367,8 +365,8 @@ public class LevelLogic {
 							"                           (Press E to buy, limit of one life per second.)\r\n" +
 							"Power Shot:  Activates the Power Shot which kills the asteroid in one hit\r\n"+
 					"                           (Press Q to buy, afterwards press Q to fire.)\r\n");
-			return;
 		}
+		ih.reset();
 	}
 
 	public void handleKeysDuringPlay(InputHandler ih, LevelState levelState) {
