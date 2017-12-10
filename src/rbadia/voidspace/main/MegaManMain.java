@@ -34,7 +34,6 @@ public class MegaManMain {
 
 
 		MainFrame frame = new MainFrame();              		// Main Game Window
-		GameStatus gameStatus = new GameStatus();       		// Records overall status of game across all levels
 		LevelLogic gameLogic = new LevelLogic();        		// Coordinates among various levels
 		InputHandler inputHandler = new InputHandler(); 		// Keyboard listener
 		GraphicsManager graphicsMan = new GraphicsManager(); // Draws all graphics for game objects
@@ -49,12 +48,12 @@ public class MegaManMain {
 		
 		frame.addKeyListener(inputHandler);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		gameStatus.setAsteroidsDestroyed(0);
-		gameStatus.setLivesLeft(3);
 
 		int playAgain = 2;
 		while(playAgain != 1) {
 
+			GameStatus gameStatus = new GameStatus();
+			gameStatus.setLivesLeft(3);
 			LevelState level1State = new Level1State(1, frame, gameStatus, gameLogic, inputHandler, graphicsMan, soundMan);
 			LevelState level2State = new Level2State(2, frame, gameStatus, gameLogic, inputHandler, graphicsMan, soundMan);
 			LevelState levels[] = { level1State, level2State };
