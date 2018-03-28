@@ -85,9 +85,9 @@ public class MainFrame extends JFrame {
 	}
 
 	private void initialize() {
-		this.setSize(530, 480);
-		this.setTitle("Mega Man");
 		Dimension dim = this.getToolkit().getScreenSize();
+		this.setSize((dim.width/2), (int)((dim.width/2)*(0.905)));
+		this.setTitle("Mega Man");
 		Rectangle bounds = this.getBounds();
 		this.setLocation(
 			(dim.width - bounds.width) / 2,

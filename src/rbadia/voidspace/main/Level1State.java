@@ -64,8 +64,10 @@ public class Level1State extends LevelState {
 			LevelLogic gameLogic, InputHandler inputHandler,
 			GraphicsManager graphicsMan, SoundManager soundMan) {
 		super();
-		this.setSize(new Dimension(500, 400));
-		this.setPreferredSize(new Dimension(500, 400));
+		this.setSize(new Dimension((int)(frame.getWidth()*0.9), (int)(frame.getWidth()*0.81)));
+		//this.setSize(new Dimension(500, 400));
+		this.setPreferredSize(new Dimension((int)(frame.getWidth()*0.9), (int)(frame.getWidth()*0.81)));
+		//this.setPreferredSize(new Dimension(500, 400));
 		this.setBackground(Color.BLACK);
 		this.setLevel(level);
 		this.setMainFrame(frame);
@@ -74,6 +76,7 @@ public class Level1State extends LevelState {
 		this.setInputHandler(inputHandler);
 		this.setSoundManager(soundMan);
 		this.setGraphicsManager(graphicsMan);
+		//backBuffer = new BufferedImage((int)(frame.getWidth()*0.9), (int)(frame.getWidth()*0.81), BufferedImage.TYPE_INT_RGB);
 		backBuffer = new BufferedImage(500, 400, BufferedImage.TYPE_INT_RGB);
 		this.setGraphics2D(backBuffer.createGraphics());
 		rand = new Random();
@@ -200,7 +203,10 @@ public class Level1State extends LevelState {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.drawImage(backBuffer, 0, 0, this);
+		Graphics2D g2 = (Graphics2D) g;
+		//g2.drawImage(backBuffer, 0, 0, (int)(getSize().getWidth()), (int)(getSize().getHeight()),  this);
+		g2.scale(getSize().getWidth()/500,getSize().getHeight()/400);
+		g2.drawImage(backBuffer, 0, 0,  this);
 	}
 
 	/**
@@ -402,7 +408,7 @@ public class Level1State extends LevelState {
 		Floor[] floor = this.getFloor();
 
 		for(int i=0; i<9; i++){
-			if((megaMan.getY() + megaMan.getHeight() -17 < this.getHeight() - floor[i].getHeight()/2) 
+			if((megaMan.getY() + megaMan.getHeight() -17 < 400 - floor[i].getHeight()/2) 
 					&& Fall() == true){
 
 				megaMan.translate(0 , 2);
@@ -526,14 +532,14 @@ public class Level1State extends LevelState {
 	 * Create a new MegaMan (and replace current one).
 	 */
 	public MegaMan newMegaMan(){
-		this.megaMan = new MegaMan((getWidth() - MegaMan.WIDTH) / 2, (getHeight() - MegaMan.HEIGHT - MegaMan.Y_OFFSET) / 2);
+		this.megaMan = new MegaMan((500 - MegaMan.WIDTH) / 2, (400 - MegaMan.HEIGHT - MegaMan.Y_OFFSET) / 2);
 		return megaMan;
 	}
 
 	public Floor[] newFloor(Level1State screen, int n){
 		floor = new Floor[n];
 		for(int i=0; i<n; i++){
-			this.floor[i] = new Floor(0 + i * Floor.WIDTH, screen.getHeight()- Floor.HEIGHT/2);
+			this.floor[i] = new Floor(0 + i * Floor.WIDTH, 400- Floor.HEIGHT/2);
 		}
 
 		return floor;
@@ -542,7 +548,7 @@ public class Level1State extends LevelState {
 	public Platform[] newPlatforms(int n){
 		platforms = new Platform[n];
 		for(int i=0; i<n; i++){
-			this.platforms[i] = new Platform(0 , getHeight()/2 + 140 - i*40);
+			this.platforms[i] = new Platform(0 , 400/2 + 140 - i*40);
 		}
 		return platforms;
 
@@ -552,8 +558,8 @@ public class Level1State extends LevelState {
 	 * Create a new asteroid.
 	 */
 	public Asteroid newAsteroid(Level1State screen){
-		int xPos = (int) (screen.getWidth() - Asteroid.WIDTH);
-		int yPos = rand.nextInt((int)(screen.getHeight() - Asteroid.HEIGHT- 32));
+		int xPos = (int) (500 - Asteroid.WIDTH);
+		int yPos = rand.nextInt((int)(400 - Asteroid.HEIGHT- 32));
 		asteroid = new Asteroid(xPos, yPos);
 		return asteroid;
 	}

@@ -53,7 +53,7 @@ public class GraphicsManager {
 
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "The graphic files are either corrupt or missing.",
-					"VoidSpace - Fatal Error", JOptionPane.ERROR_MESSAGE);
+					"MegaMan!!! - Fatal Error", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 			System.exit(-1);
 		}
