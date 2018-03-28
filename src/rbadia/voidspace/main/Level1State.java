@@ -64,8 +64,8 @@ public class Level1State extends LevelState {
 			LevelLogic gameLogic, InputHandler inputHandler,
 			GraphicsManager graphicsMan, SoundManager soundMan) {
 		super();
-		this.setSize(new Dimension(500, 400));
-		this.setPreferredSize(new Dimension(500, 400));
+		this.setSize(new Dimension((int)(frame.getWidth()*0.9), (int)(frame.getWidth()*0.81)));
+		this.setPreferredSize(new Dimension((int)(frame.getWidth()*0.9), (int)(frame.getWidth()*0.81)));
 		this.setBackground(Color.BLACK);
 		this.setLevel(level);
 		this.setMainFrame(frame);
@@ -74,7 +74,7 @@ public class Level1State extends LevelState {
 		this.setInputHandler(inputHandler);
 		this.setSoundManager(soundMan);
 		this.setGraphicsManager(graphicsMan);
-		backBuffer = new BufferedImage(500, 400, BufferedImage.TYPE_INT_RGB);
+		backBuffer = new BufferedImage(SCREEN_WIDTH, SCREEN_HEIGHT, BufferedImage.TYPE_INT_RGB);
 		this.setGraphics2D(backBuffer.createGraphics());
 		rand = new Random();
 	}
@@ -172,6 +172,7 @@ public class Level1State extends LevelState {
 
 	@Override
 	public void doLevelWon(){
+		MegaManMain.audioClip.stop();
 		setCurrentState(LEVEL_WON);
 		getGameLogic().drawYouWin();
 		repaint();
@@ -180,6 +181,7 @@ public class Level1State extends LevelState {
 
 	@Override
 	public void doGameOverScreen(){
+		MegaManMain.audioClip.stop();
 		setCurrentState(GAME_OVER_SCREEN);
 		getGameLogic().drawGameOver();
 		getMainFrame().getDestroyedValueLabel().setForeground(new Color(128, 0, 0));
@@ -198,7 +200,9 @@ public class Level1State extends LevelState {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.drawImage(backBuffer, 0, 0, this);
+		Graphics2D g2 = (Graphics2D) g;
+		g2.scale(getSize().getWidth()/SCREEN_WIDTH,getSize().getHeight()/SCREEN_HEIGHT);
+		g2.drawImage(backBuffer, 0, 0,  this);
 	}
 
 	/**
@@ -323,8 +327,8 @@ public class Level1State extends LevelState {
 				// draw a new asteroid
 				lastAsteroidTime = currentTime;
 				status.setNewAsteroid(false);
-				asteroid.setLocation((int) (this.getWidth() - asteroid.getPixelsWide()),
-						(rand.nextInt((int) (this.getHeight() - asteroid.getPixelsTall() - 32))));
+				asteroid.setLocation((int) (SCREEN_WIDTH - asteroid.getPixelsWide()),
+						(rand.nextInt((int) (SCREEN_HEIGHT - asteroid.getPixelsTall() - 32))));
 			}
 
 			else{
@@ -400,7 +404,7 @@ public class Level1State extends LevelState {
 		Floor[] floor = this.getFloor();
 
 		for(int i=0; i<9; i++){
-			if((megaMan.getY() + megaMan.getHeight() -17 < this.getHeight() - floor[i].getHeight()/2) 
+			if((megaMan.getY() + megaMan.getHeight() -17 < SCREEN_HEIGHT - floor[i].getHeight()/2) 
 					&& Fall() == true){
 
 				megaMan.translate(0 , 2);
@@ -524,14 +528,14 @@ public class Level1State extends LevelState {
 	 * Create a new MegaMan (and replace current one).
 	 */
 	public MegaMan newMegaMan(){
-		this.megaMan = new MegaMan((getWidth() - MegaMan.WIDTH) / 2, (getHeight() - MegaMan.HEIGHT - MegaMan.Y_OFFSET) / 2);
+		this.megaMan = new MegaMan((SCREEN_WIDTH - MegaMan.WIDTH) / 2, (SCREEN_HEIGHT - MegaMan.HEIGHT - MegaMan.Y_OFFSET) / 2);
 		return megaMan;
 	}
 
 	public Floor[] newFloor(Level1State screen, int n){
 		floor = new Floor[n];
 		for(int i=0; i<n; i++){
-			this.floor[i] = new Floor(0 + i * Floor.WIDTH, screen.getHeight()- Floor.HEIGHT/2);
+			this.floor[i] = new Floor(0 + i * Floor.WIDTH, SCREEN_HEIGHT- Floor.HEIGHT/2);
 		}
 
 		return floor;
@@ -540,7 +544,7 @@ public class Level1State extends LevelState {
 	public Platform[] newPlatforms(int n){
 		platforms = new Platform[n];
 		for(int i=0; i<n; i++){
-			this.platforms[i] = new Platform(0 , getHeight()/2 + 140 - i*40);
+			this.platforms[i] = new Platform(0 , SCREEN_HEIGHT/2 + 140 - i*40);
 		}
 		return platforms;
 
@@ -550,8 +554,8 @@ public class Level1State extends LevelState {
 	 * Create a new asteroid.
 	 */
 	public Asteroid newAsteroid(Level1State screen){
-		int xPos = (int) (screen.getWidth() - Asteroid.WIDTH);
-		int yPos = rand.nextInt((int)(screen.getHeight() - Asteroid.HEIGHT- 32));
+		int xPos = (int) (SCREEN_WIDTH - Asteroid.WIDTH);
+		int yPos = rand.nextInt((int)(SCREEN_HEIGHT - Asteroid.HEIGHT- 32));
 		asteroid = new Asteroid(xPos, yPos);
 		return asteroid;
 	}
@@ -572,7 +576,7 @@ public class Level1State extends LevelState {
 	 */
 	public void moveMegaManDown(){
 		for(int i=0; i<9; i++){
-			if(megaMan.getY() + megaMan.getSpeed() + megaMan.height < getHeight() - floor[i].getHeight()/2){
+			if(megaMan.getY() + megaMan.getSpeed() + megaMan.height < SCREEN_HEIGHT - floor[i].getHeight()/2){
 				megaMan.translate(0, 2);
 			}
 		}

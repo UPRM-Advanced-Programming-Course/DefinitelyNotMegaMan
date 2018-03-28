@@ -9,6 +9,10 @@ public abstract class LevelState extends JPanel {
 	
 	protected static final long serialVersionUID = 1L;
 	
+	//Base Screen Size
+	public static final int SCREEN_WIDTH = 500;
+	public static final int SCREEN_HEIGHT = 400;
+	
 	// Possible Level States
 	public static final int START_STATE=-1;
 	public static final int INITIAL_SCREEN=0;

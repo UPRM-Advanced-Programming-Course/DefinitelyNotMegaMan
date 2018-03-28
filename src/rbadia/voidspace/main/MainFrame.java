@@ -1,10 +1,12 @@
 package rbadia.voidspace.main;
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Rectangle;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -28,6 +30,8 @@ public class MainFrame extends JFrame {
 
 	private JLabel livesLabel;
 	private JLabel livesValueLabel;
+	
+	private int fontSize;
 	
 	public MainFrame() {
 		super();
@@ -83,11 +87,20 @@ public class MainFrame extends JFrame {
 		this.jContentPane = null;
 		this.setContentPane(getJContentPane());
 	}
+	
+	public int getFontSize(){
+		return fontSize;
+	}
+	
+	public void setFontSize(int fontSize){
+		this.fontSize = fontSize;
+	}
 
 	private void initialize() {
-		this.setSize(530, 480);
-		this.setTitle("Mega Man");
 		Dimension dim = this.getToolkit().getScreenSize();
+		this.setSize((dim.width/2), (int)((dim.width/2)*(0.905)));
+		this.setTitle("Mega Man");
+		this.setFontSize((int)((dim.width/2)*(0.905)*0.0225));
 		Rectangle bounds = this.getBounds();
 		this.setLocation(
 			(dim.width - bounds.width) / 2,
@@ -150,11 +163,17 @@ public class MainFrame extends JFrame {
 			gridBagConstraints.fill = GridBagConstraints.NONE;
 			gridBagConstraints.gridwidth = 6;	
 			livesLabel = new JLabel("Lives Left: ");
+			livesLabel.setFont(new Font("SansSerif", Font.PLAIN, fontSize));
 			livesValueLabel = new JLabel("3");
+			livesValueLabel.setFont(new Font("SansSerif", Font.PLAIN, fontSize));
 			destroyedLabel = new JLabel("Score: ");
+			destroyedLabel.setFont(new Font("SansSerif", Font.PLAIN, fontSize));
 			destroyedValueLabel = new JLabel("0");
+			destroyedValueLabel.setFont(new Font("SansSerif", Font.PLAIN, fontSize));
 			levelLabel = new JLabel("Level: ");
+			levelLabel.setFont(new Font("SansSerif", Font.PLAIN, fontSize));
 			levelValueLabel = new JLabel("1");
+			levelValueLabel.setFont(new Font("SansSerif", Font.PLAIN, fontSize));
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new GridBagLayout());
 			jContentPane.add(getLevelState(), gridBagConstraints);
