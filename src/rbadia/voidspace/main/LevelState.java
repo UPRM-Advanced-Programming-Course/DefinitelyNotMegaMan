@@ -9,6 +9,10 @@ public abstract class LevelState extends JPanel {
 	
 	protected static final long serialVersionUID = 1L;
 	
+	//Base Screen Size
+	public final int SCREEN_WIDTH = 500;
+	public final int SCREEN_HEIGHT = 400;
+	
 	// Possible Level States
 	public static final int START_STATE=-1;
 	public static final int INITIAL_SCREEN=0;
@@ -41,6 +45,8 @@ public abstract class LevelState extends JPanel {
 	public Graphics2D getGraphics2D() { return g2d; }
 	public int getCurrentState() { return currentState; }
 	public int getStartState() { return startState; }
+	public int getScreenWidth() {return SCREEN_WIDTH;}
+	public int getScreenHeight() {return SCREEN_HEIGHT;}
 	
 	// Setters
 	protected void setGraphicsManager(GraphicsManager graphicsManager) { this.graphicsManager = graphicsManager; }
