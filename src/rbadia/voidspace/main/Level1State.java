@@ -65,9 +65,7 @@ public class Level1State extends LevelState {
 			GraphicsManager graphicsMan, SoundManager soundMan) {
 		super();
 		this.setSize(new Dimension((int)(frame.getWidth()*0.9), (int)(frame.getWidth()*0.81)));
-		//this.setSize(new Dimension(500, 400));
 		this.setPreferredSize(new Dimension((int)(frame.getWidth()*0.9), (int)(frame.getWidth()*0.81)));
-		//this.setPreferredSize(new Dimension(500, 400));
 		this.setBackground(Color.BLACK);
 		this.setLevel(level);
 		this.setMainFrame(frame);
@@ -76,7 +74,6 @@ public class Level1State extends LevelState {
 		this.setInputHandler(inputHandler);
 		this.setSoundManager(soundMan);
 		this.setGraphicsManager(graphicsMan);
-		//backBuffer = new BufferedImage((int)(frame.getWidth()*0.9), (int)(frame.getWidth()*0.81), BufferedImage.TYPE_INT_RGB);
 		backBuffer = new BufferedImage(SCREEN_WIDTH, SCREEN_HEIGHT, BufferedImage.TYPE_INT_RGB);
 		this.setGraphics2D(backBuffer.createGraphics());
 		rand = new Random();
@@ -204,7 +201,6 @@ public class Level1State extends LevelState {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
-		//g2.drawImage(backBuffer, 0, 0, (int)(getSize().getWidth()), (int)(getSize().getHeight()),  this);
 		g2.scale(getSize().getWidth()/SCREEN_WIDTH,getSize().getHeight()/SCREEN_HEIGHT);
 		g2.drawImage(backBuffer, 0, 0,  this);
 	}

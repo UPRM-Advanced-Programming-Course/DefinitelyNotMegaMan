@@ -210,67 +210,6 @@ public class LevelLogic {
 	/**
 	 * Display initial game title screen.
 	 */
-//	protected void drawInitialMessage() {
-//
-//		LevelState levelState = getLevelState();
-//		Graphics2D g2d = levelState.getGraphics2D();
-//
-//		if(this.originalFont == null){
-//			this.originalFont = g2d.getFont();
-//			this.bigFont = originalFont;
-//		}
-//
-//		String gameTitleStr = "MegaMAN !!!";
-//
-//		Font currentFont = biggestFont == null? bigFont : biggestFont;
-//		float fontSize = currentFont.getSize2D();
-//		bigFont = currentFont.deriveFont(fontSize + 1).deriveFont(Font.BOLD).deriveFont(Font.ITALIC);
-//		FontMetrics fm = g2d.getFontMetrics(bigFont);
-//		int strWidth = fm.stringWidth(gameTitleStr);
-//		if(strWidth > 500 - 10){
-//			bigFont = currentFont;
-//			biggestFont = currentFont;
-//			fm = g2d.getFontMetrics(currentFont);
-//			strWidth = fm.stringWidth(gameTitleStr);
-//		}
-//		g2d.setFont(bigFont);
-//		int ascent = fm.getAscent();
-//		int strX = (500 - strWidth)/2;
-//		int strY = (400 + ascent)/2 - ascent;
-//		g2d.setPaint(Color.YELLOW);
-//		g2d.drawString(gameTitleStr, strX, strY);
-//
-//		g2d.setFont(originalFont);
-//		fm = g2d.getFontMetrics();
-//		String newGameStr = "Press <Space> to Start the Level";
-//		strWidth = fm.stringWidth(newGameStr);
-//		strX = (500 - strWidth)/2;
-//		strY = (400 + fm.getAscent())/2 + ascent + 16;
-//		g2d.setPaint(Color.WHITE);
-//		g2d.drawString(newGameStr, strX, strY);
-//
-//		fm = g2d.getFontMetrics();
-//		String itemGameStr = "Press <I> for Item Menu.";
-//		strWidth = fm.stringWidth(itemGameStr);
-//		strX = (500 - strWidth)/2;
-//		strY = strY + 16;
-//		g2d.drawString(itemGameStr, strX, strY);
-//
-//		fm = g2d.getFontMetrics();
-//		String shopGameStr = "Press <S> for Shop Menu.";
-//		strWidth = fm.stringWidth(shopGameStr);
-//		strX = (500 - strWidth)/2;
-//		strY = strY + 16;
-//		g2d.drawString(shopGameStr, strX, strY);
-//
-//		fm = g2d.getFontMetrics();
-//		String exitGameStr = "Press <Esc> to Exit the Game.";
-//		strWidth = fm.stringWidth(exitGameStr);
-//		strX = (500 - strWidth)/2;
-//		strY = strY + 16;
-//		g2d.drawString(exitGameStr, strX, strY);
-//	}
-	
 	protected void drawInitialMessage() {
 
 		LevelState levelState = getLevelState();
