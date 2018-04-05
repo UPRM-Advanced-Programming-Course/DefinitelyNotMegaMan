@@ -597,7 +597,7 @@ public class Level1State extends LevelState {
 	 * @param megaMan the megaMan
 	 */
 	public void moveMegaManRight(){
-		if(megaMan.getX() + megaMan.getSpeed() + megaMan.width < getWidth()){
+		if(megaMan.getX() + megaMan.getSpeed() + megaMan.width < SCREEN_WIDTH){
 			megaMan.translate(megaMan.getSpeed(), 0);
 		}
 	}
